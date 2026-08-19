@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pusat Unduhan Aplikasi - Powered by Sayuti</title>
+    
     <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             --primary: #6366f1;
             --primary-hover: #4f46e5;
-            --bg-body: #0f172a;
-            --bg-card: #1e293b;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --bg-body: #090d16;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-card-hover: rgba(30, 41, 59, 0.9);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: #334155;
+            --border-color: rgba(255, 255, 255, 0.08);
             --accent-green: #10b981;
+            --accent-amber: #f59e0b;
         }
 
         * {
@@ -33,147 +37,272 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* Header / Banner */
-        header {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%);
+        /* Background Glow Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: rgba(99, 102, 241, 0.2); }
+        .glow-2 { top: 40%; right: -100px; width: 500px; height: 500px; background: rgba(192, 132, 252, 0.15); }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
             border-bottom: 1px solid var(--border-color);
-            padding: 40px 20px;
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.8);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .stats-badge {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stats-badge span strong {
+            color: var(--text-main);
+        }
+
+        /* Header Hero */
+        header {
+            padding: 60px 20px 40px;
             text-align: center;
+            position: relative;
         }
 
         header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #818cf8, #c084fc);
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
         }
 
         header p {
             color: var(--text-muted);
-            font-size: 1rem;
-            max-width: 600px;
+            font-size: 1.05rem;
+            max-width: 650px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
         /* Container Utama */
         .container {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
-            padding: 30px 20px;
+            padding: 20px 20px 60px;
             flex: 1;
+            width: 100%;
         }
 
-        /* Bilah Pencarian & Filter */
-        .controls {
+        /* Controls Area */
+        .controls-wrapper {
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
         .search-box {
-            flex: 1;
-            min-width: 250px;
             position: relative;
+            width: 100%;
         }
 
         .search-box i {
             position: absolute;
-            left: 15px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
+            font-size: 1.1rem;
         }
 
         .search-box input {
             width: 100%;
-            padding: 12px 15px 12px 45px;
+            padding: 16px 20px 16px 52px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 14px;
             color: var(--text-main);
-            font-size: 0.95rem;
+            font-size: 1rem;
             outline: none;
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
 
         .search-box input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 20px var(--primary-glow);
         }
 
-        /* Grid Kartu Aplikasi */
+        /* Category Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* App Grid */
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
         }
 
-        /* Kartu Aplikasi */
+        /* App Card Styling */
         .app-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
         }
 
         .app-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transform: translateY(-6px);
+            background: var(--bg-card-hover);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5), 0 0 15px var(--primary-glow);
+        }
+
+        .card-top {
+            margin-bottom: 18px;
         }
 
         .app-header {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 14px;
         }
 
         .app-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 14px;
-            background: #334155;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
-            color: #818cf8;
+            color: #a5b4fc;
             flex-shrink: 0;
-            object-fit: cover;
+        }
+
+        .app-title-group {
+            flex: 1;
         }
 
         .app-title-group h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.15rem;
+            font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            line-height: 1.3;
         }
 
-        .badge-category {
-            font-size: 0.75rem;
-            background: rgba(99, 102, 241, 0.15);
-            color: #818cf8;
+        .badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 0.72rem;
             padding: 3px 8px;
             border-radius: 6px;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
+        .badge-cat { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+        .badge-status { background: rgba(16, 185, 129, 0.15); color: #34d399; }
 
         .app-desc {
             color: var(--text-muted);
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             line-height: 1.5;
-            margin-bottom: 20px;
-            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .app-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 0.82rem;
+            color: var(--accent-amber);
+        }
+
+        .app-rating span {
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
         .app-meta {
@@ -181,8 +310,8 @@
             justify-content: space-between;
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 15px;
-            padding-top: 10px;
+            margin-bottom: 16px;
+            padding-top: 14px;
             border-top: 1px dashed var(--border-color);
         }
 
@@ -190,156 +319,410 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             background: var(--primary);
             color: white;
             text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s ease;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
         }
 
         .btn-download:hover {
             background: var(--primary-hover);
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #475569;
+        }
+
+        /* Modal Details */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            max-width: 550px;
+            width: 90%;
+            padding: 30px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-muted);
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .modal-changelog {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent-green);
+            color: #000;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 25px 20px;
-            background: #0b0f19;
+            padding: 30px 20px;
+            background: rgba(9, 13, 22, 0.95);
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
             font-size: 0.9rem;
         }
 
-        footer strong {
-            color: var(--primary);
-        }
+        footer strong { color: var(--primary); }
 
-        /* Responsif untuk Layar HP */
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.6rem; }
-            .container { padding: 20px 15px; }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav { padding: 15px 5%; }
+            .stats-badge { display: none; }
+            header h1 { font-size: 2rem; }
+            .app-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header / Judul Utama -->
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="brand">
+            <i class="fa-solid fa-cubes-stacked"></i>
+            <span>SayutiHub</span>
+        </div>
+        <div class="stats-badge">
+            <span>Aplikasi Tersedia: <strong id="totalAppsCount">0</strong></span>
+            <span>|</span>
+            <span>Total Unduhan: <strong>12.4k+</strong></span>
+        </div>
+    </nav>
+
+    <!-- Header / Hero Section -->
     <header>
         <h1>Pusat Unduhan Aplikasi</h1>
-        <p>Jelajahi dan unduh berbagai aplikasi karya mandiri gratis tanpa batasan.</p>
+        <p>Akses cepat dan mudah ke berbagai aplikasi karya mandiri secara gratis, aman, dan tanpa iklan terbatas.</p>
     </header>
 
-    <!-- Konten Utama -->
+    <!-- Main Container -->
     <div class="container">
         
-        <!-- Bilah Pencarian -->
-        <div class="controls">
+        <!-- Controls: Search & Category Filter -->
+        <div class="controls-wrapper">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" onkeyup="filterApps()" placeholder="Cari nama atau deskripsi aplikasi...">
+                <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Cari aplikasi berdasarkan nama atau deskripsi...">
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-btn active" onclick="filterCategory('all', this)">Semua App</button>
+                <button class="filter-btn" onclick="filterCategory('android', this)"><i class="fa-brands fa-android"></i> Android</button>
+                <button class="filter-btn" onclick="filterCategory('windows', this)"><i class="fa-brands fa-windows"></i> Windows</button>
+                <button class="filter-btn" onclick="filterCategory('tools', this)"><i class="fa-solid fa-wrench"></i> Produktivitas</button>
             </div>
         </div>
 
-        <!-- Daftar Aplikasi -->
+        <!-- App Grid List -->
         <div class="app-grid" id="appGrid">
 
-            <!-- KARTU APLIKASI 1: TOKO SEMBAKO (FILE APK ANDA) -->
-            <div class="app-card">
-                <div>
+            <!-- KARTU APLIKASI 1: TOKO SEMBAKO -->
+            <div class="app-card" data-category="android" onclick="openModal('Toko Sembako v6.0', 'Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis, riwayat kasir, dan rekap untung rugi harian.', 'v6.0', 'Android (APK)', 'https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v6.0.apk', 'Peningkatan performa database lokal, perbaikan bug pencetakan struk, dan pembaharuan UI kasir.')">
+                <div class="card-top">
                     <div class="app-header">
                         <div class="app-icon"><i class="fa-solid fa-store"></i></div>
                         <div class="app-title-group">
                             <h3>Toko Sembako</h3>
-                            <span class="badge-category">Android App</span>
+                            <div class="badges">
+                                <span class="badge badge-cat">Android</span>
+                                <span class="badge badge-status">Updated</span>
+                            </div>
                         </div>
                     </div>
-                    <p class="app-desc">Aplikasi manajemen penjualan dan inventaris toko sembako versi 6.0.</p>
+                    <p class="app-desc">Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.</p>
+                    <div class="app-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <span>4.8 (120+ ulasan)</span>
+                    </div>
                 </div>
                 <div>
                     <div class="app-meta">
-                        <span><i class="fa-solid fa-file"></i> APK File</span>
+                        <span><i class="fa-solid fa-file-arrow-down"></i> APK File</span>
                         <span><i class="fa-solid fa-code-branch"></i> v6.0</span>
                     </div>
-                    <!-- LINK LANGSUNG KE FILE APK DI REPOSITORY GITHUB ANDA -->
-                    <a href="https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v6.0.apk" class="btn-download" target="_blank">
+                    <a href="https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v6.0.apk" class="btn-download" onclick="triggerToast(event, 'Toko Sembako')">
                         <i class="fa-solid fa-download"></i> Unduh APK
                     </a>
                 </div>
             </div>
 
-            <!-- KARTU APLIKASI 2 (CONTOH) -->
-            <div class="app-card">
-                <div>
+            <!-- KARTU APLIKASI 2: KALKULATOR TOKO -->
+            <div class="app-card" data-category="tools" onclick="openModal('Kalkulator Toko UMKM', 'Aplikasi pencatat transaksi harian kilat. Cocok untuk menghitung total belanjaan dengan cepat disertai fungsi diskon dan cetak nota digital.', 'v2.1.0', '12 MB', '#', 'Fitur baru hitung kembalian cepat dan ekspos Laporan bulanan ke PDF.')">
+                <div class="card-top">
                     <div class="app-header">
                         <div class="app-icon"><i class="fa-solid fa-calculator"></i></div>
                         <div class="app-title-group">
                             <h3>Kalkulator Toko</h3>
-                            <span class="badge-category">Produktivitas</span>
+                            <div class="badges">
+                                <span class="badge badge-cat">Produktivitas</span>
+                            </div>
                         </div>
                     </div>
                     <p class="app-desc">Aplikasi pencatat transaksi harian & rekap keuangan otomatis untuk UMKM.</p>
+                    <div class="app-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                        <span>4.1 (45 ulasan)</span>
+                    </div>
                 </div>
                 <div>
                     <div class="app-meta">
-                        <span><i class="fa-solid fa-file"></i> 12 MB</span>
+                        <span><i class="fa-solid fa-hard-drive"></i> 12 MB</span>
                         <span><i class="fa-solid fa-code-branch"></i> v2.1.0</span>
                     </div>
-                    <a href="#" class="btn-download">
+                    <a href="#" class="btn-download" onclick="triggerToast(event, 'Kalkulator Toko')">
                         <i class="fa-solid fa-download"></i> Unduh APK
                     </a>
                 </div>
             </div>
 
-            <!-- KARTU APLIKASI 3 (CONTOH) -->
-            <div class="app-card">
-                <div>
+            <!-- KARTU APLIKASI 3: AUTOCLICKER -->
+            <div class="app-card" data-category="windows" onclick="openModal('Sayuti AutoClicker', 'Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi dengan kustomisasi interval milidetik dan tombol pemicu (hotkey).', 'v1.0.0', '8 MB', '#', 'Rilis awal dengan dukungan Multi-Point Clicking.')">
+                <div class="card-top">
                     <div class="app-header">
                         <div class="app-icon"><i class="fa-solid fa-laptop-code"></i></div>
                         <div class="app-title-group">
                             <h3>Sayuti AutoClicker</h3>
-                            <span class="badge-category">Windows PC</span>
+                            <div class="badges">
+                                <span class="badge badge-cat">Windows</span>
+                                <span class="badge badge-status">New</span>
+                            </div>
                         </div>
                     </div>
                     <p class="app-desc">Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.</p>
+                    <div class="app-rating">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <span>5.0 (89 ulasan)</span>
+                    </div>
                 </div>
                 <div>
                     <div class="app-meta">
-                        <span><i class="fa-solid fa-file"></i> 8 MB</span>
+                        <span><i class="fa-solid fa-hard-drive"></i> 8 MB</span>
                         <span><i class="fa-solid fa-code-branch"></i> v1.0.0</span>
                     </div>
-                    <a href="#" class="btn-download">
+                    <a href="#" class="btn-download" onclick="triggerToast(event, 'Sayuti AutoClicker')">
                         <i class="fa-solid fa-download"></i> Unduh EXE
                     </a>
                 </div>
             </div>
 
+            <!-- Empty State Response -->
+            <div class="empty-state" id="emptyState">
+                <i class="fa-solid fa-box-open"></i>
+                <h3>Aplikasi Tidak Ditemukan</h3>
+                <p>Coba kata kunci lain atau pilih kategori yang berbeda.</p>
+            </div>
+
         </div>
     </div>
 
-    <!-- Footer / Hak Cipta -->
+    <!-- Modal Popup Detail Aplikasi -->
+    <div class="modal-overlay" id="appModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h2 id="modalTitle" style="margin-bottom: 8px;">Title</h2>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+                Versi: <span id="modalVersion" style="color: var(--text-main);"></span> | Format: <span id="modalFormat" style="color: var(--text-main);"></span>
+            </div>
+            <p id="modalDesc" style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem;"></p>
+            
+            <div class="modal-changelog">
+                <strong><i class="fa-solid fa-list-check"></i> Catatan Pembaruan:</strong>
+                <p id="modalChangelog" style="margin-top: 5px;"></p>
+            </div>
+
+            <a href="#" id="modalDownloadLink" class="btn-download" style="margin-top: 20px;">
+                <i class="fa-solid fa-download"></i> Unduh Sekarang
+            </a>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">Mengunduh aplikasi...</span>
+    </div>
+
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Apps Store. Powered by <strong>Sayuti</strong></p>
+        <p>&copy; 2026 Apps Store. Powered by <strong>Sayuti</strong>. All rights reserved.</p>
     </footer>
 
-    <!-- Script JavaScript untuk Fitur Pencarian -->
+    <!-- JavaScript Engine -->
     <script>
-        function filterApps() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('app-card');
+        let currentCategory = 'all';
 
-            for (let i = 0; i < cards.length; i++) {
-                let cardText = cards[i].innerText.toLowerCase();
-                if (cardText.includes(input)) {
-                    cards[i].style.display = "flex";
+        // Set awal total aplikasi
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAppsCount();
+        });
+
+        function updateAppsCount() {
+            const cards = document.querySelectorAll('.app-card');
+            let visibleCount = 0;
+            cards.forEach(card => {
+                if (card.style.display !== 'none') visibleCount++;
+            });
+            document.getElementById('totalAppsCount').innerText = visibleCount;
+        }
+
+        // Filter Berdasarkan Kategori Tabs
+        function filterCategory(category, element) {
+            currentCategory = category;
+            
+            // Ubah Status Active Tab
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            applyFilters();
+        }
+
+        // Gabungan Filter Pencarian + Kategori
+        function applyFilters() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.querySelectorAll('.app-card');
+            let emptyState = document.getElementById('emptyState');
+            let matchFound = false;
+
+            cards.forEach(card => {
+                let cardText = card.innerText.toLowerCase();
+                let cardCategory = card.getAttribute('data-category');
+
+                let matchesSearch = cardText.includes(input);
+                let matchesCategory = (currentCategory === 'all') || (cardCategory === currentCategory);
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = "flex";
+                    matchFound = true;
                 } else {
-                    cards[i].style.display = "none";
+                    card.style.display = "none";
                 }
-            }
+            });
+
+            emptyState.style.display = matchFound ? "none" : "block";
+            updateAppsCount();
+        }
+
+        // Modal Functionality
+        function openModal(title, desc, version, format, link, changelog) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalVersion').innerText = version;
+            document.getElementById('modalFormat').innerText = format;
+            document.getElementById('modalChangelog').innerText = changelog;
+            
+            let dlBtn = document.getElementById('modalDownloadLink');
+            dlBtn.href = link;
+            dlBtn.onclick = (e) => triggerToast(e, title);
+
+            document.getElementById('appModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('appModal').classList.remove('active');
+        }
+
+        // Stop Event Propagation saat Klik Tombol Download Langsung
+        function triggerToast(event, appName) {
+            event.stopPropagation();
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = 'Mengunduh ' + appName + '...';
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>
