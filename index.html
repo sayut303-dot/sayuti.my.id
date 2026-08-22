@@ -181,11 +181,11 @@
             margin: 0 -16px;
             padding-left: 16px;
             padding-right: 16px;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         .filter-tabs::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
         }
 
         .filter-btn {
@@ -376,7 +376,7 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             display: flex;
-            align-items: flex-end; /* Bottom sheet di seluler */
+            align-items: flex-end;
             justify-content: center;
             z-index: 1000;
             opacity: 0;
@@ -392,7 +392,7 @@
         .modal-container {
             background: #1e293b;
             border: 1px solid var(--border-color);
-            border-radius: 24px 24px 0 0; /* Rounded top */
+            border-radius: 24px 24px 0 0;
             max-width: 550px;
             width: 100%;
             padding: 24px 20px 30px;
@@ -403,7 +403,6 @@
             overflow-y: auto;
         }
 
-        /* Pill Drag Handle for Mobile Modal */
         .modal-container::before {
             content: '';
             width: 40px;
@@ -559,8 +558,8 @@
         <!-- App Grid List -->
         <div class="app-grid" id="appGrid">
 
-            <!-- KARTU APLIKASI 1: TOKO SEMBAKO -->
-            <div class="app-card" data-category="android" onclick="openModal('Toko Sembako v6.0', 'Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis, riwayat kasir, dan rekap untung rugi harian.', 'v6.0', 'APK File', 'https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v6.0.apk', 'Peningkatan performa database lokal, perbaikan bug pencetakan struk, dan pembaharuan UI kasir.')">
+            <!-- KARTU APLIKASI 1: TOKO SEMBAKO v7.0 (PEMBARUAN REPOSITORY GITHUB) -->
+            <div class="app-card" data-category="android" onclick="openModal('Toko Sembako v7.0', 'Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis, riwayat kasir, dan rekap untung rugi harian.', 'v7.0', 'APK File', 'https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v7.0.apk', 'Peningkatan stabilitas aplikasi, optimalisasi manajemen stok, perbaikan UI kasir, dan pembaruan performa database.')">
                 <div class="card-top">
                     <div class="app-header">
                         <div class="app-icon"><i class="fa-solid fa-store"></i></div>
@@ -578,16 +577,16 @@
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                        <span>4.8 (120+)</span>
+                        <i class="fa-solid fa-star"></i>
+                        <span>4.9 (150+)</span>
                     </div>
                 </div>
                 <div>
                     <div class="app-meta">
                         <span><i class="fa-solid fa-file-arrow-down"></i> APK File</span>
-                        <span><i class="fa-solid fa-code-branch"></i> v6.0</span>
+                        <span><i class="fa-solid fa-code-branch"></i> v7.0</span>
                     </div>
-                    <a href="https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v6.0.apk" class="btn-download" onclick="triggerToast(event, 'Toko Sembako')">
+                    <a href="https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v7.0.apk" class="btn-download" onclick="triggerToast(event, 'Toko Sembako v7.0')">
                         <i class="fa-solid fa-download"></i> Unduh APK
                     </a>
                 </div>
