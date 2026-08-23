@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pusat Unduhan Aplikasi - Powered by Sayuti</title>
+    <meta name="description" content="Akses cepat aplikasi karya mandiri gratis, aman, dan tanpa batas. Download aplikasi Android & Windows terlengkap.">
     
+    <!-- Open Graph for Social Media Sharing -->
+    <meta property="og:title" content="Pusat Unduhan Aplikasi - Powered by Sayuti">
+    <meta property="og:description" content="Temukan dan unduh aplikasi pilihan terbaik secara gratis dan aman.">
+    <meta property="og:type" content="website">
+
     <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -53,7 +59,7 @@
         .glow-1 { top: -100px; left: -100px; width: 300px; height: 300px; background: rgba(99, 102, 241, 0.2); }
         .glow-2 { top: 50%; right: -100px; width: 350px; height: 350px; background: rgba(192, 132, 252, 0.15); }
 
-        /* Navigation Bar Mobile Optimized */
+        /* Navigation Bar */
         nav {
             display: flex;
             justify-content: space-between;
@@ -136,16 +142,28 @@
         .controls-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .search-sort-row {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 640px) {
+            .search-sort-row {
+                flex-direction: row;
+            }
         }
 
         .search-box {
             position: relative;
-            width: 100%;
+            flex: 1;
         }
 
-        .search-box i {
+        .search-box i.fa-magnifying-glass {
             position: absolute;
             left: 16px;
             top: 50%;
@@ -156,7 +174,7 @@
 
         .search-box input {
             width: 100%;
-            padding: 14px 16px 14px 46px;
+            padding: 14px 40px 14px 46px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 14px;
@@ -172,12 +190,60 @@
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
-        /* Horizontal Scrollable Category Tabs */
+        .clear-search-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--text-muted);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+
+        .clear-search-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+        }
+
+        .sort-select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-main);
+            padding: 0 16px;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            min-width: 170px;
+            height: 48px;
+            transition: border-color 0.3s;
+        }
+
+        .sort-select:focus {
+            border-color: var(--primary);
+        }
+
+        .sort-select option {
+            background: #1e293b;
+            color: var(--text-main);
+        }
+
+        /* Filter Tabs */
         .filter-tabs {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 6px;
+            padding-bottom: 4px;
             margin: 0 -16px;
             padding-left: 16px;
             padding-right: 16px;
@@ -232,6 +298,11 @@
             transition: all 0.25s ease;
             position: relative;
             cursor: pointer;
+        }
+
+        .app-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
         }
 
         .app-card:active {
@@ -348,8 +419,11 @@
             width: 100%;
         }
 
-        .btn-download:active {
+        .btn-download:hover {
             background: var(--primary-hover);
+        }
+
+        .btn-download:active {
             transform: scale(0.99);
         }
 
@@ -368,7 +442,7 @@
             color: #475569;
         }
 
-        /* Bottom Sheet Modal for Mobile */
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -393,13 +467,13 @@
             background: #1e293b;
             border: 1px solid var(--border-color);
             border-radius: 24px 24px 0 0;
-            max-width: 550px;
+            max-width: 600px;
             width: 100%;
             padding: 24px 20px 30px;
             position: relative;
             transform: translateY(100%);
             transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -442,7 +516,115 @@
             color: var(--text-muted);
         }
 
-        /* Toast Notification Mobile Optimized */
+        /* Review Section in Modal */
+        .reviews-section {
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .reviews-section h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .review-form {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .star-picker {
+            display: flex;
+            gap: 6px;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .star-picker i.active {
+            color: var(--accent-amber);
+        }
+
+        .review-form input, .review-form textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .review-form input:focus, .review-form textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit-review {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            align-self: flex-end;
+            transition: all 0.2s;
+        }
+
+        .btn-submit-review:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .review-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.83rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .review-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .review-author {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .review-stars {
+            color: var(--accent-amber);
+            font-size: 0.75rem;
+        }
+
+        .review-comment {
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Toast Notification */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -531,11 +713,19 @@
     <!-- Main Container -->
     <div class="container">
         
-        <!-- Controls: Search & Category Filter -->
+        <!-- Controls -->
         <div class="controls-wrapper">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Cari nama atau deskripsi aplikasi...">
+            <div class="search-sort-row">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="Cari nama atau deskripsi aplikasi...">
+                    <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearch()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <select id="sortSelect" class="sort-select" onchange="renderApps()">
+                    <option value="default">Urutkan: Terbaru</option>
+                    <option value="name-asc">Nama (A - Z)</option>
+                    <option value="rating-desc">Rating Tertinggi</option>
+                </select>
             </div>
 
             <!-- Scrollable Filter Tabs -->
@@ -556,120 +746,18 @@
         </div>
 
         <!-- App Grid List -->
-        <div class="app-grid" id="appGrid">
+        <div class="app-grid" id="appGrid"></div>
 
-            <!-- KARTU APLIKASI 1: TOKO SEMBAKO v7.0 (PEMBARUAN REPOSITORY GITHUB) -->
-            <div class="app-card" data-category="android" onclick="openModal('Toko Sembako v7.0', 'Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis, riwayat kasir, dan rekap untung rugi harian.', 'v7.0', 'APK File', 'https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v7.0.apk', 'Peningkatan stabilitas aplikasi, optimalisasi manajemen stok, perbaikan UI kasir, dan pembaruan performa database.')">
-                <div class="card-top">
-                    <div class="app-header">
-                        <div class="app-icon"><i class="fa-solid fa-store"></i></div>
-                        <div class="app-title-group">
-                            <h3>Toko Sembako</h3>
-                            <div class="badges">
-                                <span class="badge badge-cat">Android</span>
-                                <span class="badge badge-status">Updated</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="app-desc">Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.</p>
-                    <div class="app-rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <span>4.9 (150+)</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="app-meta">
-                        <span><i class="fa-solid fa-file-arrow-down"></i> APK File</span>
-                        <span><i class="fa-solid fa-code-branch"></i> v7.0</span>
-                    </div>
-                    <a href="https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v7.0.apk" class="btn-download" onclick="triggerToast(event, 'Toko Sembako v7.0')">
-                        <i class="fa-solid fa-download"></i> Unduh APK
-                    </a>
-                </div>
-            </div>
-
-            <!-- KARTU APLIKASI 2: KALKULATOR TOKO -->
-            <div class="app-card" data-category="tools" onclick="openModal('Kalkulator Toko UMKM', 'Aplikasi pencatat transaksi harian kilat. Cocok untuk menghitung total belanjaan dengan cepat disertai fungsi diskon dan cetak nota digital.', 'v2.1.0', '12 MB', '#', 'Fitur baru hitung kembalian cepat dan ekspor Laporan bulanan ke PDF.')">
-                <div class="card-top">
-                    <div class="app-header">
-                        <div class="app-icon"><i class="fa-solid fa-calculator"></i></div>
-                        <div class="app-title-group">
-                            <h3>Kalkulator Toko</h3>
-                            <div class="badges">
-                                <span class="badge badge-cat">Tools</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="app-desc">Aplikasi pencatat transaksi harian & rekap keuangan otomatis untuk UMKM.</p>
-                    <div class="app-rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-regular fa-star"></i>
-                        <span>4.1 (45)</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="app-meta">
-                        <span><i class="fa-solid fa-hard-drive"></i> 12 MB</span>
-                        <span><i class="fa-solid fa-code-branch"></i> v2.1.0</span>
-                    </div>
-                    <a href="#" class="btn-download" onclick="triggerToast(event, 'Kalkulator Toko')">
-                        <i class="fa-solid fa-download"></i> Unduh APK
-                    </a>
-                </div>
-            </div>
-
-            <!-- KARTU APLIKASI 3: AUTOCLICKER -->
-            <div class="app-card" data-category="windows" onclick="openModal('Sayuti AutoClicker', 'Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi dengan kustomisasi interval milidetik dan tombol pemicu (hotkey).', 'v1.0.0', '8 MB', '#', 'Rilis awal dengan dukungan Multi-Point Clicking.')">
-                <div class="card-top">
-                    <div class="app-header">
-                        <div class="app-icon"><i class="fa-solid fa-laptop-code"></i></div>
-                        <div class="app-title-group">
-                            <h3>Sayuti AutoClicker</h3>
-                            <div class="badges">
-                                <span class="badge badge-cat">Windows</span>
-                                <span class="badge badge-status">New</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="app-desc">Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.</p>
-                    <div class="app-rating">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <span>5.0 (89)</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="app-meta">
-                        <span><i class="fa-solid fa-hard-drive"></i> 8 MB</span>
-                        <span><i class="fa-solid fa-code-branch"></i> v1.0.0</span>
-                    </div>
-                    <a href="#" class="btn-download" onclick="triggerToast(event, 'Sayuti AutoClicker')">
-                        <i class="fa-solid fa-download"></i> Unduh EXE
-                    </a>
-                </div>
-            </div>
-
-            <!-- Empty State Response -->
-            <div class="empty-state" id="emptyState">
-                <i class="fa-solid fa-box-open"></i>
-                <h3>Tidak Ditemukan</h3>
-                <p>Coba kata kunci lain atau pilih kategori yang berbeda.</p>
-            </div>
-
+        <!-- Empty State Response -->
+        <div class="empty-state" id="emptyState">
+            <i class="fa-solid fa-box-open"></i>
+            <h3>Tidak Ditemukan</h3>
+            <p>Coba kata kunci lain atau pilih kategori yang berbeda.</p>
         </div>
+
     </div>
 
-    <!-- Bottom Sheet Modal Popup -->
+    <!-- Bottom Sheet Modal Popup with Reviews -->
     <div class="modal-overlay" id="appModal" onclick="closeModal(event)">
         <div class="modal-container" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModalDirect()"><i class="fa-solid fa-xmark"></i></button>
@@ -687,6 +775,30 @@
             <a href="#" id="modalDownloadLink" class="btn-download" style="margin-top: 15px;">
                 <i class="fa-solid fa-download"></i> Unduh Sekarang
             </a>
+
+            <!-- Review & Rating Section -->
+            <div class="reviews-section">
+                <h4><i class="fa-solid fa-star-half-stroke"></i> Ulasan & Penilaian Pengguna</h4>
+                
+                <!-- Form Beri Ulasan -->
+                <div class="review-form">
+                    <div class="star-picker" id="starPicker">
+                        <i class="fa-solid fa-star active" data-value="1" onclick="setPickerRating(1)"></i>
+                        <i class="fa-solid fa-star active" data-value="2" onclick="setPickerRating(2)"></i>
+                        <i class="fa-solid fa-star active" data-value="3" onclick="setPickerRating(3)"></i>
+                        <i class="fa-solid fa-star active" data-value="4" onclick="setPickerRating(4)"></i>
+                        <i class="fa-solid fa-star active" data-value="5" onclick="setPickerRating(5)"></i>
+                    </div>
+                    <input type="text" id="reviewerName" placeholder="Nama Anda..." maxlength="30">
+                    <textarea id="reviewComment" rows="2" placeholder="Tulis ulasan Anda tentang aplikasi ini..." maxlength="150"></textarea>
+                    <button class="btn-submit-review" onclick="submitReview()"><i class="fa-solid fa-paper-plane"></i> Kirim Ulasan</button>
+                </div>
+
+                <!-- Daftar Ulasan -->
+                <div class="reviews-list" id="reviewsListContainer">
+                    <!-- Dinamis terisi dari JS -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -701,67 +813,315 @@
         <p>&copy; 2026 Apps Store. Powered by <strong>Sayuti</strong></p>
     </footer>
 
-    <!-- JavaScript Engine -->
+    <!-- JavaScript Engine with Reviews and LocalStorage -->
     <script>
+        const defaultAppsData = [
+            {
+                id: 1,
+                title: "Toko Sembako",
+                category: "android",
+                status: "Updated",
+                icon: "fa-store",
+                shortDesc: "Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.",
+                fullDesc: "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis, riwayat kasir, dan rekap untung rugi harian.",
+                version: "v7.0",
+                format: "APK File",
+                downloadUrl: "https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v7.0.apk",
+                changelog: "Peningkatan stabilitas aplikasi, optimalisasi manajemen stok, perbaikan UI kasir, dan pembaruan performa database.",
+                reviews: [
+                    { name: "Budi Santoso", rating: 5, comment: "Sangat membantu kasir toko kelontong saya! Mantap." },
+                    { name: "Siti Rahma", rating: 5, comment: "Aplikasinya ringan dan mudah digunakan." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Kalkulator Toko",
+                category: "tools",
+                status: null,
+                icon: "fa-calculator",
+                shortDesc: "Aplikasi pencatat transaksi harian & rekap keuangan otomatis untuk UMKM.",
+                fullDesc: "Aplikasi pencatat transaksi harian kilat. Cocok untuk menghitung total belanjaan dengan cepat disertai fungsi diskon dan cetak nota digital.",
+                version: "v2.1.0",
+                format: "12 MB",
+                downloadUrl: "#",
+                changelog: "Fitur baru hitung kembalian cepat dan ekspor laporan bulanan ke PDF.",
+                reviews: [
+                    { name: "Joko Anwar", rating: 4, comment: "Cukup praktis buat hitung cepat." }
+                ]
+            },
+            {
+                id: 3,
+                title: "Sayuti AutoClicker",
+                category: "windows",
+                status: "New",
+                icon: "fa-laptop-code",
+                shortDesc: "Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.",
+                fullDesc: "Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi dengan kustomisasi interval milidetik dan tombol pemicu (hotkey).",
+                version: "v1.0.0",
+                format: "8 MB",
+                downloadUrl: "#",
+                changelog: "Rilis awal dengan dukungan Multi-Point Clicking.",
+                reviews: [
+                    { name: "Rian Gamer", rating: 5, comment: "Lancar jaya di Windows 10, tanpa lag!" }
+                ]
+            }
+        ];
+
+        let appsData = [];
         let currentCategory = 'all';
+        let currentActiveAppId = null;
+        let selectedPickerRating = 5;
 
         document.addEventListener('DOMContentLoaded', () => {
-            updateAppsCount();
+            loadAppsFromStorage();
+            renderApps();
         });
 
-        function updateAppsCount() {
-            const cards = document.querySelectorAll('.app-card');
-            let visibleCount = 0;
-            cards.forEach(card => {
-                if (card.style.display !== 'none') visibleCount++;
+        function loadAppsFromStorage() {
+            const savedData = localStorage.getItem('sayuti_hub_apps_data');
+            if (savedData) {
+                try {
+                    appsData = JSON.parse(savedData);
+                } catch (e) {
+                    appsData = defaultAppsData;
+                }
+            } else {
+                appsData = defaultAppsData;
+                saveAppsToStorage();
+            }
+        }
+
+        function saveAppsToStorage() {
+            localStorage.setItem('sayuti_hub_apps_data', JSON.stringify(appsData));
+        }
+
+        function getAppRatingStats(app) {
+            if (!app.reviews || app.reviews.length === 0) {
+                return { average: 5.0, count: 0 };
+            }
+            let sum = app.reviews.reduce((acc, item) => acc + item.rating, 0);
+            let avg = (sum / app.reviews.length).toFixed(1);
+            return { average: parseFloat(avg), count: app.reviews.length };
+        }
+
+        function renderApps() {
+            const grid = document.getElementById('appGrid');
+            const emptyState = document.getElementById('emptyState');
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const sortValue = document.getElementById('sortSelect').value;
+
+            // 1. Filter by category & search
+            let filtered = appsData.filter(app => {
+                const matchesCat = (currentCategory === 'all') || (app.category === currentCategory);
+                const matchesSearch = app.title.toLowerCase().includes(searchInput) || app.shortDesc.toLowerCase().includes(searchInput);
+                return matchesCat && matchesSearch;
             });
-            document.getElementById('totalAppsCount').innerText = visibleCount;
+
+            // 2. Sort apps
+            filtered.sort((a, b) => {
+                let statsA = getAppRatingStats(a);
+                let statsB = getAppRatingStats(b);
+                if (sortValue === 'name-asc') {
+                    return a.title.localeCompare(b.title);
+                } else if (sortValue === 'rating-desc') {
+                    return statsB.average - statsA.average;
+                }
+                return b.id - a.id; // default (terbaru)
+            });
+
+            // 3. Render HTML cards
+            grid.innerHTML = '';
+            if (filtered.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                filtered.forEach(app => {
+                    let statusBadge = app.status ? `<span class="badge badge-status">${app.status}</span>` : '';
+                    let ratingStats = getAppRatingStats(app);
+                    let starsHTML = getStarRatingHTML(ratingStats.average);
+
+                    let card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.onclick = () => openModal(app.id);
+                    card.innerHTML = `
+                        <div class="card-top">
+                            <div class="app-header">
+                                <div class="app-icon"><i class="fa-solid ${app.icon}"></i></div>
+                                <div class="app-title-group">
+                                    <h3>${app.title}</h3>
+                                    <div class="badges">
+                                        <span class="badge badge-cat">${app.category}</span>
+                                        ${statusBadge}
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="app-desc">${app.shortDesc}</p>
+                            <div class="app-rating">
+                                ${starsHTML}
+                                <span>${ratingStats.average} (${ratingStats.count})</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="app-meta">
+                                <span><i class="fa-solid ${app.category === 'windows' ? 'fa-hard-drive' : 'fa-file-arrow-down'}"></i> ${app.format}</span>
+                                <span><i class="fa-solid fa-code-branch"></i> ${app.version}</span>
+                            </div>
+                            <a href="${app.downloadUrl}" class="btn-download" onclick="triggerToast(event, '${app.title}')">
+                                <i class="fa-solid fa-download"></i> Unduh ${app.category === 'windows' ? 'EXE' : 'APK'}
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            document.getElementById('totalAppsCount').innerText = filtered.length;
+        }
+
+        function getStarRatingHTML(rating) {
+            let fullStars = Math.floor(rating);
+            let hasHalf = (rating - fullStars) >= 0.5;
+            let html = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    html += '<i class="fa-solid fa-star"></i>';
+                } else if (i === fullStars && hasHalf) {
+                    html += '<i class="fa-solid fa-star-half-stroke"></i>';
+                } else {
+                    html += '<i class="fa-regular fa-star"></i>';
+                }
+            }
+            return html;
         }
 
         function filterCategory(category, element) {
             currentCategory = category;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
-            applyFilters();
+            renderApps();
         }
 
-        function applyFilters() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.querySelectorAll('.app-card');
-            let emptyState = document.getElementById('emptyState');
-            let matchFound = false;
-
-            cards.forEach(card => {
-                let cardText = card.innerText.toLowerCase();
-                let cardCategory = card.getAttribute('data-category');
-
-                let matchesSearch = cardText.includes(input);
-                let matchesCategory = (currentCategory === 'all') || (cardCategory === currentCategory);
-
-                if (matchesSearch && matchesCategory) {
-                    card.style.display = "flex";
-                    matchFound = true;
-                } else {
-                    card.style.display = "none";
-                }
-            });
-
-            emptyState.style.display = matchFound ? "none" : "block";
-            updateAppsCount();
+        function handleSearchInput() {
+            const inputVal = document.getElementById('searchInput').value;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            clearBtn.style.display = inputVal.length > 0 ? 'flex' : 'none';
+            renderApps();
         }
 
-        function openModal(title, desc, version, format, link, changelog) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('modalVersion').innerText = version;
-            document.getElementById('modalFormat').innerText = format;
-            document.getElementById('modalChangelog').innerText = changelog;
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearchBtn').style.display = 'none';
+            renderApps();
+        }
+
+        function openModal(appId) {
+            currentActiveAppId = appId;
+            let app = appsData.find(item => item.id === appId);
+            if (!app) return;
+
+            document.getElementById('modalTitle').innerText = app.title;
+            document.getElementById('modalDesc').innerText = app.fullDesc;
+            document.getElementById('modalVersion').innerText = app.version;
+            document.getElementById('modalFormat').innerText = app.format;
+            document.getElementById('modalChangelog').innerText = app.changelog;
             
             let dlBtn = document.getElementById('modalDownloadLink');
-            dlBtn.href = link;
-            dlBtn.onclick = (e) => triggerToast(e, title);
+            dlBtn.href = app.downloadUrl;
+            dlBtn.onclick = (e) => triggerToast(e, app.title);
 
+            // Reset review form inputs
+            document.getElementById('reviewerName').value = '';
+            document.getElementById('reviewComment').value = '';
+            setPickerRating(5);
+
+            renderModalReviews(app);
             document.getElementById('appModal').classList.add('active');
+        }
+
+        function renderModalReviews(app) {
+            const container = document.getElementById('reviewsListContainer');
+            container.innerHTML = '';
+
+            if (!app.reviews || app.reviews.length === 0) {
+                container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding: 10px;">Belum ada ulasan. Jadilah yang pertama memberikan ulasan!</p>';
+                return;
+            }
+
+            // Urutkan dari yang terbaru (dibalik)
+            let reversedReviews = [...app.reviews].reverse();
+            reversedReviews.forEach(rev => {
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    stars += i <= rev.rating ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+                }
+
+                let item = document.createElement('div');
+                item.className = 'review-item';
+                item.innerHTML = `
+                    <div class="review-item-header">
+                        <span class="review-author">${escapeHTML(rev.name)}</span>
+                        <div class="review-stars">${stars}</div>
+                    </div>
+                    <div class="review-comment">${escapeHTML(rev.comment)}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function setPickerRating(rating) {
+            selectedPickerRating = rating;
+            const stars = document.querySelectorAll('#starPicker i');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.className = "fa-solid fa-star active";
+                } else {
+                    star.className = "fa-regular fa-star";
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function submitReview() {
+            let name = document.getElementById('reviewerName').value.trim();
+            let comment = document.getElementById('reviewComment').value.trim();
+
+            if (!name) {
+                alert('Mohon masukkan nama Anda terlebih dahulu.');
+                return;
+            }
+            if (!comment) {
+                alert('Mohon tuliskan ulasan Anda.');
+                return;
+            }
+
+            let app = appsData.find(item => item.id === currentActiveAppId);
+            if (!app) return;
+
+            if (!app.reviews) {
+                app.reviews = [];
+            }
+
+            app.reviews.push({
+                name: name,
+                rating: selectedPickerRating,
+                comment: comment
+            });
+
+            saveAppsToStorage();
+            renderModalReviews(app);
+            renderApps(); // Memperbarui rating rata-rata di kartu utama secara langsung
+
+            // Reset form
+            document.getElementById('reviewerName').value = '';
+            document.getElementById('reviewComment').value = '';
+            
+            showToastMessage('Ulasan berhasil dikirim!');
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
         }
 
         function closeModal(event) {
@@ -776,8 +1136,12 @@
 
         function triggerToast(event, appName) {
             event.stopPropagation();
+            showToastMessage('Mengunduh ' + appName + '...');
+        }
+
+        function showToastMessage(msg) {
             const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = 'Mengunduh ' + appName + '...';
+            document.getElementById('toastMsg').innerText = msg;
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
@@ -786,3 +1150,4 @@
     </script>
 </body>
 </html>
+
