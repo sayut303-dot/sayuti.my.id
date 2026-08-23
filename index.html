@@ -201,9 +201,17 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Icon (FontAwesome)</label>
+                <label>Icon (FontAwesome - Opsional jika upload logo di bawah)</label>
                 <input type="text" id="inputIcon" class="form-control" placeholder="fa-store">
             </div>
+            
+            <!-- TAMBAHAN INPUT UPLOAD LOGO FILE -->
+            <div class="form-group">
+                <label>Upload Logo/Ikon Aplikasi (Gambar)</label>
+                <input type="file" id="inputIconFile" class="form-control" accept="image/*">
+            </div>
+            <!-- AKHIR TAMBAHAN -->
+
             <div class="form-group">
                 <label>Deskripsi Singkat</label>
                 <input type="text" id="inputShortDesc" class="form-control" placeholder="Ringkasan...">
@@ -220,7 +228,7 @@
                 </div>
             </div>
             
-            <!-- TAMBAHAN INPUT UPLOAD FILE APK & GITHUB TOKEN -->
+            <!-- INPUT UPLOAD FILE APK & GITHUB TOKEN -->
             <div class="form-group">
                 <label>Pilih File APK</label>
                 <input type="file" id="inputApkFile" class="form-control" accept=".apk">
@@ -229,7 +237,6 @@
                 <label>GitHub Token (Simpan sekali untuk selamanya)</label>
                 <input type="password" id="inputGithubToken" class="form-control" placeholder="ghp_xxxxxxxxxxxx">
             </div>
-            <!-- AKHIR TAMBAHAN -->
 
             <div class="form-group">
                 <label>URL Unduhan (Opsional jika upload file di atas)</label>
@@ -263,10 +270,8 @@
         <p>&copy; 2026 SayutiHub v2. Powered by <strong>Sayuti</strong></p>
     </footer>
 
-        <!-- Menghubungkan ke folder JS dengan pemacu cache -->
+    <!-- Menghubungkan ke folder JS dengan pemacu cache -->
     <script src="js/main.js?v=2"></script>
 </body>
-</html>
-
-</body>
-</html>
+    </html>
+                
