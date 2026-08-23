@@ -114,7 +114,6 @@ function renderApps() {
             let isFav = favorites.includes(app.id);
             let statusBadge = app.status ? `<span class="badge badge-${app.status.toLowerCase()}">${app.status}</span>` : '';
             
-            // Cek apakah icon berupa FontAwesome atau file gambar yang di-upload
             let iconContent = app.icon && app.icon.startsWith('fa-') 
                 ? `<i class="fa-solid ${app.icon}"></i>` 
                 : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
@@ -364,7 +363,6 @@ async function saveAppFromForm() {
     let iconValue = document.getElementById('inputIcon').value.trim() || 'fa-cube';
     let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
 
-    // 1. Proses Upload File APK ke GitHub (jika ada)
     if (apkFileInput) {
         showToast('Mengunggah file APK ke GitHub...');
         try {
@@ -415,7 +413,6 @@ async function saveAppFromForm() {
         }
     }
 
-    // 2. Proses Upload File Logo/Ikon ke GitHub (jika ada)
     if (iconFileInput) {
         showToast('Mengunggah logo aplikasi...');
         try {
@@ -480,4 +477,10 @@ async function saveAppFromForm() {
 
     if (id) {
         let idx = dbApps.findIndex(a => a.id == id);
-  
+        if (idx !== -1) {
+            dbApps[idx] = { ...dbApps[idx], ...appData };
+        }
+    } else {
+        appData.id = Date.now();
+        appData.downloads = 0;
+        appData.reviews = [
