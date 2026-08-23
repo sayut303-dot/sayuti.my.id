@@ -47,7 +47,7 @@ let dbApps = [
         "title": "KlikWaCepat",
         "category": "android",
         "status": "Featured",
-        "icon": "fa-cube",
+        "icon": "logo_1787495641002_1000262996.jpg",
         "shortDesc": "Kirim pesan WhatsApp tanpa perlu menyimpan nomor ke kontak.",
         "fullDesc": "Aplikasi praktis dan ringan untuk memulai percakapan WhatsApp ke nomor baru secara instan tanpa harus menyimpannya terlebih dahulu ke daftar kontak HP Anda. Cukup masukkan nomor tujuan dan langsung chat dengan cepat!\n",
         "version": "V2.1",
