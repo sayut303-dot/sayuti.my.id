@@ -282,7 +282,7 @@ function verifyAdminLogin() {
         switchView('admin');
         showToast('Berhasil masuk Admin!');
     } else {
-        alert('PIN Salah! (Gunakan 1234)');
+        alert('PIN Salah!');
     }
 }
 
