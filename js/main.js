@@ -55,7 +55,7 @@ let dbApps = [
         "downloadUrl": "KlikWaCepat v2.1.apk",
         "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 1.1.0.",
         "id": 1787488454945,
-        "downloads": 0,
+        "downloads": 1,
         "reviews": [],
         "screenshots": []
     }
