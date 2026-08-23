@@ -39,23 +39,9 @@ let activeAppId = null;
 let selectedRating = 5;
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadDatabase();
     renderApps();
     updateFavBadge();
 });
-
-function loadDatabase() {
-    const saved = localStorage.getItem('sayutihub_v2_db');
-    if (saved) {
-        try { dbApps = JSON.parse(saved); } catch(e) {}
-    } else {
-        saveDatabase();
-    }
-}
-
-function saveDatabase() {
-    localStorage.setItem('sayutihub_v2_db', JSON.stringify(dbApps));
-}
 
 function switchView(viewName) {
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
@@ -212,22 +198,14 @@ function openDetailModal(appId) {
     document.getElementById('detailModal').classList.add('active');
 }
 
-function incrementDownload() {
-    let app = dbApps.find(a => a.id === activeAppId);
-    if (app) {
-        app.downloads++;
-        saveDatabase();
-        document.getElementById('detailDownloads').innerText = app.downloads;
-        showToast('Mengunduh ' + app.title + '...');
-    }
-}
-
 function triggerDownload(event, appId) {
     event.stopPropagation();
-    let app = dbApps.find(a => a.id === appId);
+    let app = dbApps.find(appIdKey => app.id === appId); // handle gracefully
+    // ... logic download ...
+    let githubToken = localStorage.getItem('sayuti_gh_token');
     if (app) {
         app.downloads++;
-        saveDatabase();
+        if (githubToken) updateMainJsOnGitHub(githubToken).catch(e => {});
         showToast('Mengunduh ' + app.title + '...');
     }
 }
@@ -250,19 +228,24 @@ function renderReviews(app) {
 
 function setRating(r) { selectedRating = r; }
 
-function submitReview() {
+async function submitReview() {
     let name = document.getElementById('reviewName').value.trim();
     let comment = document.getElementById('reviewComment').value.trim();
     if (!name || !comment) { alert('Nama dan ulasan wajib diisi.'); return; }
     let app = dbApps.find(a => a.id === activeAppId);
     if (!app.reviews) app.reviews = [];
     app.reviews.push({ name, rating: selectedRating, comment });
-    saveDatabase();
+    
     renderReviews(app);
     renderApps();
     document.getElementById('reviewName').value = '';
     document.getElementById('reviewComment').value = '';
     showToast('Ulasan terkirim!');
+
+    let githubToken = localStorage.getItem('sayuti_gh_token');
+    if (githubToken) {
+        try { await updateMainJsOnGitHub(githubToken); } catch(e) {}
+    }
 }
 
 function renderAnalytics() {
@@ -342,7 +325,6 @@ function openAppFormModal(appId = null) {
     document.getElementById('appFormModal').classList.add('active');
 }
 
-// Fungsi Utama: Menyimpan Aplikasi, Upload APK, & Sinkronisasi Otomatis ke GitHub
 async function saveAppFromForm() {
     let id = document.getElementById('editAppId').value;
     let title = document.getElementById('inputTitle').value.trim();
@@ -350,17 +332,15 @@ async function saveAppFromForm() {
     let githubToken = document.getElementById('inputGithubToken') ? document.getElementById('inputGithubToken').value.trim() : '';
     
     if (!title) { alert('Nama aplikasi wajib diisi'); return; }
+    if (!githubToken) { alert('GitHub Token wajib diisi untuk sinkronisasi publik!'); return; }
+
+    localStorage.setItem('sayuti_gh_token', githubToken);
 
     let downloadUrl = document.getElementById('inputDownloadUrl').value || '#';
     let format = document.getElementById('inputFormat').value || 'APK File';
     let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
 
-    if (githubToken) {
-        localStorage.setItem('sayuti_gh_token', githubToken);
-    }
-
-    // Jika file APK dipilih dan token ada, upload file APK ke GitHub
-    if (apkFileInput && githubToken) {
+    if (apkFileInput) {
         showToast('Mengunggah file APK ke GitHub...');
         try {
             let base64Content = await toBase64(apkFileInput);
@@ -384,7 +364,7 @@ async function saveAppFromForm() {
                 showToast('APK Berhasil di-upload!');
             } else {
                 let errData = await response.json();
-                alert('Gagal upload APK ke GitHub: ' + (errData.message || 'Periksa kembali token Anda.'));
+                alert('Gagal upload APK: ' + (errData.message || 'Periksa token Anda.'));
                 return;
             }
         } catch (error) {
@@ -419,20 +399,13 @@ async function saveAppFromForm() {
         dbApps.push(appData);
     }
 
-    saveDatabase();
-
-    // SINKRONISASI OTOMATIS: Update file js/main.js di GitHub agar muncul di HP orang lain
-    if (githubToken) {
-        try {
-            showToast('Menyinkronkan database ke GitHub...');
-            await updateMainJsOnGitHub(githubToken);
-            showToast('Berhasil disimpan & disinkronkan ke publik!');
-        } catch (err) {
-            alert('Gagal sinkronisasi database ke GitHub: ' + err.message);
-            return;
-        }
-    } else {
-        alert('Perhatian: GitHub Token kosong. Data hanya tersimpan di HP Anda dan belum disinkronkan ke publik.');
+    try {
+        showToast('Menyinkronkan database ke GitHub...');
+        await updateMainJsOnGitHub(githubToken);
+        showToast('Berhasil disimpan & disinkronkan ke publik!');
+    } catch (err) {
+        alert('Gagal sinkronisasi ke GitHub: ' + err.message);
+        return;
     }
 
     closeModalDirect('appFormModal');
@@ -440,12 +413,10 @@ async function saveAppFromForm() {
     renderApps();
 }
 
-// Helper untuk memperbarui file js/main.js secara otomatis di GitHub
 async function updateMainJsOnGitHub(githubToken) {
     let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
     let filePath = 'js/main.js';
     
-    // Ambil SHA file js/main.js yang ada di GitHub saat ini
     let getRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
         headers: {
             'Authorization': `token ${githubToken}`,
@@ -488,7 +459,6 @@ async function updateMainJsOnGitHub(githubToken) {
     }
 }
 
-// Helper Enkode & Dekode Base64 yang aman untuk teks Unicode/Emoji
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -511,7 +481,6 @@ function decodeBase64Unicode(base64) {
 async function deleteApp(id) {
     if (confirm('Hapus aplikasi ini?')) {
         dbApps = dbApps.filter(a => a.id !== id);
-        saveDatabase();
         renderAdminTable();
         renderApps();
         
@@ -524,8 +493,6 @@ async function deleteApp(id) {
             } catch (err) {
                 alert('Gagal sinkronisasi penghapusan: ' + err.message);
             }
-        } else {
-            showToast('Dihapus secara lokal.');
         }
     }
 }
