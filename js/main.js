@@ -42,6 +42,22 @@ let dbApps = [
                 "comment": "Lancar jaya!"
             }
         ]
+    },
+    {
+        "title": "KlikWaCepat",
+        "category": "android",
+        "status": "New",
+        "icon": "logo_1787488451101_1000262941.png",
+        "shortDesc": "Kirim pesan WhatsApp tanpa perlu menyimpan nomor ke kontak.",
+        "fullDesc": "Aplikasi praktis dan ringan untuk memulai percakapan WhatsApp ke nomor baru secara instan tanpa harus menyimpannya terlebih dahulu ke daftar kontak HP Anda. Cukup masukkan nomor tujuan dan langsung chat dengan cepat!\n",
+        "version": "V1.1",
+        "format": "APK File",
+        "downloadUrl": "ChatWACepat v1.1.apk",
+        "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 1.1.0.",
+        "id": 1787488454945,
+        "downloads": 0,
+        "reviews": [],
+        "screenshots": []
     }
 ];
 
