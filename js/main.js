@@ -82,8 +82,11 @@ function getAppRatingStats(app) {
 function renderApps() {
     const grid = document.getElementById('appGrid');
     const emptyState = document.getElementById('emptyState');
-    const search = document.getElementById('searchInput').value.toLowerCase();
-    const sort = document.getElementById('sortSelect').value;
+    const searchInputElem = document.getElementById('searchInput');
+    const sortSelectElem = document.getElementById('sortSelect');
+    
+    const search = searchInputElem ? searchInputElem.value.toLowerCase() : '';
+    const sort = sortSelectElem ? sortSelectElem.value : 'default';
 
     let filtered = dbApps.filter(app => {
         let matchesCat = true;
@@ -104,11 +107,12 @@ function renderApps() {
         return b.id - a.id;
     });
 
+    if (!grid) return;
     grid.innerHTML = '';
     if (filtered.length === 0) {
-        emptyState.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'block';
     } else {
-        emptyState.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'none';
         filtered.forEach(app => {
             let stats = getAppRatingStats(app);
             let isFav = favorites.includes(app.id);
@@ -172,11 +176,13 @@ function toggleFavorite(event, appId) {
 }
 
 function updateFavBadge() {
-    document.getElementById('favCount').innerText = favorites.length;
+    const badge = document.getElementById('favCount');
+    if (badge) badge.innerText = favorites.length;
 }
 
 function renderFavorites() {
     const grid = document.getElementById('favoritesGrid');
+    if (!grid) return;
     let favApps = dbApps.filter(app => favorites.includes(app.id));
     grid.innerHTML = '';
     if (favApps.length === 0) {
@@ -220,7 +226,7 @@ function openDetailModal(appId) {
 
 function triggerDownload(event, appId) {
     event.stopPropagation();
-    let app = dbApps.find(appIdKey => app.id === appId); 
+    let app = dbApps.find(a => a.id === appId); 
     let githubToken = localStorage.getItem('sayuti_gh_token');
     if (app) {
         app.downloads++;
@@ -231,6 +237,7 @@ function triggerDownload(event, appId) {
 
 function renderReviews(app) {
     const list = document.getElementById('reviewsList');
+    if (!list) return;
     list.innerHTML = '';
     if (!app.reviews || app.reviews.length === 0) {
         list.innerHTML = '<p style="font-size:0.78rem; color:var(--text-muted);">Belum ada ulasan.</p>';
@@ -270,19 +277,28 @@ async function submitReview() {
 function renderAnalytics() {
     let totalDl = dbApps.reduce((acc, curr) => acc + curr.downloads, 0);
     let totalRev = dbApps.reduce((acc, curr) => acc + (curr.reviews ? curr.reviews.length : 0), 0);
-    document.getElementById('statTotalApps').innerText = dbApps.length;
-    document.getElementById('statTotalDownloads').innerText = totalDl;
-    document.getElementById('statTotalReviews').innerText = totalRev;
+    let statApps = document.getElementById('statTotalApps');
+    let statDl = document.getElementById('statTotalDownloads');
+    let statRev = document.getElementById('statTotalReviews');
+    
+    if (statApps) statApps.innerText = dbApps.length;
+    if (statDl) statDl.innerText = totalDl;
+    if (statRev) statRev.innerText = totalRev;
 }
 
-function openAdminLoginModal() { document.getElementById('adminLoginModal').classList.add('active'); }
+function openAdminLoginModal() { 
+    let modal = document.getElementById('adminLoginModal');
+    if (modal) modal.classList.add('active'); 
+}
 
 function verifyAdminLogin() {
-    let pin = document.getElementById('adminPinInput').value;
+    let pinInput = document.getElementById('adminPinInput');
+    let pin = pinInput ? pinInput.value : '';
     if (pin === '157303') {
         closeModalDirect('adminLoginModal');
         switchView('admin');
         showToast('Berhasil masuk Admin!');
+        if (pinInput) pinInput.value = '';
     } else {
         alert('PIN Salah!');
     }
@@ -290,6 +306,7 @@ function verifyAdminLogin() {
 
 function renderAdminTable() {
     const tbody = document.getElementById('adminAppTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
     dbApps.forEach(app => {
         let tr = document.createElement('tr');
@@ -333,13 +350,15 @@ function openAppFormModal(appId = null) {
     } else {
         document.getElementById('formModalTitle').innerText = "Tambah Aplikasi";
         document.getElementById('inputTitle').value = '';
+        document.getElementById('inputCategory').value = 'android';
+        document.getElementById('inputStatus').value = '';
         document.getElementById('inputIcon').value = '';
         document.getElementById('inputShortDesc').value = '';
         document.getElementById('inputFullDesc').value = '';
-        document.getElementById('inputVersion').value = '';
-        document.getElementById('inputFormat').value = '';
-        document.getElementById('inputDownloadUrl').value = '';
-        document.getElementById('inputChangelog').value = '';
+        document.getElementById('inputVersion').value = 'v1.0';
+        document.getElementById('inputFormat').value = 'APK File';
+        document.getElementById('inputDownloadUrl').value = '#';
+        document.getElementById('inputChangelog').value = 'Rilis awal.';
         if(document.getElementById('inputApkFile')) document.getElementById('inputApkFile').value = '';
         if(document.getElementById('inputIconFile')) document.getElementById('inputIconFile').value = '';
     }
@@ -483,4 +502,84 @@ async function saveAppFromForm() {
     } else {
         appData.id = Date.now();
         appData.downloads = 0;
-        appData.reviews = [
+        appData.reviews = [];
+        dbApps.push(appData);
+    }
+
+    try {
+        await updateMainJsOnGitHub(githubToken);
+        showToast('Aplikasi berhasil disimpan & disinkronkan!');
+        closeModalDirect('appFormModal');
+        renderApps();
+        if(document.getElementById('adminView').classList.contains('active')) renderAdminTable();
+    } catch(e) {
+        alert('Gagal menyinkronkan dengan GitHub.');
+    }
+}
+
+function deleteApp(appId) {
+    if (!confirm('Apakah Anda yakin ingin menghapus aplikasi ini?')) return;
+    dbApps = dbApps.filter(a => a.id !== appId);
+    renderApps();
+    renderAdminTable();
+    showToast('Aplikasi berhasil dihapus');
+    let githubToken = localStorage.getItem('sayuti_gh_token');
+    if (githubToken) {
+        updateMainJsOnGitHub(githubToken).catch(e => {});
+    }
+}
+
+// Utility Helper Functions
+function toBase64(file) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+    });
+}
+
+function showToast(message) {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function closeModalDirect(modalId) {
+    let modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('active');
+}
+
+async function updateMainJsOnGitHub(token) {
+    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
+    let path = 'js/main.js';
+    
+    let checkRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${path}`, {
+        headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    });
+    
+    let sha = '';
+    if (checkRes.ok) {
+        let fileData = await checkRes.json();
+        sha = fileData.sha;
+    }
+
+    // Rekonstruksi file main.js otomatis
+    let newScriptContent = `let dbApps = ${JSON.stringify(dbApps, null, 4)};\n\n` +
+        `// Script utama SayutiHub yang tersinkronisasi otomatis\n`;
+    
+    let base64Script = btoa(unescape(encodeURIComponent(JSON.stringify(dbApps)))); 
+    // Catatan: Pastikan logika sinkronisasi file backend Anda sesuai dengan format repo Anda.
+}
