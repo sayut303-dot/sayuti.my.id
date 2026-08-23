@@ -3,1172 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pusat Unduhan Aplikasi - Powered by Sayuti</title>
-    <meta name="description" content="Akses cepat aplikasi karya mandiri gratis, aman, dan tanpa batas. Download aplikasi Android & Windows terlengkap.">
+    <title>SayutiHub v2 - Pusat Unduhan Aplikasi & Marketplace</title>
+    <meta name="description" content="Pusat unduhan aplikasi mandiri terlengkap dengan fitur modern, PWA, dan panel admin.">
     
-    <!-- Open Graph for Social Media Sharing -->
-    <meta property="og:title" content="Pusat Unduhan Aplikasi - Powered by Sayuti">
-    <meta property="og:description" content="Temukan dan unduh aplikasi pilihan terbaik secara gratis dan aman.">
-    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --primary-glow: rgba(99, 102, 241, 0.35);
-            --bg-body: #090d16;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --bg-card-hover: rgba(30, 41, 59, 0.9);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --accent-green: #10b981;
-            --accent-amber: #f59e0b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Background Glow Orbs */
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            z-index: -1;
-            pointer-events: none;
-        }
-        .glow-1 { top: -100px; left: -100px; width: 300px; height: 300px; background: rgba(99, 102, 241, 0.2); }
-        .glow-2 { top: 50%; right: -100px; width: 350px; height: 350px; background: rgba(192, 132, 252, 0.15); }
-
-        /* Navigation Bar */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 5%;
-            border-bottom: 1px solid var(--border-color);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(9, 13, 22, 0.85);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.15rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .brand i {
-            color: var(--primary);
-            font-size: 1.35rem;
-        }
-
-        .stats-badge {
-            display: flex;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .stats-badge span strong {
-            color: var(--text-main);
-        }
-
-        /* Header Hero */
-        header {
-            padding: 35px 20px 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-            line-height: 1.25;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
-
-        /* Container Utama */
-        .container {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 15px 16px 40px;
-            flex: 1;
-            width: 100%;
-        }
-
-        /* Controls Area */
-        .controls-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 22px;
-        }
-
-        .search-sort-row {
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-        }
-
-        @media (min-width: 640px) {
-            .search-sort-row {
-                flex-direction: row;
-            }
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-        }
-
-        .search-box i.fa-magnifying-glass {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 14px 40px 14px 46px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        .clear-search-btn {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: var(--text-muted);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            transition: background 0.2s;
-        }
-
-        .clear-search-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--text-main);
-        }
-
-        .sort-select {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-main);
-            padding: 0 16px;
-            font-size: 0.9rem;
-            outline: none;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            min-width: 170px;
-            height: 48px;
-            transition: border-color 0.3s;
-        }
-
-        .sort-select:focus {
-            border-color: var(--primary);
-        }
-
-        .sort-select option {
-            background: #1e293b;
-            color: var(--text-main);
-        }
-
-        /* Filter Tabs */
-        .filter-tabs {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            margin: 0 -16px;
-            padding-left: 16px;
-            padding-right: 16px;
-            scrollbar-width: none;
-        }
-
-        .filter-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.25s ease;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px var(--primary-glow);
-        }
-
-        /* App Grid Layout */
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-
-        /* App Card Styling */
-        .app-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            backdrop-filter: blur(12px);
-            transition: all 0.25s ease;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .app-card:hover {
-            border-color: rgba(99, 102, 241, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .app-card:active {
-            transform: scale(0.98);
-        }
-
-        .card-top {
-            margin-bottom: 14px;
-        }
-
-        .app-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 12px;
-        }
-
-        .app-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: #a5b4fc;
-            flex-shrink: 0;
-        }
-
-        .app-title-group {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .app-title-group h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 4px;
-            line-height: 1.3;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .badges {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            font-size: 0.7rem;
-            padding: 3px 7px;
-            border-radius: 6px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .badge-cat { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
-        .badge-status { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-
-        .app-desc {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            line-height: 1.45;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .app-rating {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: var(--accent-amber);
-        }
-
-        .app-rating span {
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.75rem;
-        }
-
-        .app-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed var(--border-color);
-        }
-
-        .btn-download {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            width: 100%;
-        }
-
-        .btn-download:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-download:active {
-            transform: scale(0.99);
-        }
-
-        /* Empty State */
-        .empty-state {
-            display: none;
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-muted);
-            grid-column: 1 / -1;
-        }
-
-        .empty-state i {
-            font-size: 2.8rem;
-            margin-bottom: 12px;
-            color: #475569;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-container {
-            background: #1e293b;
-            border: 1px solid var(--border-color);
-            border-radius: 24px 24px 0 0;
-            max-width: 600px;
-            width: 100%;
-            padding: 24px 20px 30px;
-            position: relative;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-container::before {
-            content: '';
-            width: 40px;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 2px;
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .modal-overlay.active .modal-container {
-            transform: translateY(0);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px; right: 16px;
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: var(--text-muted);
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-changelog {
-            background: rgba(15, 23, 42, 0.6);
-            padding: 14px;
-            border-radius: 12px;
-            margin: 15px 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* Review Section in Modal */
-        .reviews-section {
-            margin-top: 20px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 15px;
-        }
-
-        .reviews-section h4 {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .review-form {
-            background: rgba(15, 23, 42, 0.5);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .star-picker {
-            display: flex;
-            gap: 6px;
-            font-size: 1.3rem;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        .star-picker i.active {
-            color: var(--accent-amber);
-        }
-
-        .review-form input, .review-form textarea {
-            width: 100%;
-            padding: 10px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.88rem;
-            outline: none;
-        }
-
-        .review-form input:focus, .review-form textarea:focus {
-            border-color: var(--primary);
-        }
-
-        .btn-submit-review {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.85rem;
-            align-self: flex-end;
-            transition: all 0.2s;
-        }
-
-        .btn-submit-review:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .reviews-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-
-        .review-item {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.83rem;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .review-item-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-        }
-
-        .review-author {
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .review-stars {
-            color: var(--accent-amber);
-            font-size: 0.75rem;
-        }
-
-        .review-comment {
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: var(--accent-green);
-            color: #000;
-            font-weight: 700;
-            padding: 12px 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 2000;
-            font-size: 0.9rem;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 24px 20px;
-            background: rgba(9, 13, 22, 0.95);
-            border-top: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        footer strong { color: var(--primary); }
-
-        /* Desktop Adjustments */
-        @media (min-width: 640px) {
-            header { padding: 50px 20px 30px; }
-            header h1 { font-size: 2.5rem; }
-            .container { padding: 20px 20px 50px; }
-            .modal-overlay { align-items: center; }
-            .modal-container { 
-                border-radius: 24px; 
-                transform: scale(0.9);
-                padding: 30px;
-            }
-            .modal-container::before { display: none; }
-            .modal-overlay.active .modal-container { transform: scale(1); }
-            .toast {
-                left: auto;
-                right: 30px;
-                bottom: 30px;
-                width: auto;
-            }
-        }
-    </style>
+    
+    <!-- Menghubungkan ke folder CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div class="glow-orb glow-1"></div>
     <div class="glow-orb glow-2"></div>
 
-    <!-- Navigation Bar -->
     <nav>
-        <div class="brand">
+        <div class="brand" onclick="switchView('home')">
             <i class="fa-solid fa-cubes-stacked"></i>
-            <span>SayutiHub</span>
+            <span>SayutiHub <small style="color:var(--primary); font-size:0.65rem;">v2</small></span>
         </div>
-        <div class="stats-badge">
-            <span>App: <strong id="totalAppsCount">0</strong></span>
-            <span>|</span>
-            <span>Unduhan: <strong>12.4k+</strong></span>
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="switchView('favorites')"><i class="fa-solid fa-heart" style="color:var(--accent-rose)"></i> Favorit (<span id="favCount">0</span>)</button>
+            <button class="nav-btn" onclick="switchView('analytics')"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+            <button class="nav-btn primary-action" onclick="openAdminLoginModal()"><i class="fa-solid fa-lock"></i> Admin</button>
         </div>
     </nav>
 
-    <!-- Header / Hero Section -->
-    <header>
-        <h1>Pusat Unduhan Aplikasi</h1>
-        <p>Akses cepat aplikasi karya mandiri gratis, aman, & tanpa batas.</p>
+    <header id="mainHeader">
+        <h1>Pusat Unduhan v2</h1>
+        <p>Marketplace & pusat aplikasi mandiri dengan manajemen basis data dan panel admin.</p>
     </header>
 
-    <!-- Main Container -->
     <div class="container">
-        
-        <!-- Controls -->
-        <div class="controls-wrapper">
-            <div class="search-sort-row">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="Cari nama atau deskripsi aplikasi...">
-                    <button id="clearSearchBtn" class="clear-search-btn" onclick="clearSearch()"><i class="fa-solid fa-xmark"></i></button>
+        <div id="homeView" class="view-section active">
+            <div class="controls-wrapper">
+                <div class="search-sort-row">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" oninput="renderApps()" placeholder="Cari nama atau deskripsi...">
+                    </div>
+                    <select id="sortSelect" class="sort-select" onchange="renderApps()">
+                        <option value="default">Urutkan: Terbaru</option>
+                        <option value="name-asc">Nama (A - Z)</option>
+                        <option value="rating-desc">Rating Tertinggi</option>
+                        <option value="downloads-desc">Unduhan Terbanyak</option>
+                    </select>
                 </div>
-                <select id="sortSelect" class="sort-select" onchange="renderApps()">
-                    <option value="default">Urutkan: Terbaru</option>
-                    <option value="name-asc">Nama (A - Z)</option>
-                    <option value="rating-desc">Rating Tertinggi</option>
+
+                <div class="filter-tabs">
+                    <button class="filter-btn active" onclick="setCategory('all', this)"><i class="fa-solid fa-border-all"></i> Semua</button>
+                    <button class="filter-btn" onclick="setCategory('featured', this)"><i class="fa-solid fa-star"></i> Featured</button>
+                    <button class="filter-btn" onclick="setCategory('trending', this)"><i class="fa-solid fa-fire"></i> Trending</button>
+                    <button class="filter-btn" onclick="setCategory('android', this)"><i class="fa-brands fa-android"></i> Android</button>
+                    <button class="filter-btn" onclick="setCategory('windows', this)"><i class="fa-brands fa-windows"></i> Windows</button>
+                    <button class="filter-btn" onclick="setCategory('tools', this)"><i class="fa-solid fa-wrench"></i> Tools</button>
+                </div>
+            </div>
+
+            <div class="app-grid" id="appGrid"></div>
+            <div class="empty-state" id="emptyState" style="display:none; text-align:center; padding:40px; color:var(--text-muted);">
+                <i class="fa-solid fa-box-open" style="font-size:2.5rem; margin-bottom:8px;"></i>
+                <h3>Aplikasi Tidak Ditemukan</h3>
+            </div>
+        </div>
+
+        <div id="favoritesView" class="view-section">
+            <h2 style="margin-bottom: 15px; font-size: 1.2rem;"><i class="fa-solid fa-heart" style="color:var(--accent-rose);"></i> Aplikasi Favorit Anda</h2>
+            <div class="app-grid" id="favoritesGrid"></div>
+        </div>
+
+        <div id="analyticsView" class="view-section">
+            <div class="dashboard-header">
+                <h2 style="font-size: 1.2rem;"><i class="fa-solid fa-chart-line"></i> Analisis Sistem</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Aplikasi</h4>
+                    <div class="val" id="statTotalApps">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Unduhan</h4>
+                    <div class="val" id="statTotalDownloads">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Ulasan</h4>
+                    <div class="val" id="statTotalReviews">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="adminView" class="view-section">
+            <div class="dashboard-header">
+                <h2 style="font-size: 1.1rem;"><i class="fa-solid fa-user-shield"></i> Panel Admin</h2>
+                <div style="display:flex; gap:6px;">
+                    <button class="nav-btn primary-action" onclick="openAppFormModal()"><i class="fa-solid fa-plus"></i> Tambah</button>
+                    <button class="nav-btn" onclick="switchView('home')">Keluar</button>
+                </div>
+            </div>
+            <div class="admin-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aplikasi</th>
+                            <th>Kategori</th>
+                            <th>Versi</th>
+                            <th>Unduhan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminAppTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="detailModal" onclick="closeModal(event, 'detailModal')">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModalDirect('detailModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <div class="app-icon" id="detailIcon" style="width:54px; height:54px; font-size:1.6rem;"></div>
+                <div>
+                    <h2 id="detailTitle" style="font-size:1.15rem; margin-bottom:3px;"></h2>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">
+                        Versi: <span id="detailVersion" style="color:var(--text-main);"></span> | Format: <span id="detailFormat" style="color:var(--text-main);"></span> | Diunduh: <span id="detailDownloads" style="color:var(--text-main);"></span>x
+                    </div>
+                </div>
+            </div>
+            <p id="detailDesc" style="color:var(--text-muted); font-size:0.85rem; line-height:1.4; margin-bottom:12px;"></p>
+            <div style="background:rgba(15,23,42,0.6); padding:10px; border-radius:8px; margin-bottom:12px; font-size:0.8rem; color:var(--text-muted);">
+                <strong><i class="fa-solid fa-list-check"></i> Changelog:</strong>
+                <p id="detailChangelog" style="margin-top:3px;"></p>
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:15px;">
+                <a href="#" id="detailDownloadBtn" class="btn-download" style="flex:1;" onclick="incrementDownload()"><i class="fa-solid fa-download"></i> Unduh Sekarang</a>
+                <button class="nav-btn" onclick="openShareModal()"><i class="fa-solid fa-share-nodes"></i> QR</button>
+            </div>
+            <div style="border-top:1px solid var(--border-color); padding-top:12px;">
+                <h4 style="margin-bottom:8px; font-size:0.9rem;"><i class="fa-solid fa-star-half-stroke"></i> Ulasan</h4>
+                <div style="background:rgba(15,23,42,0.4); padding:10px; border-radius:8px; margin-bottom:12px; display:flex; flex-direction:column; gap:6px;">
+                    <div id="starPicker" style="display:flex; gap:5px; font-size:1.1rem; color:var(--accent-amber); cursor:pointer;">
+                        <i class="fa-solid fa-star" onclick="setRating(1)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(2)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(3)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(4)"></i>
+                        <i class="fa-solid fa-star" onclick="setRating(5)"></i>
+                    </div>
+                    <input type="text" id="reviewName" class="form-control" placeholder="Nama Anda..." maxlength="30">
+                    <textarea id="reviewComment" class="form-control" rows="2" placeholder="Tulis ulasan..." maxlength="150"></textarea>
+                    <button class="nav-btn primary-action" style="align-self:flex-end;" onclick="submitReview()">Kirim</button>
+                </div>
+                <div id="reviewsList" style="display:flex; flex-direction:column; gap:6px; max-height:140px; overflow-y:auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adminLoginModal" onclick="closeModal(event, 'adminLoginModal')">
+        <div class="modal-container" style="max-width:360px;">
+            <button class="modal-close" onclick="closeModalDirect('adminLoginModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="margin-bottom:12px; font-size:1.1rem;"><i class="fa-solid fa-lock"></i> Login Admin</h3>
+            <div class="form-group">
+                <label>PIN (Default: 1234)</label>
+                <input type="password" id="adminPinInput" class="form-control" placeholder="Masukkan PIN...">
+            </div>
+            <button class="nav-btn primary-action" style="width:100%; justify-content:center;" onclick="verifyAdminLogin()">Masuk</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModalDirect('appFormModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="formModalTitle" style="margin-bottom:12px; font-size:1.1rem;">Tambah Aplikasi</h3>
+            <input type="hidden" id="editAppId">
+            <div class="form-group">
+                <label>Nama Aplikasi</label>
+                <input type="text" id="inputTitle" class="form-control" placeholder="Contoh: Toko Sembako">
+            </div>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="inputCategory" class="form-control">
+                    <option value="android">Android</option>
+                    <option value="windows">Windows</option>
+                    <option value="tools">Tools</option>
                 </select>
             </div>
-
-            <!-- Scrollable Filter Tabs -->
-            <div class="filter-tabs">
-                <button class="filter-btn active" onclick="filterCategory('all', this)">
-                    <i class="fa-solid fa-border-all"></i> Semua
-                </button>
-                <button class="filter-btn" onclick="filterCategory('android', this)">
-                    <i class="fa-brands fa-android"></i> Android
-                </button>
-                <button class="filter-btn" onclick="filterCategory('windows', this)">
-                    <i class="fa-brands fa-windows"></i> Windows
-                </button>
-                <button class="filter-btn" onclick="filterCategory('tools', this)">
-                    <i class="fa-solid fa-wrench"></i> Tools
-                </button>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="inputStatus" class="form-control">
+                    <option value="">Normal</option>
+                    <option value="Featured">Featured</option>
+                    <option value="Trending">Trending</option>
+                    <option value="New">New</option>
+                </select>
             </div>
-        </div>
-
-        <!-- App Grid List -->
-        <div class="app-grid" id="appGrid"></div>
-
-        <!-- Empty State Response -->
-        <div class="empty-state" id="emptyState">
-            <i class="fa-solid fa-box-open"></i>
-            <h3>Tidak Ditemukan</h3>
-            <p>Coba kata kunci lain atau pilih kategori yang berbeda.</p>
-        </div>
-
-    </div>
-
-    <!-- Bottom Sheet Modal Popup with Reviews -->
-    <div class="modal-overlay" id="appModal" onclick="closeModal(event)">
-        <div class="modal-container" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModalDirect()"><i class="fa-solid fa-xmark"></i></button>
-            <h2 id="modalTitle" style="margin-bottom: 6px; font-size: 1.25rem;">Title</h2>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-                Versi: <span id="modalVersion" style="color: var(--text-main);"></span> | Format: <span id="modalFormat" style="color: var(--text-main);"></span>
+            <div class="form-group">
+                <label>Icon (FontAwesome)</label>
+                <input type="text" id="inputIcon" class="form-control" placeholder="fa-store">
             </div>
-            <p id="modalDesc" style="color: var(--text-muted); line-height: 1.5; font-size: 0.9rem;"></p>
+            <div class="form-group">
+                <label>Deskripsi Singkat</label>
+                <input type="text" id="inputShortDesc" class="form-control" placeholder="Ringkasan...">
+            </div>
+            <div class="form-group">
+                <label>Deskripsi Lengkap</label>
+                <textarea id="inputFullDesc" class="form-control" rows="2" placeholder="Penjelasan detail..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Versi & Format</label>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="inputVersion" class="form-control" placeholder="v1.0.0">
+                    <input type="text" id="inputFormat" class="form-control" placeholder="APK / 15 MB">
+                </div>
+            </div>
             
-            <div class="modal-changelog">
-                <strong><i class="fa-solid fa-list-check"></i> Catatan Pembaruan:</strong>
-                <p id="modalChangelog" style="margin-top: 4px;"></p>
+            <!-- TAMBAHAN INPUT UPLOAD FILE APK & GITHUB TOKEN -->
+            <div class="form-group">
+                <label>Pilih File APK</label>
+                <input type="file" id="inputApkFile" class="form-control" accept=".apk">
             </div>
-
-            <a href="#" id="modalDownloadLink" class="btn-download" style="margin-top: 15px;">
-                <i class="fa-solid fa-download"></i> Unduh Sekarang
-            </a>
-
-            <!-- Review & Rating Section -->
-            <div class="reviews-section">
-                <h4><i class="fa-solid fa-star-half-stroke"></i> Ulasan & Penilaian Pengguna</h4>
-                
-                <!-- Form Beri Ulasan -->
-                <div class="review-form">
-                    <div class="star-picker" id="starPicker">
-                        <i class="fa-solid fa-star active" data-value="1" onclick="setPickerRating(1)"></i>
-                        <i class="fa-solid fa-star active" data-value="2" onclick="setPickerRating(2)"></i>
-                        <i class="fa-solid fa-star active" data-value="3" onclick="setPickerRating(3)"></i>
-                        <i class="fa-solid fa-star active" data-value="4" onclick="setPickerRating(4)"></i>
-                        <i class="fa-solid fa-star active" data-value="5" onclick="setPickerRating(5)"></i>
-                    </div>
-                    <input type="text" id="reviewerName" placeholder="Nama Anda..." maxlength="30">
-                    <textarea id="reviewComment" rows="2" placeholder="Tulis ulasan Anda tentang aplikasi ini..." maxlength="150"></textarea>
-                    <button class="btn-submit-review" onclick="submitReview()"><i class="fa-solid fa-paper-plane"></i> Kirim Ulasan</button>
-                </div>
-
-                <!-- Daftar Ulasan -->
-                <div class="reviews-list" id="reviewsListContainer">
-                    <!-- Dinamis terisi dari JS -->
-                </div>
+            <div class="form-group">
+                <label>GitHub Token (Simpan sekali untuk selamanya)</label>
+                <input type="password" id="inputGithubToken" class="form-control" placeholder="ghp_xxxxxxxxxxxx">
             </div>
+            <!-- AKHIR TAMBAHAN -->
+
+            <div class="form-group">
+                <label>URL Unduhan (Opsional jika upload file di atas)</label>
+                <input type="text" id="inputDownloadUrl" class="form-control" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>Changelog</label>
+                <input type="text" id="inputChangelog" class="form-control" placeholder="Pembaruan...">
+            </div>
+            <button class="nav-btn primary-action" style="width:100%; justify-content:center;" onclick="saveAppFromForm()">Simpan</button>
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <div class="modal-overlay" id="shareModal" onclick="closeModal(event, 'shareModal')">
+        <div class="modal-container" style="max-width:340px; text-align:center;">
+            <button class="modal-close" onclick="closeModalDirect('shareModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="margin-bottom:8px; font-size:1.1rem;">Bagikan Aplikasi</h3>
+            <div id="qrcodeContainer" style="background:#fff; padding:12px; border-radius:10px; display:inline-block; margin-bottom:12px;">
+                <img id="qrImg" src="" alt="QR Code" style="width:150px; height:150px; display:block;">
+            </div>
+            <button class="nav-btn primary-action" style="width:100%; justify-content:center;" onclick="copyAppShareLink()"><i class="fa-solid fa-copy"></i> Salin Tautan</button>
+        </div>
+    </div>
+
     <div class="toast" id="toast">
         <i class="fa-solid fa-circle-check"></i>
-        <span id="toastMsg">Mengunduh aplikasi...</span>
+        <span id="toastMsg">Berhasil!</span>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Apps Store. Powered by <strong>Sayuti</strong></p>
+        <p>&copy; 2026 SayutiHub v2. Powered by <strong>Sayuti</strong></p>
     </footer>
 
-    <!-- JavaScript Engine with Reviews and LocalStorage -->
-    <script>
-        const defaultAppsData = [
-            {
-                id: 1,
-                title: "Toko Sembako",
-                category: "android",
-                status: "Updated",
-                icon: "fa-store",
-                shortDesc: "Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.",
-                fullDesc: "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis, riwayat kasir, dan rekap untung rugi harian.",
-                version: "v7.0",
-                format: "APK File",
-                downloadUrl: "https://github.com/sayut303-dot/sayuti/raw/main/tokoSembako%20v7.0.apk",
-                changelog: "Peningkatan stabilitas aplikasi, optimalisasi manajemen stok, perbaikan UI kasir, dan pembaruan performa database.",
-                reviews: [
-                    { name: "Budi Santoso", rating: 5, comment: "Sangat membantu kasir toko kelontong saya! Mantap." },
-                    { name: "Siti Rahma", rating: 5, comment: "Aplikasinya ringan dan mudah digunakan." }
-                ]
-            },
-            {
-                id: 2,
-                title: "Kalkulator Toko",
-                category: "tools",
-                status: null,
-                icon: "fa-calculator",
-                shortDesc: "Aplikasi pencatat transaksi harian & rekap keuangan otomatis untuk UMKM.",
-                fullDesc: "Aplikasi pencatat transaksi harian kilat. Cocok untuk menghitung total belanjaan dengan cepat disertai fungsi diskon dan cetak nota digital.",
-                version: "v2.1.0",
-                format: "12 MB",
-                downloadUrl: "#",
-                changelog: "Fitur baru hitung kembalian cepat dan ekspor laporan bulanan ke PDF.",
-                reviews: [
-                    { name: "Joko Anwar", rating: 4, comment: "Cukup praktis buat hitung cepat." }
-                ]
-            },
-            {
-                id: 3,
-                title: "Sayuti AutoClicker",
-                category: "windows",
-                status: "New",
-                icon: "fa-laptop-code",
-                shortDesc: "Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.",
-                fullDesc: "Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi dengan kustomisasi interval milidetik dan tombol pemicu (hotkey).",
-                version: "v1.0.0",
-                format: "8 MB",
-                downloadUrl: "#",
-                changelog: "Rilis awal dengan dukungan Multi-Point Clicking.",
-                reviews: [
-                    { name: "Rian Gamer", rating: 5, comment: "Lancar jaya di Windows 10, tanpa lag!" }
-                ]
-            },
-            {
-                id: 4,
-                title: "Vidioplayer Debug",
-                category: "android",
-                status: "New",
-                icon: "fa-video",
-                shortDesc: "Aplikasi pemutar video Android dengan mode debug untuk pengujian media.",
-                fullDesc: "Pemutar video khusus Android yang dilengkapi panel informasi debug, mendukung berbagai format file video populer dengan kontrol pemutaran optimal.",
-                version: "v1.0-debug",
-                format: "APK File",
-                downloadUrl: "https://github.com/sayut303-dot/sayuti.my.id/raw/6573284a29499d749635f0ac213105f410476707/vidioplayer-debug.apk",
-                changelog: "Rilis versi debug awal untuk uji coba dan pemantauan performa pemutar video.",
-                reviews: [
-                    { name: "Sayuti", rating: 5, comment: "Versi debug stabil untuk tes video." }
-                ]
-            }
-        ];
-
-        let appsData = [];
-        let currentCategory = 'all';
-        let currentActiveAppId = null;
-        let selectedPickerRating = 5;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAppsFromStorage();
-            renderApps();
-        });
-
-        function loadAppsFromStorage() {
-            const savedData = localStorage.getItem('sayuti_hub_apps_data');
-            if (savedData) {
-                try {
-                    let parsed = JSON.parse(savedData);
-                    // Cek dan tambahkan aplikasi baru dari defaultAppsData secara otomatis
-                    defaultAppsData.forEach(defApp => {
-                        let exists = parsed.find(p => p.id === defApp.id);
-                        if (!exists) {
-                            parsed.push(defApp);
-                        }
-                    });
-                    appsData = parsed;
-                } catch (e) {
-                    appsData = defaultAppsData;
-                }
-            } else {
-                appsData = defaultAppsData;
-            }
-            saveAppsToStorage();
-        }
-
-        function saveAppsToStorage() {
-            localStorage.setItem('sayuti_hub_apps_data', JSON.stringify(appsData));
-        }
-
-        function getAppRatingStats(app) {
-            if (!app.reviews || app.reviews.length === 0) {
-                return { average: 5.0, count: 0 };
-            }
-            let sum = app.reviews.reduce((acc, item) => acc + item.rating, 0);
-            let avg = (sum / app.reviews.length).toFixed(1);
-            return { average: parseFloat(avg), count: app.reviews.length };
-        }
-
-        function renderApps() {
-            const grid = document.getElementById('appGrid');
-            const emptyState = document.getElementById('emptyState');
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            const sortValue = document.getElementById('sortSelect').value;
-
-            // 1. Filter by category & search
-            let filtered = appsData.filter(app => {
-                const matchesCat = (currentCategory === 'all') || (app.category === currentCategory);
-                const matchesSearch = app.title.toLowerCase().includes(searchInput) || app.shortDesc.toLowerCase().includes(searchInput);
-                return matchesCat && matchesSearch;
-            });
-
-            // 2. Sort apps
-            filtered.sort((a, b) => {
-                let statsA = getAppRatingStats(a);
-                let statsB = getAppRatingStats(b);
-                if (sortValue === 'name-asc') {
-                    return a.title.localeCompare(b.title);
-                } else if (sortValue === 'rating-desc') {
-                    return statsB.average - statsA.average;
-                }
-                return b.id - a.id; // default (terbaru)
-            });
-
-            // 3. Render HTML cards
-            grid.innerHTML = '';
-            if (filtered.length === 0) {
-                emptyState.style.display = 'block';
-            } else {
-                emptyState.style.display = 'none';
-                filtered.forEach(app => {
-                    let statusBadge = app.status ? `<span class="badge badge-status">${app.status}</span>` : '';
-                    let ratingStats = getAppRatingStats(app);
-                    let starsHTML = getStarRatingHTML(ratingStats.average);
-
-                    let card = document.createElement('div');
-                    card.className = 'app-card';
-                    card.onclick = () => openModal(app.id);
-                    card.innerHTML = `
-                        <div class="card-top">
-                            <div class="app-header">
-                                <div class="app-icon"><i class="fa-solid ${app.icon}"></i></div>
-                                <div class="app-title-group">
-                                    <h3>${app.title}</h3>
-                                    <div class="badges">
-                                        <span class="badge badge-cat">${app.category}</span>
-                                        ${statusBadge}
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="app-desc">${app.shortDesc}</p>
-                            <div class="app-rating">
-                                ${starsHTML}
-                                <span>${ratingStats.average} (${ratingStats.count})</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="app-meta">
-                                <span><i class="fa-solid ${app.category === 'windows' ? 'fa-hard-drive' : 'fa-file-arrow-down'}"></i> ${app.format}</span>
-                                <span><i class="fa-solid fa-code-branch"></i> ${app.version}</span>
-                            </div>
-                            <a href="${app.downloadUrl}" class="btn-download" onclick="triggerToast(event, '${app.title}')">
-                                <i class="fa-solid fa-download"></i> Unduh ${app.category === 'windows' ? 'EXE' : 'APK'}
-                            </a>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-
-            document.getElementById('totalAppsCount').innerText = filtered.length;
-        }
-
-        function getStarRatingHTML(rating) {
-            let fullStars = Math.floor(rating);
-            let hasHalf = (rating - fullStars) >= 0.5;
-            let html = '';
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    html += '<i class="fa-solid fa-star"></i>';
-                } else if (i === fullStars && hasHalf) {
-                    html += '<i class="fa-solid fa-star-half-stroke"></i>';
-                } else {
-                    html += '<i class="fa-regular fa-star"></i>';
-                }
-            }
-            return html;
-        }
-
-        function filterCategory(category, element) {
-            currentCategory = category;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            renderApps();
-        }
-
-        function handleSearchInput() {
-            const inputVal = document.getElementById('searchInput').value;
-            const clearBtn = document.getElementById('clearSearchBtn');
-            clearBtn.style.display = inputVal.length > 0 ? 'flex' : 'none';
-            renderApps();
-        }
-
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('clearSearchBtn').style.display = 'none';
-            renderApps();
-        }
-
-        function openModal(appId) {
-            currentActiveAppId = appId;
-            let app = appsData.find(item => item.id === appId);
-            if (!app) return;
-
-            document.getElementById('modalTitle').innerText = app.title;
-            document.getElementById('modalDesc').innerText = app.fullDesc;
-            document.getElementById('modalVersion').innerText = app.version;
-            document.getElementById('modalFormat').innerText = app.format;
-            document.getElementById('modalChangelog').innerText = app.changelog;
-            
-            let dlBtn = document.getElementById('modalDownloadLink');
-            dlBtn.href = app.downloadUrl;
-            dlBtn.onclick = (e) => triggerToast(e, app.title);
-
-            // Reset review form inputs
-            document.getElementById('reviewerName').value = '';
-            document.getElementById('reviewComment').value = '';
-            setPickerRating(5);
-
-            renderModalReviews(app);
-            document.getElementById('appModal').classList.add('active');
-        }
-
-        function renderModalReviews(app) {
-            const container = document.getElementById('reviewsListContainer');
-            container.innerHTML = '';
-
-            if (!app.reviews || app.reviews.length === 0) {
-                container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding: 10px;">Belum ada ulasan. Jadilah yang pertama memberikan ulasan!</p>';
-                return;
-            }
-
-            let reversedReviews = [...app.reviews].reverse();
-            reversedReviews.forEach(rev => {
-                let stars = '';
-                for (let i = 1; i <= 5; i++) {
-                    stars += i <= rev.rating ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
-                }
-
-                let item = document.createElement('div');
-                item.className = 'review-item';
-                item.innerHTML = `
-                    <div class="review-item-header">
-                        <span class="review-author">${escapeHTML(rev.name)}</span>
-                        <div class="review-stars">${stars}</div>
-                    </div>
-                    <div class="review-comment">${escapeHTML(rev.comment)}</div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function setPickerRating(rating) {
-            selectedPickerRating = rating;
-            const stars = document.querySelectorAll('#starPicker i');
-            stars.forEach((star, index) => {
-                if (index < rating) {
-                    star.className = "fa-solid fa-star active";
-                } else {
-                    star.className = "fa-regular fa-star";
-                    star.classList.remove('active');
-                }
-            });
-        }
-
-        function submitReview() {
-            let name = document.getElementById('reviewerName').value.trim();
-            let comment = document.getElementById('reviewComment').value.trim();
-
-            if (!name) {
-                alert('Mohon masukkan nama Anda terlebih dahulu.');
-                return;
-            }
-            if (!comment) {
-                alert('Mohon tuliskan ulasan Anda.');
-                return;
-            }
-
-            let app = appsData.find(item => item.id === currentActiveAppId);
-            if (!app) return;
-
-            if (!app.reviews) {
-                app.reviews = [];
-            }
-
-            app.reviews.push({
-                name: name,
-                rating: selectedPickerRating,
-                comment: comment
-            });
-
-            saveAppsToStorage();
-            renderModalReviews(app);
-            renderApps();
-
-            document.getElementById('reviewerName').value = '';
-            document.getElementById('reviewComment').value = '';
-            
-            showToastMessage('Ulasan berhasil dikirim!');
-        }
-
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
-
-        function closeModal(event) {
-            if (event.target === document.getElementById('appModal')) {
-                document.getElementById('appModal').classList.remove('active');
-            }
-        }
-
-        function closeModalDirect() {
-            document.getElementById('appModal').classList.remove('active');
-        }
-
-        function triggerToast(event, appName) {
-            event.stopPropagation();
-            showToastMessage('Mengunduh ' + appName + '...');
-        }
-
-        function showToastMessage(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-    </script>
+    <!-- Menghubungkan ke folder JS -->
+    <script src="js/main.js"></script>
 </body>
 </html>
