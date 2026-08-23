@@ -897,14 +897,22 @@
             const savedData = localStorage.getItem('sayuti_hub_apps_data');
             if (savedData) {
                 try {
-                    appsData = JSON.parse(savedData);
+                    let parsed = JSON.parse(savedData);
+                    // Cek dan tambahkan aplikasi baru dari defaultAppsData secara otomatis
+                    defaultAppsData.forEach(defApp => {
+                        let exists = parsed.find(p => p.id === defApp.id);
+                        if (!exists) {
+                            parsed.push(defApp);
+                        }
+                    });
+                    appsData = parsed;
                 } catch (e) {
                     appsData = defaultAppsData;
                 }
             } else {
                 appsData = defaultAppsData;
-                saveAppsToStorage();
             }
+            saveAppsToStorage();
         }
 
         function saveAppsToStorage() {
@@ -1164,4 +1172,3 @@
     </script>
 </body>
 </html>
-
