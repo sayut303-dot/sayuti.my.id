@@ -42,22 +42,6 @@ let dbApps = [
                 "comment": "Lancar jaya!"
             }
         ]
-    },
-    {
-        "title": "Testii",
-        "category": "android",
-        "status": "Featured",
-        "icon": "fa-cube",
-        "shortDesc": "",
-        "fullDesc": "",
-        "version": "V 2",
-        "format": "APK File",
-        "downloadUrl": "Beta.apk",
-        "changelog": "Pembaruan rutin.",
-        "id": 1787474815264,
-        "downloads": 0,
-        "reviews": [],
-        "screenshots": []
     }
 ];
 
