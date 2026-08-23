@@ -366,8 +366,8 @@ async function saveAppFromForm() {
             let base64Content = await toBase64(apkFileInput);
             let fileName = apkFileInput.name;
             
-            // CATATAN: Ganti 'sayut303-dot/sayut303-dot.github.io' jika nama repository GitHub Anda berbeda
-            let repoOwnerAndName = 'sayut303-dot/sayut303-dot.github.io'; 
+            // Repository target yang sudah disesuaikan
+            let repoOwnerAndName = 'sayut303-dot/sayuti.my.id'; 
             
             let response = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${fileName}`, {
                 method: 'PUT',
