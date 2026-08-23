@@ -310,7 +310,6 @@ function renderAdminTable() {
 function openAppFormModal(appId = null) {
     document.getElementById('editAppId').value = appId || '';
     
-    // Muat token GitHub yang tersimpan di browser jika ada
     let savedToken = localStorage.getItem('sayuti_gh_token');
     if (savedToken && document.getElementById('inputGithubToken')) {
         document.getElementById('inputGithubToken').value = savedToken;
@@ -343,7 +342,7 @@ function openAppFormModal(appId = null) {
     document.getElementById('appFormModal').classList.add('active');
 }
 
-// Fungsi Utama: Menyimpan Aplikasi & Upload Otomatis ke GitHub via API
+// Fungsi Utama: Menyimpan Aplikasi, Upload APK, & Sinkronisasi Otomatis ke GitHub
 async function saveAppFromForm() {
     let id = document.getElementById('editAppId').value;
     let title = document.getElementById('inputTitle').value.trim();
@@ -354,20 +353,18 @@ async function saveAppFromForm() {
 
     let downloadUrl = document.getElementById('inputDownloadUrl').value || '#';
     let format = document.getElementById('inputFormat').value || 'APK File';
+    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
 
-    // Jika file APK dipilih dan GitHub Token diisi, upload otomatis ke GitHub repository
+    if (githubToken) {
+        localStorage.setItem('sayuti_gh_token', githubToken);
+    }
+
+    // Jika file APK dipilih dan token ada, upload file APK ke GitHub
     if (apkFileInput && githubToken) {
         showToast('Mengunggah file APK ke GitHub...');
-        
-        // Simpan token ke localStorage agar otomatis terisi nanti
-        localStorage.setItem('sayuti_gh_token', githubToken);
-
         try {
             let base64Content = await toBase64(apkFileInput);
             let fileName = apkFileInput.name;
-            
-            // Repository target yang sudah disesuaikan
-            let repoOwnerAndName = 'sayut303-dot/sayuti.my.id'; 
             
             let response = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${fileName}`, {
                 method: 'PUT',
@@ -382,16 +379,16 @@ async function saveAppFromForm() {
             });
 
             if (response.ok) {
-                downloadUrl = fileName; // Mengarah langsung ke file APK di root repo
+                downloadUrl = fileName; 
                 format = 'APK File';
-                showToast('APK Berhasil di-upload ke GitHub!');
+                showToast('APK Berhasil di-upload!');
             } else {
                 let errData = await response.json();
-                alert('Gagal upload ke GitHub: ' + (errData.message || 'Periksa kembali token Anda.'));
+                alert('Gagal upload APK ke GitHub: ' + (errData.message || 'Periksa kembali token Anda.'));
                 return;
             }
         } catch (error) {
-            alert('Terjadi kesalahan jaringan saat proses upload.');
+            alert('Terjadi kesalahan jaringan saat upload APK.');
             return;
         }
     }
@@ -411,7 +408,9 @@ async function saveAppFromForm() {
 
     if (id) {
         let idx = dbApps.findIndex(a => a.id == id);
-        if (idx !== -1) dbApps[idx] = { ...dbApps[idx], ...appData };
+        if (idx !== -1) {
+            dbApps[idx] = { ...dbApps[idx], ...appData };
+        }
     } else {
         appData.id = Date.now();
         appData.downloads = 0;
@@ -421,13 +420,75 @@ async function saveAppFromForm() {
     }
 
     saveDatabase();
+
+    // SINKRONISASI OTOMATIS: Update file js/main.js di GitHub agar muncul di HP orang lain
+    if (githubToken) {
+        try {
+            showToast('Menyinkronkan database ke GitHub...');
+            await updateMainJsOnGitHub(githubToken);
+            showToast('Berhasil disimpan & disinkronkan ke publik!');
+        } catch (err) {
+            alert('Gagal sinkronisasi database ke GitHub: ' + err.message);
+            return;
+        }
+    } else {
+        alert('Perhatian: GitHub Token kosong. Data hanya tersimpan di HP Anda dan belum disinkronkan ke publik.');
+    }
+
     closeModalDirect('appFormModal');
     renderAdminTable();
     renderApps();
-    showToast('Aplikasi berhasil disimpan!');
 }
 
-// Helper untuk mengubah file APK menjadi Base64 (syarat format GitHub API)
+// Helper untuk memperbarui file js/main.js secara otomatis di GitHub
+async function updateMainJsOnGitHub(githubToken) {
+    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
+    let filePath = 'js/main.js';
+    
+    // Ambil SHA file js/main.js yang ada di GitHub saat ini
+    let getRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
+        headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    });
+    
+    if (!getRes.ok) throw new Error('Gagal mengambil file js/main.js dari GitHub.');
+    let fileData = await getRes.json();
+    let sha = fileData.sha;
+    
+    let currentCode = decodeBase64Unicode(fileData.content);
+    let newDbAppsString = `let dbApps = ${JSON.stringify(dbApps, null, 4)};`;
+    
+    let startIndex = currentCode.indexOf('let dbApps =');
+    let endIndex = currentCode.indexOf('let favorites =');
+    
+    if (startIndex !== -1 && endIndex !== -1) {
+        let updatedCode = currentCode.substring(0, startIndex) + newDbAppsString + '\n\n' + currentCode.substring(endIndex);
+        
+        let putRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: 'Update dbApps automatically via Admin Panel',
+                content: encodeBase64Unicode(updatedCode),
+                sha: sha
+            })
+        });
+        
+        if (!putRes.ok) {
+            let errData = await putRes.json();
+            throw new Error(errData.message || 'Gagal memperbarui file js/main.js.');
+        }
+    } else {
+        throw new Error('Format file js/main.js tidak dikenali.');
+    }
+}
+
+// Helper Enkode & Dekode Base64 yang aman untuk teks Unicode/Emoji
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -435,13 +496,37 @@ const toBase64 = file => new Promise((resolve, reject) => {
     reader.onerror = error => reject(error);
 });
 
-function deleteApp(id) {
+function encodeBase64Unicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+    }));
+}
+
+function decodeBase64Unicode(base64) {
+    return decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+
+async function deleteApp(id) {
     if (confirm('Hapus aplikasi ini?')) {
         dbApps = dbApps.filter(a => a.id !== id);
         saveDatabase();
         renderAdminTable();
         renderApps();
-        showToast('Dihapus.');
+        
+        let githubToken = localStorage.getItem('sayuti_gh_token');
+        if (githubToken) {
+            try {
+                showToast('Menghapus & menyinkronkan ke GitHub...');
+                await updateMainJsOnGitHub(githubToken);
+                showToast('Berhasil dihapus dari publik!');
+            } catch (err) {
+                alert('Gagal sinkronisasi penghapusan: ' + err.message);
+            }
+        } else {
+            showToast('Dihapus secara lokal.');
+        }
     }
 }
 
