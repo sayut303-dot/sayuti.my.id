@@ -51,13 +51,18 @@ let activeAppId = null;
 let selectedRating = 5;
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderApps();
-    updateFavBadge();
+    try {
+        renderApps();
+        updateFavBadge();
+    } catch (err) {
+        console.error("Error saat init:", err);
+    }
 });
 
 function switchView(viewName) {
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-    document.getElementById(viewName + 'View').classList.add('active');
+    let targetView = document.getElementById(viewName + 'View');
+    if (targetView) targetView.classList.add('active');
     
     if(viewName === 'favorites') renderFavorites();
     if(viewName === 'analytics') renderAnalytics();
@@ -69,7 +74,7 @@ function switchView(viewName) {
 function setCategory(cat, btn) {
     currentCategory = cat;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     renderApps();
 }
 
@@ -81,6 +86,8 @@ function getAppRatingStats(app) {
 
 function renderApps() {
     const grid = document.getElementById('appGrid');
+    if (!grid) return; // Mencegah error jika elemen belum siap
+
     const emptyState = document.getElementById('emptyState');
     const searchInputElem = document.getElementById('searchInput');
     const sortSelectElem = document.getElementById('sortSelect');
@@ -107,7 +114,6 @@ function renderApps() {
         return b.id - a.id;
     });
 
-    if (!grid) return;
     grid.innerHTML = '';
     if (filtered.length === 0) {
         if (emptyState) emptyState.style.display = 'block';
@@ -172,7 +178,6 @@ function toggleFavorite(event, appId) {
     localStorage.setItem('sayuti_favs', JSON.stringify(favorites));
     updateFavBadge();
     renderApps();
-    if(document.getElementById('favoritesView').classList.contains('active')) renderFavorites();
 }
 
 function updateFavBadge() {
@@ -186,7 +191,7 @@ function renderFavorites() {
     let favApps = dbApps.filter(app => favorites.includes(app.id));
     grid.innerHTML = '';
     if (favApps.length === 0) {
-        grid.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Belum ada aplikasi favorit.</p>';
+        grid.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem; padding:10px;">Belum ada aplikasi favorit.</p>';
         return;
     }
     favApps.forEach(app => {
@@ -211,27 +216,27 @@ function openDetailModal(appId) {
         ? `<i class="fa-solid ${app.icon}"></i>` 
         : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
-    document.getElementById('detailTitle').innerText = app.title;
-    document.getElementById('detailDesc').innerText = app.fullDesc;
-    document.getElementById('detailVersion').innerText = app.version;
-    document.getElementById('detailFormat').innerText = app.format;
-    document.getElementById('detailDownloads').innerText = app.downloads;
-    document.getElementById('detailChangelog').innerText = app.changelog;
-    document.getElementById('detailIcon').innerHTML = iconContent;
-    document.getElementById('detailDownloadBtn').href = app.downloadUrl;
+    if(document.getElementById('detailTitle')) document.getElementById('detailTitle').innerText = app.title;
+    if(document.getElementById('detailDesc')) document.getElementById('detailDesc').innerText = app.fullDesc;
+    if(document.getElementById('detailVersion')) document.getElementById('detailVersion').innerText = app.version;
+    if(document.getElementById('detailFormat')) document.getElementById('detailFormat').innerText = app.format;
+    if(document.getElementById('detailDownloads')) document.getElementById('detailDownloads').innerText = app.downloads;
+    if(document.getElementById('detailChangelog')) document.getElementById('detailChangelog').innerText = app.changelog;
+    if(document.getElementById('detailIcon')) document.getElementById('detailIcon').innerHTML = iconContent;
+    if(document.getElementById('detailDownloadBtn')) document.getElementById('detailDownloadBtn').href = app.downloadUrl;
 
     renderReviews(app);
-    document.getElementById('detailModal').classList.add('active');
+    let modal = document.getElementById('detailModal');
+    if(modal) modal.classList.add('active');
 }
 
 function triggerDownload(event, appId) {
     event.stopPropagation();
     let app = dbApps.find(a => a.id === appId); 
-    let githubToken = localStorage.getItem('sayuti_gh_token');
     if (app) {
         app.downloads++;
-        if (githubToken) updateMainJsOnGitHub(githubToken).catch(e => {});
         showToast('Mengunduh ' + app.title + '...');
+        renderApps();
     }
 }
 
@@ -246,7 +251,7 @@ function renderReviews(app) {
     app.reviews.forEach(r => {
         let stars = '<i class="fa-solid fa-star"></i>'.repeat(r.rating);
         let item = document.createElement('div');
-        item.style.cssText = "background:rgba(255,255,255,0.03); padding:6px 8px; border-radius:6px; font-size:0.78rem;";
+        item.style.cssText = "background:rgba(255,255,255,0.03); padding:6px 8px; border-radius:6px; font-size:0.78rem; margin-bottom:4px;";
         item.innerHTML = `<strong>${r.name}</strong> <span style="color:var(--accent-amber)">${stars}</span><br><span style="color:var(--text-muted);">${r.comment}</span>`;
         list.appendChild(item);
     });
@@ -254,29 +259,29 @@ function renderReviews(app) {
 
 function setRating(r) { selectedRating = r; }
 
-async function submitReview() {
-    let name = document.getElementById('reviewName').value.trim();
-    let comment = document.getElementById('reviewComment').value.trim();
+function submitReview() {
+    let nameElem = document.getElementById('reviewName');
+    let commentElem = document.getElementById('reviewComment');
+    let name = nameElem ? nameElem.value.trim() : '';
+    let comment = commentElem ? commentElem.value.trim() : '';
+    
     if (!name || !comment) { alert('Nama dan ulasan wajib diisi.'); return; }
     let app = dbApps.find(a => a.id === activeAppId);
+    if (!app) return;
     if (!app.reviews) app.reviews = [];
     app.reviews.push({ name, rating: selectedRating, comment });
     
     renderReviews(app);
     renderApps();
-    document.getElementById('reviewName').value = '';
-    document.getElementById('reviewComment').value = '';
+    if (nameElem) nameElem.value = '';
+    if (commentElem) commentElem.value = '';
     showToast('Ulasan terkirim!');
-
-    let githubToken = localStorage.getItem('sayuti_gh_token');
-    if (githubToken) {
-        try { await updateMainJsOnGitHub(githubToken); } catch(e) {}
-    }
 }
 
 function renderAnalytics() {
     let totalDl = dbApps.reduce((acc, curr) => acc + curr.downloads, 0);
     let totalRev = dbApps.reduce((acc, curr) => acc + (curr.reviews ? curr.reviews.length : 0), 0);
+    
     let statApps = document.getElementById('statTotalApps');
     let statDl = document.getElementById('statTotalDownloads');
     let statRev = document.getElementById('statTotalReviews');
@@ -327,171 +332,70 @@ function renderAdminTable() {
 }
 
 function openAppFormModal(appId = null) {
-    document.getElementById('editAppId').value = appId || '';
+    let editIdElem = document.getElementById('editAppId');
+    if (editIdElem) editIdElem.value = appId || '';
     
     let savedToken = localStorage.getItem('sayuti_gh_token');
-    if (savedToken && document.getElementById('inputGithubToken')) {
-        document.getElementById('inputGithubToken').value = savedToken;
+    let tokenElem = document.getElementById('inputGithubToken');
+    if (savedToken && tokenElem) {
+        tokenElem.value = savedToken;
     }
 
     if (appId) {
         let app = dbApps.find(a => a.id === appId);
-        document.getElementById('formModalTitle').innerText = "Edit Aplikasi";
-        document.getElementById('inputTitle').value = app.title;
-        document.getElementById('inputCategory').value = app.category;
-        document.getElementById('inputStatus').value = app.status || '';
-        document.getElementById('inputIcon').value = app.icon && app.icon.startsWith('fa-') ? app.icon : '';
-        document.getElementById('inputShortDesc').value = app.shortDesc;
-        document.getElementById('inputFullDesc').value = app.fullDesc;
-        document.getElementById('inputVersion').value = app.version;
-        document.getElementById('inputFormat').value = app.format;
-        document.getElementById('inputDownloadUrl').value = app.downloadUrl;
-        document.getElementById('inputChangelog').value = app.changelog;
+        if (app) {
+            if(document.getElementById('formModalTitle')) document.getElementById('formModalTitle').innerText = "Edit Aplikasi";
+            if(document.getElementById('inputTitle')) document.getElementById('inputTitle').value = app.title;
+            if(document.getElementById('inputCategory')) document.getElementById('inputCategory').value = app.category;
+            if(document.getElementById('inputStatus')) document.getElementById('inputStatus').value = app.status || '';
+            if(document.getElementById('inputIcon')) document.getElementById('inputIcon').value = app.icon && app.icon.startsWith('fa-') ? app.icon : '';
+            if(document.getElementById('inputShortDesc')) document.getElementById('inputShortDesc').value = app.shortDesc;
+            if(document.getElementById('inputFullDesc')) document.getElementById('inputFullDesc').value = app.fullDesc;
+            if(document.getElementById('inputVersion')) document.getElementById('inputVersion').value = app.version;
+            if(document.getElementById('inputFormat')) document.getElementById('inputFormat').value = app.format;
+            if(document.getElementById('inputDownloadUrl')) document.getElementById('inputDownloadUrl').value = app.downloadUrl;
+            if(document.getElementById('inputChangelog')) document.getElementById('inputChangelog').value = app.changelog;
+        }
     } else {
-        document.getElementById('formModalTitle').innerText = "Tambah Aplikasi";
-        document.getElementById('inputTitle').value = '';
-        document.getElementById('inputCategory').value = 'android';
-        document.getElementById('inputStatus').value = '';
-        document.getElementById('inputIcon').value = '';
-        document.getElementById('inputShortDesc').value = '';
-        document.getElementById('inputFullDesc').value = '';
-        document.getElementById('inputVersion').value = 'v1.0';
-        document.getElementById('inputFormat').value = 'APK File';
-        document.getElementById('inputDownloadUrl').value = '#';
-        document.getElementById('inputChangelog').value = 'Rilis awal.';
-        if(document.getElementById('inputApkFile')) document.getElementById('inputApkFile').value = '';
-        if(document.getElementById('inputIconFile')) document.getElementById('inputIconFile').value = '';
+        if(document.getElementById('formModalTitle')) document.getElementById('formModalTitle').innerText = "Tambah Aplikasi";
+        if(document.getElementById('inputTitle')) document.getElementById('inputTitle').value = '';
+        if(document.getElementById('inputCategory')) document.getElementById('inputCategory').value = 'android';
+        if(document.getElementById('inputStatus')) document.getElementById('inputStatus').value = '';
+        if(document.getElementById('inputIcon')) document.getElementById('inputIcon').value = '';
+        if(document.getElementById('inputShortDesc')) document.getElementById('inputShortDesc').value = '';
+        if(document.getElementById('inputFullDesc')) document.getElementById('inputFullDesc').value = '';
+        if(document.getElementById('inputVersion')) document.getElementById('inputVersion').value = 'v1.0';
+        if(document.getElementById('inputFormat')) document.getElementById('inputFormat').value = 'APK File';
+        if(document.getElementById('inputDownloadUrl')) document.getElementById('inputDownloadUrl').value = '#';
+        if(document.getElementById('inputChangelog')) document.getElementById('inputChangelog').value = 'Rilis awal.';
     }
-    document.getElementById('appFormModal').classList.add('active');
+    let modal = document.getElementById('appFormModal');
+    if(modal) modal.classList.add('active');
 }
 
 async function saveAppFromForm() {
-    let id = document.getElementById('editAppId').value;
-    let title = document.getElementById('inputTitle').value.trim();
-    let apkFileInput = document.getElementById('inputApkFile') ? document.getElementById('inputApkFile').files[0] : null;
-    let iconFileInput = document.getElementById('inputIconFile') ? document.getElementById('inputIconFile').files[0] : null;
-    let githubToken = document.getElementById('inputGithubToken') ? document.getElementById('inputGithubToken').value.trim() : '';
+    let idElem = document.getElementById('editAppId');
+    let titleElem = document.getElementById('inputTitle');
+    let id = idElem ? idElem.value : '';
+    let title = titleElem ? titleElem.value.trim() : '';
     
     if (!title) { alert('Nama aplikasi wajib diisi'); return; }
-    if (!githubToken) { alert('GitHub Token wajib diisi untuk sinkronisasi publik!'); return; }
 
-    localStorage.setItem('sayuti_gh_token', githubToken);
-
-    let downloadUrl = document.getElementById('inputDownloadUrl').value || '#';
-    let format = document.getElementById('inputFormat').value || 'APK File';
-    let iconValue = document.getElementById('inputIcon').value.trim() || 'fa-cube';
-    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
-
-    if (apkFileInput) {
-        showToast('Mengunggah file APK ke GitHub...');
-        try {
-            let base64Content = await toBase64(apkFileInput);
-            let fileName = apkFileInput.name;
-            
-            let existingSha = null;
-            let checkRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${fileName}`, {
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            if (checkRes.ok) {
-                let fileData = await checkRes.json();
-                existingSha = fileData.sha;
-            }
-
-            let bodyData = {
-                message: `Upload ${fileName} via Admin Panel SayutiHub`,
-                content: base64Content
-            };
-            if (existingSha) {
-                bodyData.sha = existingSha;
-            }
-            
-            let response = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${fileName}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(bodyData)
-            });
-
-            if (response.ok) {
-                downloadUrl = fileName; 
-                format = 'APK File';
-                showToast('APK Berhasil di-upload!');
-            } else {
-                let errData = await response.json();
-                alert('Gagal upload APK: ' + (errData.message || 'Periksa token Anda.'));
-                return;
-            }
-        } catch (error) {
-            alert('Terjadi kesalahan jaringan saat upload APK.');
-            return;
-        }
-    }
-
-    if (iconFileInput) {
-        showToast('Mengunggah logo aplikasi...');
-        try {
-            let base64Icon = await toBase64(iconFileInput);
-            let iconFileName = 'logo_' + Date.now() + '_' + iconFileInput.name;
-            
-            let existingShaIcon = null;
-            let checkIconRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${iconFileName}`, {
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            if (checkIconRes.ok) {
-                let fileDataIcon = await checkIconRes.json();
-                existingShaIcon = fileDataIcon.sha;
-            }
-
-            let bodyIconData = {
-                message: `Upload logo ${iconFileName} via Admin Panel`,
-                content: base64Icon
-            };
-            if (existingShaIcon) {
-                bodyIconData.sha = existingShaIcon;
-            }
-            
-            let responseIcon = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${iconFileName}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(bodyIconData)
-            });
-
-            if (responseIcon.ok) {
-                iconValue = iconFileName;
-                showToast('Logo berhasil di-upload!');
-            } else {
-                let errData = await responseIcon.json();
-                alert('Gagal upload logo: ' + (errData.message || 'Periksa token.'));
-                return;
-            }
-        } catch (error) {
-            alert('Terjadi kesalahan jaringan saat upload logo.');
-            return;
-        }
-    }
+    let downloadUrl = document.getElementById('inputDownloadUrl') ? document.getElementById('inputDownloadUrl').value : '#';
+    let format = document.getElementById('inputFormat') ? document.getElementById('inputFormat').value : 'APK File';
+    let iconValue = document.getElementById('inputIcon') ? document.getElementById('inputIcon').value.trim() : 'fa-cube';
 
     let appData = {
         title,
-        category: document.getElementById('inputCategory').value,
-        status: document.getElementById('inputStatus').value,
-        icon: iconValue,
-        shortDesc: document.getElementById('inputShortDesc').value,
-        fullDesc: document.getElementById('inputFullDesc').value,
-        version: document.getElementById('inputVersion').value || 'v1.0',
+        category: document.getElementById('inputCategory') ? document.getElementById('inputCategory').value : 'android',
+        status: document.getElementById('inputStatus') ? document.getElementById('inputStatus').value : '',
+        icon: iconValue || 'fa-cube',
+        shortDesc: document.getElementById('inputShortDesc') ? document.getElementById('inputShortDesc').value : '',
+        fullDesc: document.getElementById('inputFullDesc') ? document.getElementById('inputFullDesc').value : '',
+        version: document.getElementById('inputVersion') ? document.getElementById('inputVersion').value : 'v1.0',
         format: format,
         downloadUrl: downloadUrl,
-        changelog: document.getElementById('inputChangelog').value || 'Pembaruan rutin.',
+        changelog: document.getElementById('inputChangelog') ? document.getElementById('inputChangelog').value : '',
     };
 
     if (id) {
@@ -506,15 +410,12 @@ async function saveAppFromForm() {
         dbApps.push(appData);
     }
 
-    try {
-        await updateMainJsOnGitHub(githubToken);
-        showToast('Aplikasi berhasil disimpan & disinkronkan!');
-        closeModalDirect('appFormModal');
-        renderApps();
-        if(document.getElementById('adminView').classList.contains('active')) renderAdminTable();
-    } catch(e) {
-        alert('Gagal menyinkronkan dengan GitHub.');
+    closeModalDirect('appFormModal');
+    renderApps();
+    if(document.getElementById('adminView') && document.getElementById('adminView').classList.contains('active')) {
+        renderAdminTable();
     }
+    showToast('Aplikasi berhasil disimpan!');
 }
 
 function deleteApp(appId) {
@@ -523,20 +424,6 @@ function deleteApp(appId) {
     renderApps();
     renderAdminTable();
     showToast('Aplikasi berhasil dihapus');
-    let githubToken = localStorage.getItem('sayuti_gh_token');
-    if (githubToken) {
-        updateMainJsOnGitHub(githubToken).catch(e => {});
-    }
-}
-
-// Utility Helper Functions
-function toBase64(file) {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-    });
 }
 
 function showToast(message) {
@@ -557,29 +444,4 @@ function showToast(message) {
 function closeModalDirect(modalId) {
     let modal = document.getElementById(modalId);
     if (modal) modal.classList.remove('active');
-}
-
-async function updateMainJsOnGitHub(token) {
-    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
-    let path = 'js/main.js';
-    
-    let checkRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${path}`, {
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    });
-    
-    let sha = '';
-    if (checkRes.ok) {
-        let fileData = await checkRes.json();
-        sha = fileData.sha;
-    }
-
-    // Rekonstruksi file main.js otomatis
-    let newScriptContent = `let dbApps = ${JSON.stringify(dbApps, null, 4)};\n\n` +
-        `// Script utama SayutiHub yang tersinkronisasi otomatis\n`;
-    
-    let base64Script = btoa(unescape(encodeURIComponent(JSON.stringify(dbApps)))); 
-    // Catatan: Pastikan logika sinkronisasi file backend Anda sesuai dengan format repo Anda.
 }
