@@ -58,22 +58,6 @@ let dbApps = [
         "downloads": 0,
         "reviews": [],
         "screenshots": []
-    },
-    {
-        "title": "KlikWaCepat",
-        "category": "android",
-        "status": "Featured",
-        "icon": "/* Pengaturan latar belakang halaman bervolume putih terang */ body {   margin: 0;   height: 100vh;   display: flex;   justify-content: center;   align-items: center;   background-color: #f7f9fa; }  /* Kontainer pembungkus logo untuk efek bayangan halus */ .logo-container {   position: relative;   filter: drop-shadow(0 15px 20px rgba(0, 168, 120, 0.2)); }  /* Membuat balon percakapan bulat dengan ekor di pojok kiri bawah */ .speech-bubble {   width: 250px;   height: 250px;   background: linear-gradient(135deg, #a3e635 0%, #10b981 60%, #059669 100%);   border-radius: 50% 50% 50% 15%;   position: relative;   display: flex;   justify-content: center;   align-items: center;   transform: rotate(0deg); }  /* Menambahkan tonjolan ekor percakapan di bagian bawah agar tampak autentik */ .speech-bubble::after {   content: '';   position: absolute;   bottom: -4px;   left: 28px;   width: 40px;   height: 40px;   background: #059669; /* Selaras dengan warna gradasi bawah */   border-radius: 0 0 0 100%;   transform: rotate(-15deg);   z-index: -1; }  /* Pengaturan bentuk dan warna putih solid ikon kilat */ .lightning-bolt {   width: 110px;   height: 110px;   color: #ffffff;   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08)); }",
-        "shortDesc": "Kirim pesan WhatsApp tanpa perlu menyimpan nomor ke kontak.",
-        "fullDesc": "Aplikasi praktis dan ringan untuk memulai percakapan WhatsApp ke nomor baru secara instan tanpa harus menyimpannya terlebih dahulu ke daftar kontak HP Anda. Cukup masukkan nomor tujuan dan langsung chat dengan cepat!\n",
-        "version": "V1.1",
-        "format": "4.83",
-        "downloadUrl": "#",
-        "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 1.1.0.",
-        "id": 1787481637110,
-        "downloads": 0,
-        "reviews": [],
-        "screenshots": []
     }
 ];
 
