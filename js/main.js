@@ -277,7 +277,7 @@ function openAdminLoginModal() { document.getElementById('adminLoginModal').clas
 
 function verifyAdminLogin() {
     let pin = document.getElementById('adminPinInput').value;
-    if (pin === '1234') {
+    if (pin === '157303') {
         closeModalDirect('adminLoginModal');
         switchView('admin');
         showToast('Berhasil masuk Admin!');
