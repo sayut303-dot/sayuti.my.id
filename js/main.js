@@ -1,35 +1,63 @@
 let dbApps = [
     {
-        id: 1,
-        title: "Toko Sembako",
-        category: "android",
-        status: "Featured",
-        icon: "fa-store",
-        shortDesc: "Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.",
-        fullDesc: "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis.",
-        version: "v7.0",
-        format: "APK File",
-        downloads: 4120,
-        downloadUrl: "tokoSembako v7.0.apk",
-        changelog: "Peningkatan stabilitas aplikasi.",
-        screenshots: [],
-        reviews: [{ name: "Budi Santoso", rating: 5, comment: "Sangat membantu kasir!" }]
+        "id": 1,
+        "title": "Toko Sembako",
+        "category": "android",
+        "status": "Featured",
+        "icon": "fa-store",
+        "shortDesc": "Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.",
+        "fullDesc": "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis.",
+        "version": "v7.0",
+        "format": "APK File",
+        "downloads": 4120,
+        "downloadUrl": "tokoSembako v7.0.apk",
+        "changelog": "Peningkatan stabilitas aplikasi.",
+        "screenshots": [],
+        "reviews": [
+            {
+                "name": "Budi Santoso",
+                "rating": 5,
+                "comment": "Sangat membantu kasir!"
+            }
+        ]
     },
     {
-        id: 2,
-        title: "Sayuti AutoClicker",
-        category: "windows",
-        status: "Trending",
-        icon: "fa-laptop-code",
-        shortDesc: "Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.",
-        fullDesc: "Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi.",
-        version: "v1.2.0",
-        format: "8 MB EXE",
-        downloads: 1850,
-        downloadUrl: "#",
-        changelog: "Dukungan Multi-Point Clicking.",
-        screenshots: [],
-        reviews: [{ name: "Rian Gamer", rating: 5, comment: "Lancar jaya!" }]
+        "id": 2,
+        "title": "Sayuti AutoClicker",
+        "category": "windows",
+        "status": "Trending",
+        "icon": "fa-laptop-code",
+        "shortDesc": "Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.",
+        "fullDesc": "Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi.",
+        "version": "v1.2.0",
+        "format": "8 MB EXE",
+        "downloads": 1850,
+        "downloadUrl": "#",
+        "changelog": "Dukungan Multi-Point Clicking.",
+        "screenshots": [],
+        "reviews": [
+            {
+                "name": "Rian Gamer",
+                "rating": 5,
+                "comment": "Lancar jaya!"
+            }
+        ]
+    },
+    {
+        "title": "Testii",
+        "category": "android",
+        "status": "Featured",
+        "icon": "fa-cube",
+        "shortDesc": "",
+        "fullDesc": "",
+        "version": "V 2",
+        "format": "APK File",
+        "downloadUrl": "Beta.apk",
+        "changelog": "Pembaruan rutin.",
+        "id": 1787474815264,
+        "downloads": 0,
+        "reviews": [],
+        "screenshots": []
     }
 ];
 
