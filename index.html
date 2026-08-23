@@ -864,6 +864,22 @@
                 reviews: [
                     { name: "Rian Gamer", rating: 5, comment: "Lancar jaya di Windows 10, tanpa lag!" }
                 ]
+            },
+            {
+                id: 4,
+                title: "Vidioplayer Debug",
+                category: "android",
+                status: "New",
+                icon: "fa-video",
+                shortDesc: "Aplikasi pemutar video Android dengan mode debug untuk pengujian media.",
+                fullDesc: "Pemutar video khusus Android yang dilengkapi panel informasi debug, mendukung berbagai format file video populer dengan kontrol pemutaran optimal.",
+                version: "v1.0-debug",
+                format: "APK File",
+                downloadUrl: "https://github.com/sayut303-dot/sayuti.my.id/raw/6573284a29499d749635f0ac213105f410476707/vidioplayer-debug.apk",
+                changelog: "Rilis versi debug awal untuk uji coba dan pemantauan performa pemutar video.",
+                reviews: [
+                    { name: "Sayuti", rating: 5, comment: "Versi debug stabil untuk tes video." }
+                ]
             }
         ];
 
@@ -1047,7 +1063,6 @@
                 return;
             }
 
-            // Urutkan dari yang terbaru (dibalik)
             let reversedReviews = [...app.reviews].reverse();
             reversedReviews.forEach(rev => {
                 let stars = '';
@@ -1109,9 +1124,8 @@
 
             saveAppsToStorage();
             renderModalReviews(app);
-            renderApps(); // Memperbarui rating rata-rata di kartu utama secara langsung
+            renderApps();
 
-            // Reset form
             document.getElementById('reviewerName').value = '';
             document.getElementById('reviewComment').value = '';
             
