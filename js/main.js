@@ -200,8 +200,7 @@ function openDetailModal(appId) {
 
 function triggerDownload(event, appId) {
     event.stopPropagation();
-    let app = dbApps.find(appIdKey => app.id === appId); // handle gracefully
-    // ... logic download ...
+    let app = dbApps.find(appIdKey => app.id === appId); 
     let githubToken = localStorage.getItem('sayuti_gh_token');
     if (app) {
         app.downloads++;
@@ -346,16 +345,34 @@ async function saveAppFromForm() {
             let base64Content = await toBase64(apkFileInput);
             let fileName = apkFileInput.name;
             
+            // Cek apakah file sudah ada di GitHub untuk mendapatkan SHA-nya (jika update)
+            let existingSha = null;
+            let checkRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${fileName}`, {
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (checkRes.ok) {
+                let fileData = await checkRes.json();
+                existingSha = fileData.sha;
+            }
+
+            let bodyData = {
+                message: `Upload ${fileName} via Admin Panel SayutiHub`,
+                content: base64Content
+            };
+            if (existingSha) {
+                bodyData.sha = existingSha; // Wajib disertakan jika file sudah ada sebelumnya
+            }
+            
             let response = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${fileName}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `token ${githubToken}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    message: `Upload ${fileName} via Admin Panel SayutiHub`,
-                    content: base64Content
-                })
+                body: JSON.stringify(bodyData)
             });
 
             if (response.ok) {
