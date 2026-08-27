@@ -1628,6 +1628,16 @@
 }
 
 </style>
+
+<style id="navbar-right-alignment">
+@media (min-width: 640px) {
+  nav .nav-actions {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -1653,12 +1663,7 @@
 </div>
 </div>
 <div class="nav-actions">
-<button aria-label="Buka aplikasi favorit" class="nav-btn" onclick="switchView('favorites')">
-<i class="fa-solid fa-heart" style="color:var(--accent-rose)"></i>
-<span>Favorit</span>
 
-                (<span id="favCount">0</span>)
-            </button>
 <button aria-label="Buka analytics" class="nav-btn" onclick="switchView('analytics')">
 <i class="fa-solid fa-chart-line"></i>
 <span>Analytics</span>
