@@ -58,6 +58,22 @@ let dbApps = [
         "downloads": 241,
         "reviews": [],
         "screenshots": []
+    },
+    {
+        "title": "Test",
+        "category": "android",
+        "status": "New",
+        "icon": "fa-cube",
+        "shortDesc": "",
+        "fullDesc": "",
+        "version": "",
+        "format": "APK File",
+        "downloadUrl": "Beta.apk",
+        "changelog": "",
+        "id": 1787806062738,
+        "downloads": 0,
+        "reviews": [],
+        "screenshots": []
     }
 ];
 
