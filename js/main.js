@@ -55,7 +55,23 @@ let dbApps = [
         "downloadUrl": "KlikWaCepat v2.1.apk",
         "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 2.1.0.",
         "id": 1787488454945,
-        "downloads": 2,
+        "downloads": 241,
+        "reviews": [],
+        "screenshots": []
+    },
+    {
+        "title": "Test",
+        "category": "android",
+        "status": "New",
+        "icon": "logo_1787806936745_1000262996.jpg",
+        "shortDesc": "",
+        "fullDesc": "",
+        "version": "",
+        "format": "APK File",
+        "downloadUrl": "CPUmonitor-debug.apk",
+        "changelog": "",
+        "id": 1787806938728,
+        "downloads": 0,
         "reviews": [],
         "screenshots": []
     }
