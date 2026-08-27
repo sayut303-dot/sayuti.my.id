@@ -9,7 +9,7 @@ let dbApps = [
         "fullDesc": "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis.",
         "version": "v7.0",
         "format": "APK File",
-        "downloads": 4120,
+        "downloads": 4121,
         "downloadUrl": "tokoSembako v7.0.apk",
         "changelog": "Peningkatan stabilitas aplikasi.",
         "screenshots": [],
