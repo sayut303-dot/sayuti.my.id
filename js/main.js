@@ -1,2534 +1,781 @@
-<!DOCTYPE html>
-
-<html lang="id">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<meta content="#6366f1" name="theme-color"/>
-<meta content="dark" name="color-scheme"/>
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<meta content="SayutiHub — pusat aplikasi, marketplace digital, unduhan APK dan software dengan tampilan modern." name="description"/>
-<title>SayutiHub v3 — Pusat Aplikasi &amp; Marketplace</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<!-- Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<!-- Main CSS -->
-<link href="css/style.css?v=3" rel="stylesheet"/>
-<style>
-        /* =========================================================
-           SAYUTIHUB V3 — MODERN OVERRIDE
-           Bisa dipindahkan ke css/style.css
-        ========================================================= */
-
-        :root {
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --primary-dark: #4f46e5;
-
-            --accent-cyan: #22d3ee;
-            --accent-green: #22c55e;
-            --accent-amber: #f59e0b;
-            --accent-rose: #f43f5e;
-
-            --bg-main: #070b17;
-            --bg-card: rgba(15, 23, 42, .72);
-            --bg-card-solid: #0f172a;
-
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --text-soft: #cbd5e1;
-
-            --border-color: rgba(148, 163, 184, .12);
-
-            --shadow-lg:
-                0 25px 70px rgba(0, 0, 0, .35);
-
-            --radius-xl: 24px;
-            --radius-lg: 18px;
-            --radius-md: 14px;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            min-height: 100vh;
-            margin: 0;
-            background:
-                radial-gradient(
-                    circle at 15% 10%,
-                    rgba(99, 102, 241, .12),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 85% 20%,
-                    rgba(34, 211, 238, .08),
-                    transparent 28%
-                ),
-                linear-gradient(
-                    180deg,
-                    #070b17 0%,
-                    #0a1020 50%,
-                    #070b17 100%
-                );
-            color: var(--text-main);
-            font-family: "Plus Jakarta Sans", sans-serif;
-            overflow-x: hidden;
-        }
-
-        button,
-        input,
-        textarea,
-        select {
-            font-family: inherit;
-        }
-
-        button,
-        a {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* =========================
-           BACKGROUND ORBS
-        ========================= */
-
-        .glow-orb {
-            position: fixed;
-            width: 420px;
-            height: 420px;
-            border-radius: 50%;
-            filter: blur(100px);
-            pointer-events: none;
-            z-index: -1;
-            opacity: .22;
-        }
-
-        .glow-1 {
-            top: -180px;
-            left: -120px;
-            background: #6366f1;
-        }
-
-        .glow-2 {
-            right: -180px;
-            top: 40%;
-            background: #06b6d4;
-        }
-
-        /* =========================
-           NAVBAR
-        ========================= */
-
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-
-            width: 100%;
-            padding: 14px 5%;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-
-            background: rgba(7, 11, 23, .78);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-
-            border-bottom: 1px solid rgba(255,255,255,.06);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .brand-icon {
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-
-            border-radius: 13px;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    #8b5cf6
-                );
-
-            box-shadow:
-                0 10px 30px rgba(99,102,241,.35);
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.1;
-        }
-
-        .brand-name {
-            font-size: 1rem;
-            font-weight: 800;
-            letter-spacing: -.03em;
-        }
-
-        .brand-sub {
-            margin-top: 3px;
-            color: var(--text-muted);
-            font-size: .62rem;
-            font-weight: 600;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .nav-btn {
-            min-height: 38px;
-            padding: 9px 13px;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-
-            color: var(--text-soft);
-
-            background: rgba(255,255,255,.035);
-            border: 1px solid var(--border-color);
-            border-radius: 11px;
-
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .nav-btn:hover {
-            color: white;
-            background: rgba(255,255,255,.07);
-            border-color: rgba(255,255,255,.14);
-            transform: translateY(-1px);
-        }
-
-        .nav-btn.primary-action {
-            color: white;
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    var(--primary-dark)
-                );
-            border-color: transparent;
-            box-shadow:
-                0 8px 25px rgba(99,102,241,.22);
-        }
-
-        .nav-btn.primary-action:hover {
-            box-shadow:
-                0 12px 32px rgba(99,102,241,.34);
-        }
-
-        /* =========================
-           HERO
-        ========================= */
-
-        .hero {
-            width: min(1200px, 90%);
-            margin: 55px auto 35px;
-
-            display: grid;
-            grid-template-columns: 1.5fr .8fr;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .hero-content {
-            max-width: 720px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-
-            padding: 7px 11px;
-            margin-bottom: 18px;
-
-            border: 1px solid rgba(129,140,248,.2);
-            border-radius: 999px;
-
-            color: #c7d2fe;
-            background: rgba(99,102,241,.08);
-
-            font-size: .72rem;
-            font-weight: 700;
-        }
-
-        .hero-badge i {
-            color: #a5b4fc;
-        }
-
-        .hero h1 {
-            margin: 0;
-
-            font-size: clamp(
-                2.2rem,
-                5vw,
-                4.4rem
-            );
-
-            line-height: 1.02;
-            letter-spacing: -.055em;
-            font-weight: 800;
-        }
-
-        .hero h1 span {
-            background:
-                linear-gradient(
-                    135deg,
-                    #818cf8,
-                    #c084fc,
-                    #22d3ee
-                );
-
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .hero-description {
-            max-width: 650px;
-            margin: 20px 0 25px;
-
-            color: var(--text-muted);
-            font-size: .98rem;
-            line-height: 1.75;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .hero-btn {
-            min-height: 45px;
-            padding: 12px 18px;
-
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-
-            color: white;
-            background: rgba(255,255,255,.04);
-
-            cursor: pointer;
-            font-weight: 700;
-
-            transition: .2s ease;
-        }
-
-        .hero-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(255,255,255,.08);
-        }
-
-        .hero-btn.primary {
-            border: none;
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    #8b5cf6
-                );
-
-            box-shadow:
-                0 12px 30px rgba(99,102,241,.28);
-        }
-
-        /* =========================
-           HERO STATS
-        ========================= */
-
-        .hero-panel {
-            padding: 20px;
-
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--border-color);
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(30,41,59,.75),
-                    rgba(15,23,42,.55)
-                );
-
-            box-shadow: var(--shadow-lg);
-            backdrop-filter: blur(18px);
-        }
-
-        .hero-panel-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            margin-bottom: 15px;
-        }
-
-        .hero-panel-title strong {
-            font-size: .85rem;
-        }
-
-        .online-dot {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-
-            color: #86efac;
-            font-size: .68rem;
-            font-weight: 700;
-        }
-
-        .online-dot span {
-            width: 7px;
-            height: 7px;
-
-            border-radius: 50%;
-            background: #22c55e;
-
-            box-shadow: 0 0 12px #22c55e;
-        }
-
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .quick-stat {
-            padding: 15px;
-
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,.06);
-            background: rgba(255,255,255,.035);
-        }
-
-        .quick-stat i {
-            margin-bottom: 9px;
-            color: var(--primary-light);
-        }
-
-        .quick-stat .number {
-            display: block;
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
-
-        .quick-stat small {
-            color: var(--text-muted);
-            font-size: .65rem;
-        }
-
-        /* =========================
-           CONTAINER
-        ========================= */
-
-        .container {
-            width: min(1200px, 90%);
-            margin: 0 auto 50px;
-        }
-
-        .view-section {
-            display: none;
-            animation: fadeIn .3s ease;
-        }
-
-        .view-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
+let dbApps = [
+    {
+        "id": 1,
+        "title": "Toko Sembako",
+        "category": "android",
+        "status": "Featured",
+        "icon": "fa-store",
+        "shortDesc": "Manajemen penjualan, inventaris barang, dan laporan keuangan toko sembako otomatis.",
+        "fullDesc": "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis.",
+        "version": "v7.0",
+        "format": "APK File",
+        "downloads": 4121,
+        "downloadUrl": "tokoSembako v7.0.apk",
+        "changelog": "Peningkatan stabilitas aplikasi.",
+        "screenshots": [],
+        "reviews": [
+            {
+                "name": "Budi Santoso",
+                "rating": 5,
+                "comment": "Sangat membantu kasir!"
             }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Sayuti AutoClicker",
+        "category": "windows",
+        "status": "Trending",
+        "icon": "fa-laptop-code",
+        "shortDesc": "Software otomatisasi klik mouse untuk komputer Windows dengan preset mudah.",
+        "fullDesc": "Software utilitas Windows untuk melakukan klik otomatis berkecepatan tinggi.",
+        "version": "v1.2.0",
+        "format": "8 MB EXE",
+        "downloads": 1850,
+        "downloadUrl": "#",
+        "changelog": "Dukungan Multi-Point Clicking.",
+        "screenshots": [],
+        "reviews": [
+            {
+                "name": "Rian Gamer",
+                "rating": 5,
+                "comment": "Lancar jaya!"
             }
-        }
-
-        /* =========================
-           SECTION HEADER
-        ========================= */
-
-        .section-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-
-        .section-heading h2 {
-            margin: 0;
-            font-size: 1.25rem;
-            letter-spacing: -.03em;
-        }
-
-        .section-heading p {
-            margin: 5px 0 0;
-            color: var(--text-muted);
-            font-size: .78rem;
-        }
-
-        /* =========================
-           CONTROLS
-        ========================= */
-
-        .controls-wrapper {
-            margin-bottom: 22px;
-        }
-
-        .search-sort-row {
-            display: grid;
-            grid-template-columns: 1fr 190px;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-
-        .search-box input,
-        .sort-select,
-        .form-control {
-            width: 100%;
-            min-height: 44px;
-
-            color: var(--text-main);
-            background: rgba(15,23,42,.72);
-
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-
-            outline: none;
-
-            transition: .2s ease;
-        }
-
-        .search-box input {
-            padding: 0 15px 0 43px;
-        }
-
-        .search-box input::placeholder {
-            color: #64748b;
-        }
-
-        .search-box input:focus,
-        .sort-select:focus,
-        .form-control:focus {
-            border-color: rgba(129,140,248,.55);
-            box-shadow:
-                0 0 0 3px rgba(99,102,241,.1);
-        }
-
-        .sort-select,
-        .form-control {
-            padding: 0 12px;
-        }
-
-        textarea.form-control {
-            padding: 12px;
-            resize: vertical;
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 7px;
-            overflow-x: auto;
-            padding-bottom: 3px;
-
-            scrollbar-width: none;
-        }
-
-        .filter-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-btn {
-            flex: 0 0 auto;
-
-            min-height: 36px;
-            padding: 8px 12px;
-
-            border: 1px solid var(--border-color);
-            border-radius: 999px;
-
-            color: var(--text-muted);
-            background: rgba(255,255,255,.025);
-
-            cursor: pointer;
-            font-size: .72rem;
-            font-weight: 700;
-
-            transition: .2s ease;
-        }
-
-        .filter-btn:hover {
-            color: white;
-            background: rgba(255,255,255,.06);
-        }
-
-        .filter-btn.active {
-            color: white;
-            border-color: transparent;
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    #8b5cf6
-                );
-            box-shadow:
-                0 7px 20px rgba(99,102,241,.2);
-        }
-
-        /* =========================
-           APP GRID
-        ========================= */
-
-        .app-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(
-                    auto-fill,
-                    minmax(250px, 1fr)
-                );
-
-            gap: 14px;
-        }
-
-        .app-card {
-            position: relative;
-
-            padding: 17px;
-
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(15,23,42,.86),
-                    rgba(15,23,42,.58)
-                );
-
-            box-shadow:
-                0 12px 40px rgba(0,0,0,.12);
-
-            transition:
-                transform .25s ease,
-                border-color .25s ease,
-                box-shadow .25s ease;
-
-            overflow: hidden;
-        }
-
-        .app-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-
-            background:
-                radial-gradient(
-                    circle at top right,
-                    rgba(99,102,241,.12),
-                    transparent 35%
-                );
-
-            pointer-events: none;
-        }
-
-        .app-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(129,140,248,.24);
-
-            box-shadow:
-                0 22px 50px rgba(0,0,0,.25);
-        }
-
-        .app-card-top {
-            position: relative;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .app-icon {
-            width: 52px;
-            height: 52px;
-
-            flex: 0 0 52px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 15px;
-
-            color: white;
-            font-size: 1.3rem;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #4f46e5,
-                    #7c3aed
-                );
-
-            box-shadow:
-                0 10px 25px rgba(79,70,229,.22);
-
-            overflow: hidden;
-        }
-
-        .app-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .favorite-btn {
-            width: 34px;
-            height: 34px;
-
-            display: grid;
-            place-items: center;
-
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-
-            color: #64748b;
-            background: rgba(255,255,255,.03);
-
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .favorite-btn:hover,
-        .favorite-btn.active {
-            color: var(--accent-rose);
-            border-color: rgba(244,63,94,.22);
-            background: rgba(244,63,94,.08);
-        }
-
-        .app-card h3 {
-            position: relative;
-
-            margin: 14px 0 5px;
-
-            font-size: .98rem;
-            letter-spacing: -.025em;
-        }
-
-        .app-card p {
-            position: relative;
-
-            min-height: 38px;
-            margin: 0 0 13px;
-
-            color: var(--text-muted);
-            font-size: .73rem;
-            line-height: 1.6;
-        }
-
-        .app-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding-top: 11px;
-
-            border-top: 1px solid rgba(255,255,255,.06);
-
-            color: var(--text-muted);
-            font-size: .66rem;
-        }
-
-        .app-meta i {
-            color: #fbbf24;
-        }
-
-        .app-card-actions {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 7px;
-            margin-top: 11px;
-        }
-
-        .btn-download {
-            min-height: 38px;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-
-            padding: 9px 12px;
-
-            color: white;
-            text-decoration: none;
-
-            border-radius: 10px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    #7c3aed
-                );
-
-            font-size: .72rem;
-            font-weight: 700;
-
-            box-shadow:
-                0 8px 22px rgba(99,102,241,.2);
-
-            transition: .2s ease;
-        }
-
-        .btn-download:hover {
-            transform: translateY(-1px);
-            box-shadow:
-                0 12px 28px rgba(99,102,241,.3);
-        }
-
-        .btn-detail {
-            min-width: 42px;
-
-            display: grid;
-            place-items: center;
-
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-
-            color: var(--text-soft);
-            background: rgba(255,255,255,.03);
-
-            cursor: pointer;
-        }
-
-        .status-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-
-            padding: 5px 8px;
-
-            border-radius: 999px;
-
-            font-size: .58rem;
-            font-weight: 800;
-        }
-
-        .status-featured {
-            color: #fde68a;
-            background: rgba(245,158,11,.12);
-            border: 1px solid rgba(245,158,11,.18);
-        }
-
-        .status-trending {
-            color: #fda4af;
-            background: rgba(244,63,94,.1);
-            border: 1px solid rgba(244,63,94,.16);
-        }
-
-        .status-new {
-            color: #86efac;
-            background: rgba(34,197,94,.1);
-            border: 1px solid rgba(34,197,94,.16);
-        }
-
-        /* =========================
-           EMPTY STATE
-        ========================= */
-
-        .empty-state {
-            padding: 65px 20px;
-
-            text-align: center;
-
-            border: 1px dashed rgba(148,163,184,.15);
-            border-radius: var(--radius-lg);
-
-            background: rgba(255,255,255,.015);
-        }
-
-        .empty-state-icon {
-            width: 65px;
-            height: 65px;
-
-            display: grid;
-            place-items: center;
-
-            margin: 0 auto 15px;
-
-            border-radius: 18px;
-
-            color: #818cf8;
-            background: rgba(99,102,241,.08);
-
-            font-size: 1.6rem;
-        }
-
-        .empty-state h3 {
-            margin: 0 0 6px;
-            font-size: 1rem;
-        }
-
-        .empty-state p {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: .75rem;
-        }
-
-        /* =========================
-           DASHBOARD
-        ========================= */
-
-        .dashboard-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-
-            margin-bottom: 16px;
-        }
-
-        .dashboard-header h2 {
-            margin: 0;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 13px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            position: relative;
-
-            padding: 19px;
-
-            border-radius: 17px;
-            border: 1px solid var(--border-color);
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(30,41,59,.72),
-                    rgba(15,23,42,.62)
-                );
-
-            overflow: hidden;
-        }
-
-        .stat-card::after {
-            content: "";
-
-            position: absolute;
-            width: 100px;
-            height: 100px;
-
-            right: -45px;
-            bottom: -45px;
-
-            border-radius: 50%;
-
-            background: rgba(99,102,241,.1);
-            filter: blur(5px);
-        }
-
-        .stat-card h4 {
-            margin: 0 0 8px;
-
-            color: var(--text-muted);
-            font-size: .7rem;
-            font-weight: 600;
-        }
-
-        .stat-card .val {
-            font-size: 1.65rem;
-            font-weight: 800;
-            letter-spacing: -.04em;
-        }
-
-        /* =========================
-           ADMIN TABLE
-        ========================= */
-
-        .admin-table-wrapper {
-            overflow-x: auto;
-
-            border: 1px solid var(--border-color);
-            border-radius: 17px;
-
-            background: rgba(15,23,42,.55);
-        }
-
-        table {
-            width: 100%;
-            min-width: 700px;
-            border-collapse: collapse;
-        }
-
-        th {
-            padding: 13px 15px;
-
-            color: #94a3b8;
-            background: rgba(255,255,255,.025);
-
-            text-align: left;
-            font-size: .68rem;
-            font-weight: 700;
-        }
-
-        td {
-            padding: 14px 15px;
-
-            border-top: 1px solid rgba(255,255,255,.05);
-
-            color: #cbd5e1;
-            font-size: .72rem;
-        }
-
-        tr:hover td {
-            background: rgba(255,255,255,.018);
-        }
-
-        /* =========================
-           MODAL
-        ========================= */
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-
-            z-index: 1000;
-
-            display: none;
-            align-items: center;
-            justify-content: center;
-
-            padding: 18px;
-
-            background: rgba(2,6,23,.76);
-
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-container {
-            position: relative;
-
-            width: min(650px, 100%);
-            max-height: 90vh;
-
-            overflow-y: auto;
-
-            padding: 22px;
-
-            border-radius: 22px;
-            border: 1px solid rgba(255,255,255,.09);
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(15,23,42,.97),
-                    rgba(9,15,29,.97)
-                );
-
-            box-shadow:
-                0 30px 100px rgba(0,0,0,.55);
-
-            animation: modalIn .25s ease;
-        }
-
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px) scale(.98);
+        ]
+    },
+    {
+        "title": "KlikWaCepat",
+        "category": "android",
+        "status": "Featured",
+        "icon": "logo_1787495641002_1000262996.jpg",
+        "shortDesc": "Kirim pesan WhatsApp tanpa perlu menyimpan nomor ke kontak.",
+        "fullDesc": "Aplikasi praktis dan ringan untuk memulai percakapan WhatsApp ke nomor baru secara instan tanpa harus menyimpannya terlebih dahulu ke daftar kontak HP Anda. Cukup masukkan nomor tujuan dan langsung chat dengan cepat!\n",
+        "version": "V2.1",
+        "format": "APK File",
+        "downloadUrl": "KlikWaCepat v2.1.apk",
+        "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 2.1.0.",
+        "id": 1787488454945,
+        "downloads": 241,
+        "reviews": [],
+        "screenshots": []
+    }
+];
+
+let favorites = JSON.parse(localStorage.getItem('sayuti_favs') || '[]');
+let currentCategory = 'all';
+let activeAppId = null;
+let selectedRating = 5;
+
+// === Sinkronisasi jumlah unduhan ===
+function getTotalDownloads() {
+    return dbApps.reduce((total, app) => total + (Number(app.downloads) || 0), 0);
+}
+
+function formatNumber(value) {
+    return new Intl.NumberFormat('id-ID').format(Number(value) || 0);
+}
+
+function saveDownloadCounts() {
+    const counts = {};
+    dbApps.forEach(app => counts[app.id] = Number(app.downloads) || 0);
+    localStorage.setItem('sayuti_download_counts', JSON.stringify(counts));
+}
+
+function loadDownloadCounts() {
+    try {
+        const counts = JSON.parse(localStorage.getItem('sayuti_download_counts') || '{}');
+        dbApps.forEach(app => {
+            if (Object.prototype.hasOwnProperty.call(counts, app.id)) {
+                app.downloads = Number(counts[app.id]) || 0;
             }
+        });
+    } catch (e) { console.warn('Gagal memuat counter unduhan', e); }
+}
 
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
+
+
+function restoreDownloadCounts() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('sayuti_downloads') || '[]');
+        if (!Array.isArray(saved)) return;
+
+        saved.forEach(item => {
+            const app = dbApps.find(a => a.id === item.id);
+            if (app && Number.isFinite(Number(item.downloads))) {
+                app.downloads = Number(item.downloads);
             }
-        }
+        });
+    } catch (e) {
+        console.warn('Gagal memulihkan counter unduhan:', e);
+    }
+}
 
-        .modal-close {
-            position: absolute;
-            top: 14px;
-            right: 14px;
+function getTotalDownloads() {
+    return dbApps.reduce((total, app) => {
+        return total + (Number(app.downloads) || 0);
+    }, 0);
+}
 
-            width: 34px;
-            height: 34px;
+document.addEventListener('DOMContentLoaded', () => {
+    loadDownloadCounts();
+    renderApps();
+    updateFavBadge();
+});
 
-            display: grid;
-            place-items: center;
-
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-
-            color: var(--text-muted);
-            background: rgba(255,255,255,.035);
-
-            cursor: pointer;
-        }
-
-        .modal-close:hover {
-            color: white;
-            background: rgba(255,255,255,.08);
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-
-            color: var(--text-soft);
-            font-size: .7rem;
-            font-weight: 700;
-        }
-
-        /* =========================
-           TOAST
-        ========================= */
-
-        .toast {
-            position: fixed;
-
-            right: 20px;
-            bottom: 20px;
-
-            z-index: 2000;
-
-            display: flex;
-            align-items: center;
-            gap: 9px;
-
-            max-width: calc(100vw - 40px);
-
-            padding: 12px 15px;
-
-            border: 1px solid rgba(34,197,94,.18);
-            border-radius: 13px;
-
-            color: #dcfce7;
-            background:
-                rgba(20,83,45,.9);
-
-            box-shadow:
-                0 15px 40px rgba(0,0,0,.35);
-
-            transform: translateY(20px);
-            opacity: 0;
-            pointer-events: none;
-
-            transition: .25s ease;
-
-            font-size: .75rem;
-            font-weight: 700;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        footer {
-            width: min(1200px, 90%);
-
-            margin: 70px auto 25px;
-            padding-top: 22px;
-
-            border-top: 1px solid rgba(255,255,255,.06);
-
-            text-align: center;
-            color: #64748b;
-
-            font-size: .7rem;
-        }
-
-        footer strong {
-            color: #818cf8;
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                margin-top: 35px;
-            }
-
-            .hero-panel {
-                max-width: 600px;
-            }
-        }
-
-        @media (max-width: 720px) {
-            nav {
-                padding: 10px 12px;
-                gap: 8px;
-            }
-
-            .brand-text {
-                display: flex !important;
-                min-width: 0;
-            }
-
-            .brand-name {
-                font-size: .86rem;
-                white-space: nowrap;
-            }
-
-            .brand-sub {
-                display: none;
-            }
-
-            .nav-actions {
-                flex: 1 1 auto;
-                min-width: 0;
-                justify-content: flex-end;
-                gap: 5px;
-                overflow-x: auto;
-            }
-
-            .nav-btn {
-                padding: 8px 10px;
-                font-size: .68rem;
-            }
-
-            .nav-btn span {
-                display: none;
-            }
-
-            .hero {
-                width: 92%;
-            }
-
-            .hero h1 {
-                font-size: 2.65rem;
-            }
-
-            .hero-description {
-                font-size: .84rem;
-            }
-
-            .container {
-                width: 92%;
-            }
-
-            .search-sort-row {
-                grid-template-columns: 1fr;
-            }
-
-            .app-grid {
-                grid-template-columns:
-                    repeat(
-                        2,
-                        minmax(0, 1fr)
-                    );
-                gap: 10px;
-            }
-
-            .app-card {
-                padding: 13px;
-                border-radius: 15px;
-            }
-
-            .app-icon {
-                width: 45px;
-                height: 45px;
-                flex-basis: 45px;
-            }
-
-            .app-card h3 {
-                font-size: .82rem;
-            }
-
-            .app-card p {
-                font-size: .67rem;
-                min-height: 45px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-container {
-                padding: 18px;
-                max-height: 94vh;
-                border-radius: 18px;
-            }
-
-            .hero-actions {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .hero-btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 430px) {
-            .app-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .app-card p {
-                min-height: auto;
-            }
-
-            .quick-stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .hero h1 {
-                font-size: 2.25rem;
-            }
-
-            .hero-actions {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* =========================
-           REDUCED MOTION
-        ========================= */
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                animation-duration: .01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: .01ms !important;
-            }
-        }
+function switchView(viewName) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    let targetView = document.getElementById(viewName + 'View');
+    if (targetView) targetView.classList.add('active');
     
-
-/* =========================
-   HERO CENTER + VISUAL DECORATION
-========================= */
-.hero {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
-    gap: 38px;
-    align-items: center;
+    if(viewName === 'favorites') renderFavorites();
+    if(viewName === 'analytics') renderAnalytics();
+    if(viewName === 'admin') renderAdminTable();
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-.hero-content {
-    max-width: 720px;
-    text-align: center;
-    margin: 0 auto;
+function setCategory(cat, btn) {
+    currentCategory = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderApps();
 }
 
-.hero-badge,
-.hero-description {
-    margin-left: auto;
-    margin-right: auto;
+function getAppRatingStats(app) {
+    if (!app.reviews || app.reviews.length === 0) return { average: 5.0, count: 0 };
+    let sum = app.reviews.reduce((acc, item) => acc + item.rating, 0);
+    return { average: (sum / app.reviews.length).toFixed(1), count: app.reviews.length };
 }
 
-.hero-actions {
-    justify-content: center;
-}
+function renderApps() {
+    const grid = document.getElementById('appGrid');
+    const emptyState = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    
+    if (!grid) return;
 
-.hero-visual {
-    position: relative;
-    min-height: 330px;
-    display: grid;
-    place-items: center;
-    isolation: isolate;
-    overflow: hidden;
-}
+    const search = searchInput ? searchInput.value.toLowerCase() : '';
+    const sort = sortSelect ? sortSelect.value : 'default';
 
-.visual-orbit {
-    position: absolute;
-    border: 1px solid rgba(129,140,248,.14);
-    border-radius: 50%;
-    transform: rotate(-18deg);
-}
+    let filtered = dbApps.filter(app => {
+        let matchesCat = true;
+        if (currentCategory === 'featured') matchesCat = app.status === 'Featured';
+        else if (currentCategory === 'trending') matchesCat = app.status === 'Trending';
+        else if (currentCategory !== 'all') matchesCat = app.category === currentCategory;
 
-.orbit-one {
-    width: 320px;
-    height: 210px;
-}
+        let matchesSearch = app.title.toLowerCase().includes(search) || app.shortDesc.toLowerCase().includes(search);
+        return matchesCat && matchesSearch;
+    });
 
-.orbit-two {
-    width: 410px;
-    height: 275px;
-    transform: rotate(28deg);
-}
+    filtered.sort((a, b) => {
+        let statsA = getAppRatingStats(a);
+        let statsB = getAppRatingStats(b);
+        if (sort === 'name-asc') return a.title.localeCompare(b.title);
+        if (sort === 'rating-desc') return statsB.average - statsA.average;
+        if (sort === 'downloads-desc') return b.downloads - statsA.downloads;
+        return b.id - a.id;
+    });
 
-.visual-glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(35px);
-    pointer-events: none;
-}
+    grid.innerHTML = '';
+    if (filtered.length === 0) {
+        if (emptyState) emptyState.style.display = 'block';
+    } else {
+        if (emptyState) emptyState.style.display = 'none';
+        filtered.forEach(app => {
+            let stats = getAppRatingStats(app);
+            let isFav = favorites.includes(app.id);
+            let statusBadge = app.status ? `<span class="badge badge-${app.status.toLowerCase()}">${app.status}</span>` : '';
+            
+            let iconContent = app.icon && app.icon.startsWith('fa-') 
+                ? `<i class="fa-solid ${app.icon}"></i>` 
+                : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
-.glow-a {
-    width: 150px;
-    height: 150px;
-    background: rgba(99,102,241,.16);
-}
-
-.glow-b {
-    width: 100px;
-    height: 100px;
-    background: rgba(34,211,238,.12);
-    right: 12%;
-    bottom: 12%;
-}
-
-.visual-card {
-    position: absolute;
-    border: 1px solid rgba(255,255,255,.09);
-    background: linear-gradient(145deg, rgba(30,41,59,.88), rgba(15,23,42,.72));
-    box-shadow: 0 24px 55px rgba(0,0,0,.25);
-    backdrop-filter: blur(16px);
-}
-
-.visual-card-main {
-    position: relative;
-    width: 285px;
-    height: 215px;
-    border-radius: 24px;
-    transform: perspective(900px) rotateY(-8deg) rotateX(3deg);
-    overflow: hidden;
-    z-index: 3;
-}
-
-.visual-window-bar {
-    height: 32px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 13px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-    background: rgba(255,255,255,.025);
-}
-
-.visual-window-bar span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.22);
-}
-
-.visual-window-content {
-    padding: 22px;
-}
-
-.visual-app-icon {
-    width: 58px;
-    height: 58px;
-    display: grid;
-    place-items: center;
-    border-radius: 17px;
-    color: #c7d2fe;
-    background: linear-gradient(135deg, rgba(99,102,241,.38), rgba(34,211,238,.18));
-    border: 1px solid rgba(129,140,248,.2);
-    font-size: 1.45rem;
-    box-shadow: 0 12px 30px rgba(99,102,241,.18);
-}
-
-.visual-lines {
-    margin-top: 16px;
-    display: grid;
-    gap: 8px;
-}
-
-.visual-lines i {
-    display: block;
-    height: 7px;
-    border-radius: 20px;
-    background: rgba(255,255,255,.09);
-}
-
-.visual-lines i:nth-child(1) { width: 72%; }
-.visual-lines i:nth-child(2) { width: 48%; }
-.visual-lines i:nth-child(3) { width: 61%; }
-
-.visual-mini-grid {
-    display: flex;
-    gap: 8px;
-    margin-top: 18px;
-}
-
-.visual-mini-grid span {
-    width: 32px;
-    height: 26px;
-    display: grid;
-    place-items: center;
-    border-radius: 8px;
-    color: #a5b4fc;
-    background: rgba(255,255,255,.045);
-    font-size: .65rem;
-}
-
-.visual-card-float {
-    width: 54px;
-    height: 54px;
-    display: grid;
-    place-items: center;
-    border-radius: 16px;
-    color: #c7d2fe;
-    font-size: 1rem;
-    z-index: 4;
-}
-
-.float-one {
-    top: 48px;
-    right: 22px;
-    animation: heroFloatOne 5s ease-in-out infinite;
-}
-
-.float-two {
-    bottom: 45px;
-    left: 18px;
-    animation: heroFloatTwo 6s ease-in-out infinite;
-}
-
-.float-three {
-    bottom: 22px;
-    right: 56px;
-    animation: heroFloatThree 5.5s ease-in-out infinite;
-}
-
-@keyframes heroFloatOne {
-    0%,100% { transform: translateY(0) rotate(5deg); }
-    50% { transform: translateY(-9px) rotate(8deg); }
-}
-
-@keyframes heroFloatTwo {
-    0%,100% { transform: translateY(0) rotate(-5deg); }
-    50% { transform: translateY(8px) rotate(-8deg); }
-}
-
-@keyframes heroFloatThree {
-    0%,100% { transform: translateY(0) rotate(3deg); }
-    50% { transform: translateY(-7px) rotate(-3deg); }
-}
-
-@media (max-width: 900px) {
-    .hero {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .hero-content {
-        max-width: 760px;
-    }
-
-    .hero-visual {
-        min-height: 290px;
-        margin-top: -5px;
-    }
-}
-
-@media (max-width: 520px) {
-    .hero {
-        width: min(94%, 1200px);
-    }
-
-    .hero-visual {
-        min-height: 250px;
-    }
-
-    .visual-card-main {
-        width: 245px;
-        height: 185px;
-    }
-
-    .visual-window-content {
-        padding: 17px;
-    }
-
-    .visual-app-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 1.2rem;
-    }
-
-    .visual-card-float {
-        width: 45px;
-        height: 45px;
-        border-radius: 13px;
-    }
-
-    .float-one { right: 5px; top: 28px; }
-    .float-two { left: 3px; bottom: 28px; }
-    .float-three { right: 28px; bottom: 5px; }
-}
-
-/* Visual hero hanya untuk desktop */
-@media (max-width: 900px) {
-    .hero-visual {
-        display: none !important;
-    }
-}
-
-</style>
-
-<style id="navbar-right-alignment">
-@media (min-width: 640px) {
-  nav .nav-actions {
-    margin-left: auto;
-    justify-content: flex-end;
-  }
-}
-</style>
-
-</head>
-<body>
-<!-- =========================================================
-         BACKGROUND
-    ========================================================== -->
-<div class="glow-orb glow-1"></div>
-<div class="glow-orb glow-2"></div>
-<!-- =========================================================
-         NAVIGATION
-    ========================================================== -->
-<nav aria-label="Navigasi utama">
-<div aria-label="Kembali ke halaman utama" class="brand" onclick="switchView('home')" role="button" tabindex="0">
-<div class="brand-icon">
-<i class="fa-solid fa-cubes-stacked"></i>
-</div>
-<div class="brand-text">
-<span class="brand-name">
-                    SayutiHub
-                </span>
-<span class="brand-sub">
-                    DIGITAL APP MARKETPLACE • v3
-                </span>
-</div>
-</div>
-<div class="nav-actions">
-
-<button aria-label="Buka analytics" class="nav-btn" onclick="switchView('analytics')">
-<i class="fa-solid fa-chart-line"></i>
-<span>Analytics</span>
-</button>
-<button aria-label="Login admin" class="nav-btn primary-action" onclick="openAdminLoginModal()">
-<i class="fa-solid fa-lock"></i>
-<span>Admin</span>
-</button>
-</div>
-</nav>
-<!-- =========================================================
-         HERO
-    ========================================================== -->
-<header class="hero" id="mainHeader">
-<div class="hero-content">
-<div class="hero-badge">
-<i class="fa-solid fa-sparkles"></i>
-                PLATFORM APLIKASI MANDIRI
-            </div>
-<h1>
-                Semua Aplikasi.
-                <br/>
-<span>Satu Tempat.</span>
-</h1>
-<p class="hero-description">
-                Temukan, unduh, dan kelola aplikasi digital favorit
-                Anda melalui SayutiHub. Dirancang cepat, sederhana,
-                modern, dan nyaman digunakan di desktop maupun mobile.
-            </p>
-<div class="hero-actions">
-<button class="hero-btn primary" onclick="document.getElementById('searchInput').focus()">
-<i class="fa-solid fa-magnifying-glass"></i>
-                    Jelajahi Aplikasi
+            let card = document.createElement('div');
+            card.className = 'app-card';
+            card.onclick = () => openDetailModal(app.id);
+            card.innerHTML = `
+                <button class="fav-btn-card ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${app.id})">
+                    <i class="fa-solid fa-heart"></i>
                 </button>
-<button class="hero-btn" onclick="switchView('favorites')">
-<i class="fa-solid fa-heart"></i>
-                    Favorit Saya
-                </button>
-</div>
-</div>
-<div class="hero-visual">
-<div class="visual-orbit orbit-one"></div>
-<div class="visual-orbit orbit-two"></div>
-<div class="visual-glow glow-a"></div>
-<div class="visual-glow glow-b"></div>
-<div class="visual-card visual-card-main">
-<div class="visual-window-bar">
-<span></span><span></span><span></span>
-</div>
-<div class="visual-window-content">
-<div class="visual-app-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
-<div class="visual-lines"><i></i><i></i><i></i></div>
-<div class="visual-mini-grid">
-<span><i class="fa-solid fa-download"></i></span>
-<span><i class="fa-solid fa-star"></i></span>
-<span><i class="fa-solid fa-bolt"></i></span>
-</div>
-</div>
-</div>
-<div class="visual-card visual-card-float float-one"><i class="fa-solid fa-cloud-arrow-down"></i></div>
-<div class="visual-card visual-card-float float-two"><i class="fa-solid fa-shield-halved"></i></div>
-<div class="visual-card visual-card-float float-three"><i class="fa-solid fa-mobile-screen-button"></i></div>
-</div></header>
-<!-- =========================================================
-         MAIN
-    ========================================================== -->
-<main class="container">
-<!-- =====================================================
-             HOME
-        ====================================================== -->
-<section class="view-section active" id="homeView">
-<div class="section-heading">
-<div>
-<h2>
-<i class="fa-solid fa-grid-2" style="color:var(--primary-light)"></i>
-
-                        Koleksi Aplikasi
-                    </h2>
-<p>
-                        Pilih aplikasi yang ingin Anda gunakan.
-                    </p>
-</div>
-</div>
-<!-- SEARCH & FILTER -->
-<div class="controls-wrapper">
-<div class="search-sort-row">
-<div class="search-box">
-<i class="fa-solid fa-magnifying-glass"></i>
-<input aria-label="Cari aplikasi" autocomplete="off" id="searchInput" oninput="renderApps()" placeholder="Cari nama aplikasi atau deskripsi..." type="search"/>
-</div>
-<select aria-label="Urutkan aplikasi" class="sort-select" id="sortSelect" onchange="renderApps()">
-<option value="default">
-                            Terbaru
-                        </option>
-<option value="name-asc">
-                            Nama A - Z
-                        </option>
-<option value="rating-desc">
-                            Rating Tertinggi
-                        </option>
-<option value="downloads-desc">
-                            Unduhan Terbanyak
-                        </option>
-</select>
-</div>
-<div aria-label="Filter aplikasi" class="filter-tabs" role="tablist">
-<button class="filter-btn active" onclick="setCategory('all', this)">
-<i class="fa-solid fa-border-all"></i>
-                        Semua
-                    </button>
-<button class="filter-btn" onclick="setCategory('featured', this)">
-<i class="fa-solid fa-star"></i>
-                        Featured
-                    </button>
-<button class="filter-btn" onclick="setCategory('trending', this)">
-<i class="fa-solid fa-fire"></i>
-                        Trending
-                    </button>
-<button class="filter-btn" onclick="setCategory('android', this)">
-<i class="fa-brands fa-android"></i>
-                        Android
-                    </button>
-<button class="filter-btn" onclick="setCategory('windows', this)">
-<i class="fa-brands fa-windows"></i>
-                        Windows
-                    </button>
-<button class="filter-btn" onclick="setCategory('tools', this)">
-<i class="fa-solid fa-wrench"></i>
-                        Tools
-                    </button>
-</div>
-</div>
-<!-- APP GRID -->
-<div aria-live="polite" class="app-grid" id="appGrid"></div>
-<!-- EMPTY -->
-<div class="empty-state" id="emptyState" style="display:none;">
-<div class="empty-state-icon">
-<i class="fa-solid fa-box-open"></i>
-</div>
-<h3>
-                    Aplikasi Tidak Ditemukan
-                </h3>
-<p>
-                    Coba gunakan kata kunci atau kategori yang berbeda.
-                </p>
-</div>
-</section>
-<!-- =====================================================
-             FAVORITES
-        ====================================================== -->
-<section class="view-section" id="favoritesView">
-<div class="section-heading">
-<div>
-<h2>
-<i class="fa-solid fa-heart" style="color:var(--accent-rose)"></i>
-
-                        Aplikasi Favorit
-                    </h2>
-<p>
-                        Aplikasi yang Anda simpan untuk akses cepat.
-                    </p>
-</div>
-</div>
-<div class="app-grid" id="favoritesGrid"></div>
-</section>
-<!-- =====================================================
-             ANALYTICS
-        ====================================================== -->
-<section class="view-section" id="analyticsView">
-<div class="dashboard-header">
-<div>
-<h2 style="font-size:1.2rem; margin:0;">
-<i class="fa-solid fa-chart-line" style="color:var(--primary-light)"></i>
-
-                        Analisis Sistem
-                    </h2>
-<p style="
-                            margin:5px 0 0;
-                            color:var(--text-muted);
-                            font-size:.72rem;
-                        ">
-                        Statistik aktivitas SayutiHub.
-                    </p>
-</div>
-</div>
-<div class="stats-grid">
-<div class="stat-card">
-<h4>
-                        TOTAL APLIKASI
-                    </h4>
-<div class="val" id="statTotalApps">
-                        0
+                <div>
+                    <div class="app-header">
+                        <div class="app-icon">${iconContent}</div>
+                        <div class="app-title-group">
+                            <h3>${app.title}</h3>
+                            <div class="badges">
+                                <span class="badge badge-cat">${app.category}</span>
+                                ${statusBadge}
+                            </div>
+                        </div>
                     </div>
-</div>
-<div class="stat-card">
-<h4>
-                        TOTAL UNDUHAN
-                    </h4>
-<div class="val" id="statTotalDownloads">
-                        0
+                    <p class="app-desc">${app.shortDesc}</p>
+                    <div class="app-rating">
+                        <i class="fa-solid fa-star"></i> <span>${stats.average} (${stats.count})</span>
                     </div>
-</div>
-<div class="stat-card">
-<h4>
-                        TOTAL ULASAN
-                    </h4>
-<div class="val" id="statTotalReviews">
-                        0
+                </div>
+                <div>
+                    <div class="app-meta">
+                        <span><i class="fa-solid fa-download"></i> ${formatNumber(app.downloads)}</span>
+                        <span><i class="fa-solid fa-code-branch"></i> ${app.version}</span>
                     </div>
-</div>
-</div>
-</section>
-<!-- =====================================================
-             ADMIN
-        ====================================================== -->
-<section class="view-section" id="adminView">
-<div class="dashboard-header">
-<div>
-<h2 style="font-size:1.15rem; margin:0;">
-<i class="fa-solid fa-user-shield" style="color:#818cf8"></i>
+                    <a href="${app.downloadUrl}" class="btn-download" onclick="triggerDownload(event, ${app.id})">
+                        <i class="fa-solid fa-download"></i> Unduh ${app.format}
+                    </a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+}
 
-                        Panel Admin
-                    </h2>
-<p style="
-                            margin:5px 0 0;
-                            color:var(--text-muted);
-                            font-size:.7rem;
-                        ">
-                        Kelola aplikasi dan katalog SayutiHub.
-                    </p>
-</div>
-<div style="
-                        display:flex;
-                        gap:7px;
-                        flex-wrap:wrap;
-                    ">
-<button class="nav-btn primary-action" onclick="openAppFormModal()">
-<i class="fa-solid fa-plus"></i>
-                        Tambah
-                    </button>
-<button class="nav-btn" onclick="switchView('home')">
-<i class="fa-solid fa-arrow-left"></i>
-                        Keluar
-                    </button>
-</div>
-</div>
-<div class="admin-table-wrapper">
-<table>
-<thead>
-<tr>
-<th>Aplikasi</th>
-<th>Kategori</th>
-<th>Versi</th>
-<th>Unduhan</th>
-<th>Aksi</th>
-</tr>
-</thead>
-<tbody id="adminAppTableBody"></tbody>
-</table>
-</div>
-</section>
-</main>
-<!-- =========================================================
-         DETAIL MODAL
-    ========================================================== -->
-<div aria-labelledby="detailTitle" aria-modal="true" class="modal-overlay" id="detailModal" onclick="closeModal(event, 'detailModal')" role="dialog">
-<div class="modal-container">
-<button aria-label="Tutup" class="modal-close" onclick="closeModalDirect('detailModal')">
-<i class="fa-solid fa-xmark"></i>
-</button>
-<div style="
-                    display:flex;
-                    align-items:center;
-                    gap:13px;
-                    margin-bottom:14px;
-                    padding-right:30px;
-                ">
-<div class="app-icon" id="detailIcon" style="
-                        width:58px;
-                        height:58px;
-                        font-size:1.6rem;
-                    "></div>
-<div>
-<h2 id="detailTitle" style="
-                            font-size:1.15rem;
-                            margin:0 0 4px;
-                        "></h2>
-<div style="
-                            font-size:.68rem;
-                            color:var(--text-muted);
-                        ">
+function toggleFavorite(event, appId) {
+    event.stopPropagation();
+    if (favorites.includes(appId)) {
+        favorites = favorites.filter(id => id !== appId);
+        showToast('Dihapus dari favorit');
+    } else {
+        favorites.push(appId);
+        showToast('Ditambahkan ke favorit!');
+    }
+    localStorage.setItem('sayuti_favs', JSON.stringify(favorites));
+    updateFavBadge();
+    renderApps();
+    let favView = document.getElementById('favoritesView');
+    if(favView && favView.classList.contains('active')) renderFavorites();
+}
 
-                        Versi:
-                        <span id="detailVersion" style="color:var(--text-main);"></span>
+function updateFavBadge() {
+    let badge = document.getElementById('favCount');
+    if (badge) badge.innerText = favorites.length;
+}
 
-                         • 
+function renderFavorites() {
+    const grid = document.getElementById('favoritesGrid');
+    if (!grid) return;
+    let favApps = dbApps.filter(app => favorites.includes(app.id));
+    grid.innerHTML = '';
+    if (favApps.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Belum ada aplikasi favorit.</p>';
+        return;
+    }
+    favApps.forEach(app => {
+        let card = document.createElement('div');
+        card.className = 'app-card';
+        card.onclick = () => openDetailModal(app.id);
+        card.innerHTML = `
+            <h3 style="font-size:1rem; margin-bottom:4px;">${app.title}</h3>
+            <p class="app-desc">${app.shortDesc}</p>
+            <a href="${app.downloadUrl}" class="btn-download" onclick="triggerDownload(event, ${app.id})">Unduh</a>
+        `;
+        grid.appendChild(card);
+    });
+}
 
-                        Format:
-                        <span id="detailFormat" style="color:var(--text-main);"></span>
+function openDetailModal(appId) {
+    activeAppId = appId;
+    let app = dbApps.find(a => a.id === appId);
+    if (!app) return;
 
-                         • 
+    let iconContent = app.icon && app.icon.startsWith('fa-') 
+        ? `<i class="fa-solid ${app.icon}"></i>` 
+        : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
-                        Unduhan:
-                        <span id="detailDownloads" style="color:var(--text-main);"></span>x
+    if(document.getElementById('detailTitle')) document.getElementById('detailTitle').innerText = app.title;
+    if(document.getElementById('detailDesc')) document.getElementById('detailDesc').innerText = app.fullDesc;
+    if(document.getElementById('detailVersion')) document.getElementById('detailVersion').innerText = app.version;
+    if(document.getElementById('detailFormat')) document.getElementById('detailFormat').innerText = app.format;
+    if(document.getElementById('detailDownloads')) document.getElementById('detailDownloads').innerText = formatNumber(app.downloads);
+    if(document.getElementById('detailChangelog')) document.getElementById('detailChangelog').innerText = app.changelog;
+    if(document.getElementById('detailIcon')) document.getElementById('detailIcon').innerHTML = iconContent;
+    if(document.getElementById('detailDownloadBtn')) {
+        const btn = document.getElementById('detailDownloadBtn');
+        btn.href = app.downloadUrl;
+        btn.onclick = (event) => triggerDownload(event, app.id);
+    }
 
-                    </div>
-</div>
-</div>
-<p id="detailDesc" style="
-                    color:var(--text-muted);
-                    font-size:.82rem;
-                    line-height:1.65;
-                    margin-bottom:14px;
-                "></p>
-<div style="
-                    background:rgba(15,23,42,.65);
-                    padding:12px;
-                    border-radius:12px;
-                    margin-bottom:14px;
-                    font-size:.75rem;
-                    color:var(--text-muted);
-                    border:1px solid rgba(255,255,255,.05);
-                ">
-<strong style="color:var(--text-soft);">
-<i class="fa-solid fa-list-check"></i>
-                    Changelog
-                </strong>
-<p id="detailChangelog" style="margin:5px 0 0;"></p>
-</div>
-<div style="
-                    display:grid;
-                    grid-template-columns:1fr auto;
-                    gap:8px;
-                    margin-bottom:17px;
-                ">
-<a class="btn-download" href="#" id="detailDownloadBtn" onclick="incrementDownload()">
-<i class="fa-solid fa-download"></i>
-                    Unduh Sekarang
-                </a>
-<button aria-label="Bagikan aplikasi" class="nav-btn" onclick="openShareModal()">
-<i class="fa-solid fa-qrcode"></i>
-</button>
-</div>
-<!-- REVIEWS -->
-<div style="
-                    border-top:1px solid var(--border-color);
-                    padding-top:15px;
-                ">
-<h4 style="
-                        margin:0 0 9px;
-                        font-size:.88rem;
-                    ">
-<i class="fa-solid fa-star-half-stroke" style="color:#fbbf24;"></i>
+    renderReviews(app);
+    let modal = document.getElementById('detailModal');
+    if(modal) modal.classList.add('active');
+}
 
-                    Ulasan Pengguna
-                </h4>
-<div style="
-                        background:rgba(15,23,42,.45);
-                        padding:11px;
-                        border-radius:12px;
-                        margin-bottom:12px;
-                        display:flex;
-                        flex-direction:column;
-                        gap:7px;
-                        border:1px solid rgba(255,255,255,.05);
-                    ">
-<div id="starPicker" style="
-                            display:flex;
-                            gap:6px;
-                            font-size:1rem;
-                            color:#fbbf24;
-                            cursor:pointer;
-                        ">
-<i class="fa-solid fa-star" onclick="setRating(1)"></i>
-<i class="fa-solid fa-star" onclick="setRating(2)"></i>
-<i class="fa-solid fa-star" onclick="setRating(3)"></i>
-<i class="fa-solid fa-star" onclick="setRating(4)"></i>
-<i class="fa-solid fa-star" onclick="setRating(5)"></i>
-</div>
-<input class="form-control" id="reviewName" maxlength="30" placeholder="Nama Anda..." type="text"/>
-<textarea class="form-control" id="reviewComment" maxlength="150" placeholder="Bagikan pengalaman Anda..." rows="3"></textarea>
-<button class="nav-btn primary-action" onclick="submitReview()" style="align-self:flex-end;">
-<i class="fa-solid fa-paper-plane"></i>
-                        Kirim Ulasan
-                    </button>
-</div>
-<div id="reviewsList" style="
-                        display:flex;
-                        flex-direction:column;
-                        gap:7px;
-                        max-height:180px;
-                        overflow-y:auto;
-                    "></div>
-</div>
-</div>
-</div>
-<!-- =========================================================
-         ADMIN LOGIN
-    ========================================================== -->
-<div aria-modal="true" class="modal-overlay" id="adminLoginModal" onclick="closeModal(event, 'adminLoginModal')" role="dialog">
-<div class="modal-container" style="max-width:380px;">
-<button class="modal-close" onclick="closeModalDirect('adminLoginModal')">
-<i class="fa-solid fa-xmark"></i>
-</button>
-<div style="
-                    width:50px;
-                    height:50px;
-                    display:grid;
-                    place-items:center;
-                    border-radius:15px;
-                    background:rgba(99,102,241,.1);
-                    color:#818cf8;
-                    margin-bottom:12px;
-                ">
-<i class="fa-solid fa-user-shield"></i>
-</div>
-<h3 style="
-                    margin:0 0 5px;
-                    font-size:1.1rem;
-                ">
-                Login Admin
-            </h3>
-<p style="
-                    color:var(--text-muted);
-                    font-size:.72rem;
-                    margin:0 0 17px;
-                ">
-                Masukkan PIN administrator untuk melanjutkan.
-            </p>
-<div class="form-group">
-<label for="adminPinInput">
-                    PIN Administrator
-                </label>
-<input autocomplete="current-password" class="form-control" id="adminPinInput" placeholder="Masukkan PIN..." type="password"/>
-</div>
-<button class="nav-btn primary-action" onclick="verifyAdminLogin()" style="
-                    width:100%;
-                    justify-content:center;
-                    min-height:44px;
-                ">
-<i class="fa-solid fa-right-to-bracket"></i>
-                Masuk ke Panel
-            </button>
-</div>
-</div>
-<!-- =========================================================
-         APP FORM
-    ========================================================== -->
-<div aria-modal="true" class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')" role="dialog">
-<div class="modal-container">
-<button class="modal-close" onclick="closeModalDirect('appFormModal')">
-<i class="fa-solid fa-xmark"></i>
-</button>
-<div style="
-                    display:flex;
-                    align-items:center;
-                    gap:10px;
-                    margin-bottom:17px;
-                    padding-right:30px;
-                ">
-<div style="
-                        width:42px;
-                        height:42px;
-                        display:grid;
-                        place-items:center;
-                        border-radius:12px;
-                        color:white;
-                        background:linear-gradient(
-                            135deg,
-                            #6366f1,
-                            #8b5cf6
-                        );
-                    ">
-<i class="fa-solid fa-cloud-arrow-up"></i>
-</div>
-<div>
-<h3 id="formModalTitle" style="
-                            margin:0;
-                            font-size:1rem;
-                        ">
-                        Tambah Aplikasi
-                    </h3>
-<p style="
-                            margin:3px 0 0;
-                            color:var(--text-muted);
-                            font-size:.68rem;
-                        ">
-                        Tambahkan aplikasi ke katalog.
-                    </p>
-</div>
-</div>
-<input id="editAppId" type="hidden"/>
-<div class="form-group">
-<label>
-                    Nama Aplikasi
-                </label>
-<input class="form-control" id="inputTitle" placeholder="Contoh: Sayuti Store" type="text"/>
-</div>
-<div class="form-group">
-<label>
-                    Kategori
-                </label>
-<select class="form-control" id="inputCategory">
-<option value="android">
-                        Android
-                    </option>
-<option value="windows">
-                        Windows
-                    </option>
-<option value="tools">
-                        Tools
-                    </option>
-</select>
-</div>
-<div class="form-group">
-<label>
-                    Status
-                </label>
-<select class="form-control" id="inputStatus">
-<option value="">
-                        Normal
-                    </option>
-<option value="Featured">
-                        Featured
-                    </option>
-<option value="Trending">
-                        Trending
-                    </option>
-<option value="New">
-                        New
-                    </option>
-</select>
-</div>
-<div class="form-group">
-<label>
-                    Icon FontAwesome
-                </label>
-<input class="form-control" id="inputIcon" placeholder="fa-store" type="text"/>
-</div>
-<div class="form-group">
-<label>
-                    Upload Logo / Ikon
-                </label>
-<input accept="image/png,image/jpeg,image/webp,image/svg+xml" class="form-control" id="inputIconFile" type="file"/>
-</div>
-<div class="form-group">
-<label>
-                    Deskripsi Singkat
-                </label>
-<input class="form-control" id="inputShortDesc" placeholder="Ringkasan aplikasi..." type="text"/>
-</div>
-<div class="form-group">
-<label>
-                    Deskripsi Lengkap
-                </label>
-<textarea class="form-control" id="inputFullDesc" placeholder="Jelaskan fungsi dan fitur aplikasi..." rows="3"></textarea>
-</div>
-<div class="form-group">
-<label>
-                    Versi &amp; Format
-                </label>
-<div style="
-                        display:grid;
-                        grid-template-columns:1fr 1fr;
-                        gap:8px;
-                    ">
-<input class="form-control" id="inputVersion" placeholder="v1.0.0" type="text"/>
-<input class="form-control" id="inputFormat" placeholder="APK / 15 MB" type="text"/>
-</div>
-</div>
-<div class="form-group">
-<label>
-                    File APK
-                </label>
-<input accept=".apk" class="form-control" id="inputApkFile" type="file"/>
-<small style="
-                        display:block;
-                        margin-top:5px;
-                        color:#64748b;
-                        font-size:.62rem;
-                    ">
-                    Gunakan file APK jika ingin mengunggah aplikasi
-                    langsung dari panel.
-                </small>
-</div>
-<div class="form-group">
-<label>
-                    GitHub Token
-                </label>
-<input autocomplete="new-password" class="form-control" id="inputGithubToken" placeholder="Masukkan token hanya jika diperlukan" type="password"/>
-<small style="
-                        display:block;
-                        margin-top:5px;
-                        color:#64748b;
-                        font-size:.62rem;
-                    ">
-                    Jangan menaruh token rahasia secara hard-code
-                    di source HTML.
-                </small>
-</div>
-<div class="form-group">
-<label>
-                    URL Unduhan
-                </label>
-<input class="form-control" id="inputDownloadUrl" placeholder="https://..." type="url"/>
-</div>
-<div class="form-group">
-<label>
-                    Changelog
-                </label>
-<input class="form-control" id="inputChangelog" placeholder="Pembaruan versi terbaru..." type="text"/>
-</div>
-<button class="nav-btn primary-action" onclick="saveAppFromForm()" style="
-                    width:100%;
-                    justify-content:center;
-                    min-height:45px;
-                    margin-top:5px;
-                ">
-<i class="fa-solid fa-floppy-disk"></i>
-                Simpan Aplikasi
-            </button>
-</div>
-</div>
-<!-- =========================================================
-         SHARE / QR MODAL
-    ========================================================== -->
-<div aria-modal="true" class="modal-overlay" id="shareModal" onclick="closeModal(event, 'shareModal')" role="dialog">
-<div class="modal-container" style="
-                max-width:360px;
-                text-align:center;
-            ">
-<button class="modal-close" onclick="closeModalDirect('shareModal')">
-<i class="fa-solid fa-xmark"></i>
-</button>
-<div style="
-                    width:48px;
-                    height:48px;
-                    display:grid;
-                    place-items:center;
-                    margin:0 auto 10px;
-                    border-radius:14px;
-                    color:#818cf8;
-                    background:rgba(99,102,241,.1);
-                ">
-<i class="fa-solid fa-qrcode"></i>
-</div>
-<h3 style="
-                    margin:0 0 5px;
-                    font-size:1.05rem;
-                ">
-                Bagikan Aplikasi
-            </h3>
-<p style="
-                    margin:0 0 15px;
-                    color:var(--text-muted);
-                    font-size:.7rem;
-                ">
-                Scan QR Code untuk membuka halaman aplikasi.
-            </p>
-<div id="qrcodeContainer" style="
-                    background:#fff;
-                    padding:12px;
-                    border-radius:14px;
-                    display:inline-block;
-                    margin-bottom:14px;
-                    box-shadow:0 15px 35px rgba(0,0,0,.25);
-                ">
-<img alt="QR Code aplikasi" id="qrImg" src="" style="
-                        width:170px;
-                        height:170px;
-                        display:block;
-                    "/>
-</div>
-<button class="nav-btn primary-action" onclick="copyAppShareLink()" style="
-                    width:100%;
-                    justify-content:center;
-                    min-height:44px;
-                ">
-<i class="fa-solid fa-copy"></i>
-                Salin Tautan
-            </button>
-</div>
-</div>
-<!-- =========================================================
-         TOAST
-    ========================================================== -->
-<div aria-live="polite" class="toast" id="toast" role="status">
-<i class="fa-solid fa-circle-check"></i>
-<span id="toastMsg">
-            Berhasil!
-        </span>
-</div>
-<!-- =========================================================
-         FOOTER
-    ========================================================== -->
-<footer>
-<p>
-            © 2026
-            <strong>SayutiHub</strong>.
-            Semua hak dilindungi.
-        </p>
-<p style="
-                margin-top:5px;
-                opacity:.65;
-            ">
-            Built for a faster digital experience.
-        </p>
-</footer>
-<!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
-<script src="js/main.js?v=3"></script>
-<!-- =========================================================
-         SMALL UI ENHANCEMENT
-         Tidak menggantikan main.js
-    ========================================================== -->
-<script>
+function triggerDownload(event, appId) {
+    event.stopPropagation();
+    let app = dbApps.find(a => a.id === appId);
+    if (!app) return;
+    app.downloads = (Number(app.downloads) || 0) + 1;
+    saveDownloadCounts();
+    renderApps();
+    renderAnalytics();
+    if (activeAppId === app.id) openDetailModal(app.id);
 
-        /*
-         * Sinkronisasi statistik Hero dengan
-         * statistik dashboard.
-         */
+    const githubToken = localStorage.getItem('sayuti_gh_token');
+    if (githubToken) updateMainJsOnGitHub(githubToken).catch(e => console.warn('Sinkronisasi gagal:', e));
+    showToast('Mengunduh ' + app.title + '...');
+}
 
-        function syncHeroStats() {
+function renderReviews(app) {
+    const list = document.getElementById('reviewsList');
+    if (!list) return;
+    list.innerHTML = '';
+    if (!app.reviews || app.reviews.length === 0) {
+        list.innerHTML = '<p style="font-size:0.78rem; color:var(--text-muted);">Belum ada ulasan.</p>';
+        return;
+    }
+    app.reviews.forEach(r => {
+        let stars = '<i class="fa-solid fa-star"></i>'.repeat(r.rating);
+        let item = document.createElement('div');
+        item.style.cssText = "background:rgba(255,255,255,0.03); padding:6px 8px; border-radius:6px; font-size:0.78rem;";
+        item.innerHTML = `<strong>${r.name}</strong> <span style="color:var(--accent-amber)">${stars}</span><br><span style="color:var(--text-muted);">${r.comment}</span>`;
+        list.appendChild(item);
+    });
+}
 
-            const totalApps =
-                document.getElementById("statTotalApps");
+function setRating(r) { selectedRating = r; }
 
-            const totalDownloads =
-                document.getElementById("statTotalDownloads");
+async function submitReview() {
+    let nameElem = document.getElementById('reviewName');
+    let commentElem = document.getElementById('reviewComment');
+    let name = nameElem ? nameElem.value.trim() : '';
+    let comment = commentElem ? commentElem.value.trim() : '';
+    
+    if (!name || !comment) { alert('Nama dan ulasan wajib diisi.'); return; }
+    let app = dbApps.find(a => a.id === activeAppId);
+    if (!app) return;
+    if (!app.reviews) app.reviews = [];
+    app.reviews.push({ name, rating: selectedRating, comment });
+    
+    renderReviews(app);
+    renderApps();
+    if(nameElem) nameElem.value = '';
+    if(commentElem) commentElem.value = '';
+    showToast('Ulasan terkirim!');
 
-            const totalReviews =
-                document.getElementById("statTotalReviews");
+    let githubToken = localStorage.getItem('sayuti_gh_token');
+    if (githubToken) {
+        try { await updateMainJsOnGitHub(githubToken); } catch(e) {}
+    }
+}
 
-            const heroApps =
-                document.getElementById("heroTotalApps");
+function renderAnalytics() {
+    let totalDl = getTotalDownloads();
+    let totalRev = dbApps.reduce((acc, curr) => acc + (curr.reviews ? curr.reviews.length : 0), 0);
+    if(document.getElementById('statTotalApps')) document.getElementById('statTotalApps').innerText = dbApps.length;
+    if(document.getElementById('statTotalDownloads')) document.getElementById('statTotalDownloads').innerText = formatNumber(totalDl);
+    if(document.getElementById('statTotalReviews')) document.getElementById('statTotalReviews').innerText = totalRev;
+}
 
-            const heroDownloads =
-                document.getElementById("heroTotalDownloads");
+function openAdminLoginModal() { 
+    let modal = document.getElementById('adminLoginModal');
+    if(modal) modal.classList.add('active'); 
+}
 
-            const heroReviews =
-                document.getElementById("heroTotalReviews");
+function verifyAdminLogin() {
+    let pinInput = document.getElementById('adminPinInput');
+    let pin = pinInput ? pinInput.value : '';
+    if (pin === '157303') {
+        closeModalDirect('adminLoginModal');
+        switchView('admin');
+        showToast('Berhasil masuk Admin!');
+        if(pinInput) pinInput.value = '';
+    } else {
+        alert('PIN Salah!');
+    }
+}
 
+function renderAdminTable() {
+    const tbody = document.getElementById('adminAppTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    dbApps.forEach(app => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><strong>${app.title}</strong></td>
+            <td>${app.category}</td>
+            <td>${app.version}</td>
+            <td>${formatNumber(app.downloads)}</td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn-icon-action" onclick="openAppFormModal(${app.id})"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-icon-action danger" onclick="deleteApp(${app.id})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
 
-            if (totalApps && heroApps) {
-                heroApps.textContent =
-                    totalApps.textContent || "0";
-            }
+function openAppFormModal(appId = null) {
+    let editId = document.getElementById('editAppId');
+    if(editId) editId.value = appId || '';
+    
+    let savedToken = localStorage.getItem('sayuti_gh_token');
+    let tokenInput = document.getElementById('inputGithubToken');
+    if (savedToken && tokenInput) {
+        tokenInput.value = savedToken;
+    }
 
-            if (totalDownloads && heroDownloads) {
-                heroDownloads.textContent =
-                    totalDownloads.textContent || "0";
-            }
-
-            if (totalReviews && heroReviews) {
-                heroReviews.textContent =
-                    totalReviews.textContent || "0";
-            }
-
+    if (appId) {
+        let app = dbApps.find(a => a.id === appId);
+        if (app) {
+            if(document.getElementById('formModalTitle')) document.getElementById('formModalTitle').innerText = "Edit Aplikasi";
+            if(document.getElementById('inputTitle')) document.getElementById('inputTitle').value = app.title;
+            if(document.getElementById('inputCategory')) document.getElementById('inputCategory').value = app.category;
+            if(document.getElementById('inputStatus')) document.getElementById('inputStatus').value = app.status || '';
+            if(document.getElementById('inputIcon')) document.getElementById('inputIcon').value = app.icon && app.icon.startsWith('fa-') ? app.icon : '';
+            if(document.getElementById('inputShortDesc')) document.getElementById('inputShortDesc').value = app.shortDesc;
+            if(document.getElementById('inputFullDesc')) document.getElementById('inputFullDesc').value = app.fullDesc;
+            if(document.getElementById('inputVersion')) document.getElementById('inputVersion').value = app.version;
+            if(document.getElementById('inputFormat')) document.getElementById('inputFormat').value = app.format;
+            if(document.getElementById('inputDownloadUrl')) document.getElementById('inputDownloadUrl').value = app.downloadUrl;
+            if(document.getElementById('inputChangelog')) document.getElementById('inputChangelog').value = app.changelog;
         }
+    } else {
+        if(document.getElementById('formModalTitle')) document.getElementById('formModalTitle').innerText = "Tambah Aplikasi";
+        if(document.getElementById('inputTitle')) document.getElementById('inputTitle').value = '';
+        if(document.getElementById('inputIcon')) document.getElementById('inputIcon').value = '';
+        if(document.getElementById('inputShortDesc')) document.getElementById('inputShortDesc').value = '';
+        if(document.getElementById('inputFullDesc')) document.getElementById('inputFullDesc').value = '';
+        if(document.getElementById('inputVersion')) document.getElementById('inputVersion').value = '';
+        if(document.getElementById('inputFormat')) document.getElementById('inputFormat').value = '';
+        if(document.getElementById('inputDownloadUrl')) document.getElementById('inputDownloadUrl').value = '';
+        if(document.getElementById('inputChangelog')) document.getElementById('inputChangelog').value = '';
+        if(document.getElementById('inputApkFile')) document.getElementById('inputApkFile').value = '';
+        if(document.getElementById('inputIconFile')) document.getElementById('inputIconFile').value = '';
+    }
+    let formModal = document.getElementById('appFormModal');
+    if(formModal) formModal.classList.add('active');
+}
 
+async function saveAppFromForm() {
+    let editIdElem = document.getElementById('editAppId');
+    let titleElem = document.getElementById('inputTitle');
+    let id = editIdElem ? editIdElem.value : '';
+    let title = titleElem ? titleElem.value.trim() : '';
+    
+    let apkFileInput = document.getElementById('inputApkFile') ? document.getElementById('inputApkFile').files[0] : null;
+    let iconFileInput = document.getElementById('inputIconFile') ? document.getElementById('inputIconFile').files[0] : null;
+    let githubToken = document.getElementById('inputGithubToken') ? document.getElementById('inputGithubToken').value.trim() : '';
+    
+    if (!title) { alert('Nama aplikasi wajib diisi'); return; }
+    if (!githubToken) { alert('GitHub Token wajib diisi untuk sinkronisasi publik!'); return; }
 
-        /*
-         * Jalankan berkala karena main.js
-         * kemungkinan memperbarui statistik
-         * secara dinamis.
-         */
+    localStorage.setItem('sayuti_gh_token', githubToken);
 
-        /*
-         * Total unduhan selalu dihitung dari angka unduhan setiap aplikasi.
-         * Jadi dashboard/hero tidak memakai angka total yang terpisah.
-         */
-        function parseDownloadNumber(value) {
-            if (!value) return 0;
-            const text = String(value).trim().toLowerCase().replace(/\s+/g, "");
-            const match = text.match(/([0-9]+(?:[.,][0-9]+)?)(k|m|jt|juta)?/i);
-            if (!match) return 0;
-            let number = parseFloat(match[1].replace(',', '.'));
-            const unit = match[2] || '';
-            if (unit === 'k') number *= 1000;
-            else if (unit === 'm' || unit === 'jt' || unit === 'juta') number *= 1000000;
-            return Math.round(number);
-        }
+    let downloadUrl = document.getElementById('inputDownloadUrl') ? document.getElementById('inputDownloadUrl').value : '#';
+    let format = document.getElementById('inputFormat') ? document.getElementById('inputFormat').value : 'APK File';
+    let iconValue = document.getElementById('inputIcon') && document.getElementById('inputIcon').value ? document.getElementById('inputIcon').value.trim() : 'fa-cube';
+    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
 
-        function syncDownloadTotalFromApps() {
-            const cards = document.querySelectorAll('#appGrid .app-card, #favoritesGrid .app-card');
-            const seen = new Set();
-            let total = 0;
-
-            cards.forEach(function(card) {
-                const key = card.dataset.appId || card.querySelector('h3')?.textContent?.trim();
-                if (key && seen.has(key)) return;
-                if (key) seen.add(key);
-
-                const candidates = card.querySelectorAll('[data-downloads], .downloads, .app-meta span, .app-meta');
-                let value = null;
-                for (const el of candidates) {
-                    if (el.dataset.downloads) {
-                        value = el.dataset.downloads;
-                        break;
-                    }
-                    const text = el.textContent || '';
-                    const downloadMatch = text.match(/([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?\s*(?:unduhan|downloads?)/i);
-                    if (downloadMatch) {
-                        value = downloadMatch[1] + (downloadMatch[2] || '');
-                        break;
-                    }
-                    const reverseMatch = text.match(/(?:unduhan|downloads?)\s*[:\-]?\s*([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?/i);
-                    if (reverseMatch) {
-                        value = reverseMatch[1] + (reverseMatch[2] || '');
-                        break;
-                    }
+    // 1. Proses Upload File APK ke GitHub (jika ada)
+    if (apkFileInput) {
+        showToast('Mengunggah file APK ke GitHub...');
+        try {
+            let base64Content = await toBase64(apkFileInput);
+            let fileName = apkFileInput.name;
+            let encodedFileName = encodeURIComponent(fileName);
+            
+            let existingSha = null;
+            let checkRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedFileName}`, {
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json'
                 }
-                if (value != null) total += parseDownloadNumber(value);
+            });
+            if (checkRes.ok) {
+                let fileData = await checkRes.json();
+                existingSha = fileData.sha;
+            }
+
+            let bodyData = {
+                message: `Upload ${fileName} via Admin Panel SayutiHub`,
+                content: base64Content
+            };
+            if (existingSha) {
+                bodyData.sha = existingSha;
+            }
+            
+            let response = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedFileName}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bodyData)
             });
 
-            /* Jika card belum selesai dirender, jangan menimpa statistik yang valid. */
-            if (!cards.length) return;
-
-            const formatted = total.toLocaleString('id-ID');
-            const dashboard = document.getElementById('statTotalDownloads');
-            const hero = document.getElementById('heroTotalDownloads');
-            if (dashboard) dashboard.textContent = formatted;
-            if (hero) hero.textContent = formatted;
+            if (response.ok) {
+                downloadUrl = fileName; 
+                format = 'APK File';
+                showToast('APK Berhasil di-upload!');
+            } else {
+                let errData = await response.json();
+                alert('Gagal upload APK: ' + (errData.message || 'Periksa token Anda.'));
+                return;
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error jaringan/upload APK: ' + error.message);
+            return;
         }
+    }
 
-        setInterval(function() {
-            syncHeroStats();
-            syncDownloadTotalFromApps();
-        }, 500);
+    // 2. Proses Upload File Logo/Ikon ke GitHub (jika ada)
+    if (iconFileInput) {
+        showToast('Memproses logo aplikasi...');
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function() {
-                syncHeroStats();
-                syncDownloadTotalFromApps();
+        try {
+            // GitHub Contents API memiliki batas praktis sekitar 1 MB untuk upload
+            // file melalui endpoint ini. Beri pesan yang jelas jika terlalu besar.
+            if (iconFileInput.size > 900 * 1024) {
+                alert('Logo terlalu besar. Gunakan PNG/JPG/WebP di bawah 900 KB.');
+                return;
             }
-        );
 
+            const allowedTypes = [
+                'image/png',
+                'image/jpeg',
+                'image/webp',
+                'image/svg+xml'
+            ];
 
-        /*
-         * Keyboard accessibility
-         */
+            if (!allowedTypes.includes(iconFileInput.type)) {
+                alert('Format logo tidak didukung. Gunakan PNG, JPG, WebP, atau SVG.');
+                return;
+            }
 
-        document.addEventListener(
-            "keydown",
-            function(event) {
+            let base64Icon = await toBase64(iconFileInput);
 
-                if (
-                    event.key === "Escape"
-                ) {
+            // Bersihkan nama file agar aman digunakan sebagai path GitHub.
+            let originalName = iconFileInput.name || 'logo.png';
+            let safeName = originalName
+                .replace(/[^a-zA-Z0-9._-]/g, '_')
+                .replace(/_+/g, '_');
 
-                    document
-                        .querySelectorAll(".modal-overlay.active")
-                        .forEach(function(modal) {
+            let iconFileName = 'logo_' + Date.now() + '_' + safeName;
+            let encodedIconFileName = encodeURIComponent(iconFileName);
 
-                            modal.classList.remove("active");
+            const githubHeaders = {
+                'Authorization': `token ${githubToken}`,
+                'Accept': 'application/vnd.github+json'
+            };
 
-                        });
+            // Cek apakah token benar-benar dapat mengakses repository.
+            let repoCheck = await fetch(
+                `https://api.github.com/repos/${repoOwnerAndName}`,
+                { headers: githubHeaders }
+            );
 
+            if (!repoCheck.ok) {
+                let errText = 'Token GitHub tidak dapat mengakses repository.';
+                try {
+                    const errData = await repoCheck.json();
+                    if (errData.message) errText += '\n\nGitHub: ' + errData.message;
+                } catch (e) {}
+                alert(errText);
+                return;
+            }
+
+            let bodyIconData = {
+                message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
+                content: base64Icon
+            };
+
+            showToast('Mengunggah logo ke GitHub...');
+
+            let responseIcon = await fetch(
+                `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        ...githubHeaders,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyIconData)
                 }
+            );
 
+            if (responseIcon.ok) {
+                iconValue = iconFileName;
+                showToast('Logo berhasil di-upload!');
+            } else {
+                let errMessage = 'Gagal upload logo.';
+                try {
+                    let errData = await responseIcon.json();
+                    if (errData.message) errMessage += '\n\nGitHub: ' + errData.message;
+                } catch (e) {}
+                alert(errMessage);
+                return;
             }
-        );
 
-    </script>
-</body>
-</html>
+        } catch (error) {
+            console.error('Logo upload error:', error);
+            alert('Error upload logo: ' + (error.message || 'Kesalahan tidak diketahui.'));
+            return;
+        }
+    }
+
+    // 3.
+    let appData = {
+        title,
+        category: document.getElementById('inputCategory') ? document.getElementById('inputCategory').value : 'android',
+        status: document.getElementById('inputStatus') ? document.getElementById('inputStatus').value : '',
+        icon: iconValue,
+        shortDesc: document.getElementById('inputShortDesc') ? document.getElementById('inputShortDesc').value : '',
+        fullDesc: document.getElementById('inputFullDesc') ? document.getElementById('inputFullDesc').value : '',
+        version: document.getElementById('inputVersion') ? document.getElementById('inputVersion').value : 'v1.0',
+        format: format,
+        downloadUrl: downloadUrl,
+        changelog: document.getElementById('inputChangelog') ? document.getElementById('inputChangelog').value : 'Pembaruan rutin.',
+    };
+
+    if (id) {
+        let idx = dbApps.findIndex(a => a.id == id);
+        if (idx !== -1) {
+            dbApps[idx] = { ...dbApps[idx], ...appData };
+        }
+    } else {
+        appData.id = Date.now();
+        appData.downloads = 0;
+        appData.reviews = [];
+        appData.screenshots = [];
+        dbApps.push(appData);
+    }
+    saveDownloadCounts();
+
+    try {
+        showToast('Menyinkronkan database ke GitHub...');
+        await updateMainJsOnGitHub(githubToken);
+        showToast('Berhasil disimpan & disinkronkan ke publik!');
+    } catch (err) {
+        alert('Gagal sinkronisasi ke GitHub: ' + err.message);
+        return;
+    }
+
+    closeModalDirect('appFormModal');
+    renderAdminTable();
+    renderApps();
+}
+
+async function updateMainJsOnGitHub(githubToken) {
+    let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
+    let filePath = 'js/main.js';
+    
+    let getRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
+        headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+    });
+    
+    if (!getRes.ok) throw new Error('Gagal mengambil file js/main.js dari GitHub.');
+    let fileData = await getRes.json();
+    let sha = fileData.sha;
+    
+    let currentCode = decodeBase64Unicode(fileData.content);
+    let newDbAppsString = `let dbApps = ${JSON.stringify(dbApps, null, 4)};`;
+    
+    let startIndex = currentCode.indexOf('let dbApps =');
+    let endIndex = currentCode.indexOf('let favorites =');
+    
+    if (startIndex !== -1 && endIndex !== -1) {
+        let updatedCode = currentCode.substring(0, startIndex) + newDbAppsString + '\n\n' + currentCode.substring(endIndex);
+        
+        let putRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: 'Update dbApps automatically via Admin Panel',
+                content: encodeBase64Unicode(updatedCode),
+                sha: sha
+            })
+        });
+        
+        if (!putRes.ok) {
+            let errData = await putRes.json();
+            throw new Error(errData.message || 'Gagal memperbarui file js/main.js.');
+        }
+    } else {
+        throw new Error('Format file js/main.js tidak dikenali.');
+    }
+}
+
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+});
+
+function encodeBase64Unicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+    }));
+}
+
+function decodeBase64Unicode(base64) {
+    return decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+
+async function deleteApp(id) {
+    if (confirm('Hapus aplikasi ini?')) {
+        dbApps = dbApps.filter(a => a.id !== id);
+        renderAdminTable();
+        renderApps();
+        
+        let githubToken = localStorage.getItem('sayuti_gh_token');
+        if (githubToken) {
+            try {
+                showToast('Menghapus & menyinkronkan ke GitHub...');
+                await updateMainJsOnGitHub(githubToken);
+                showToast('Berhasil dihapus dari publik!');
+            } catch (err) {
+                alert('Gagal sinkronisasi penghapusan: ' + err.message);
+            }
+        }
+    }
+}
+
+function openShareModal() {
+    let app = dbApps.find(a => a.id === activeAppId);
+    if (!app) return;
+    let qrImg = document.getElementById('qrImg');
+    if(qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(app.downloadUrl)}`;
+    let shareModal = document.getElementById('shareModal');
+    if(shareModal) shareModal.classList.add('active');
+}
+
+function copyAppShareLink() {
+    let app = dbApps.find(a => a.id === activeAppId);
+    if (!app) return;
+    navigator.clipboard.writeText(app.downloadUrl);
+    showToast('Tautan disalin!');
+    closeModalDirect('shareModal');
+}
+
+function closeModal(e, modalId) {
+    let modalElem = document.getElementById(modalId);
+    if (e.target === modalElem) {
+        modalElem.classList.remove('active');
+    }
+}
+
+function closeModalDirect(modalId) { 
+    let modal = document.getElementById(modalId);
+    if(modal) modal.classList.remove('active'); 
+}
+
+function showToast(msg) {
+    let t = document.getElementById('toast');
+    let tMsg = document.getElementById('toastMsg');
+    if (tMsg) tMsg.innerText = msg;
+    if (t) {
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+}
