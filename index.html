@@ -1,23 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
+ 
 <html lang="id">
- <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-  <meta content="#6366f1" name="theme-color">
-  <meta content="dark" name="color-scheme">
-  <meta content="yes" name="apple-mobile-web-app-capable">
-  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
-  <meta content="SayutiHub — pusat aplikasi, marketplace digital, unduhan APK dan software dengan tampilan modern." name="description">
-  <title>SayutiHub v3 — Pusat Aplikasi &amp; Marketplace</title>
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <!-- Main CSS -->
-  <link href="css/style.css?v=3" rel="stylesheet">
-  <style>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<meta content="#6366f1" name="theme-color"/>
+<meta content="dark" name="color-scheme"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="SayutiHub — pusat aplikasi, marketplace digital, unduhan APK dan software dengan tampilan modern." name="description"/>
+<title>SayutiHub v3 — Pusat Aplikasi &amp; Marketplace</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Main CSS -->
+<link href="css/style.css?v=3" rel="stylesheet"/>
+<style>
         /* =========================================================
            SAYUTIHUB V3 — MODERN OVERRIDE
            Bisa dipindahkan ke css/style.css
@@ -1627,246 +1628,352 @@
 }
  
 </style>
-  <style id="navbar-right-alignment">
-@media (min-width: 640px) {
-  nav .nav-actions {
-    margin-left: auto;
-    justify-content: flex-end;
-  }
-}
-</style>
- </head>
- <body>
-  <!-- =========================================================
+</head>
+<body>
+<!-- =========================================================
          BACKGROUND
     ========================================================== -->
-  <div class="glow-orb glow-1"></div>
-  <div class="glow-orb glow-2"></div>
-  <!-- =========================================================
+<div class="glow-orb glow-1"></div>
+<div class="glow-orb glow-2"></div>
+<!-- =========================================================
          NAVIGATION
     ========================================================== -->
-  <nav aria-label="Navigasi utama">
-   <div aria-label="Kembali ke halaman utama" class="brand" onclick="switchView('home')" role="button" tabindex="0">
-    <div class="brand-icon">
-     <i class="fa-solid fa-cubes-stacked"></i>
-    </div>
-    <div class="brand-text">
-     <span class="brand-name"> SayutiHub </span> <span class="brand-sub"> DIGITAL APP MARKETPLACE • v3 </span>
-    </div>
-   </div>
-   <div class="nav-actions">
-    <button aria-label="Buka analytics" class="nav-btn" onclick="switchView('analytics')"><i class="fa-solid fa-chart-line"></i> <span>Analytics</span></button>
-    <button aria-label="Login admin" class="nav-btn primary-action" onclick="openAdminLoginModal()"><i class="fa-solid fa-lock"></i> <span>Admin</span></button>
-   </div>
-  </nav>
-  <!-- =========================================================
+<nav aria-label="Navigasi utama">
+<div aria-label="Kembali ke halaman utama" class="brand" onclick="switchView('home')" role="button" tabindex="0">
+<div class="brand-icon">
+<i class="fa-solid fa-cubes-stacked"></i>
+</div>
+<div class="brand-text">
+<span class="brand-name">
+                    SayutiHub
+                </span>
+<span class="brand-sub">
+                    DIGITAL APP MARKETPLACE • v3
+                </span>
+</div>
+</div>
+<div class="nav-actions">
+<button aria-label="Buka aplikasi favorit" class="nav-btn" onclick="switchView('favorites')">
+<i class="fa-solid fa-heart" style="color:var(--accent-rose)"></i>
+<span>Favorit</span>
+ 
+                (<span id="favCount">0</span>)
+            </button>
+<button aria-label="Buka analytics" class="nav-btn" onclick="switchView('analytics')">
+<i class="fa-solid fa-chart-line"></i>
+<span>Analytics</span>
+</button>
+<button aria-label="Login admin" class="nav-btn primary-action" onclick="openAdminLoginModal()">
+<i class="fa-solid fa-lock"></i>
+<span>Admin</span>
+</button>
+</div>
+</nav>
+<!-- =========================================================
          HERO
     ========================================================== -->
-  <header class="hero" id="mainHeader">
-   <div class="hero-content">
-    <div class="hero-badge">
-     <i class="fa-solid fa-sparkles"></i> PLATFORM APLIKASI MANDIRI
-    </div>
-    <h1>Semua Aplikasi.
-     <br>
-     <span>Satu Tempat.</span></h1>
-    <p class="hero-description">Temukan, unduh, dan kelola aplikasi digital favorit Anda melalui SayutiHub. Dirancang cepat, sederhana, modern, dan nyaman digunakan di desktop maupun mobile.</p>
-    <div class="hero-actions">
-     <button class="hero-btn primary" onclick="document.getElementById('searchInput').focus()"><i class="fa-solid fa-magnifying-glass"></i> Jelajahi Aplikasi</button>
-     <button class="hero-btn" onclick="switchView('favorites')"><i class="fa-solid fa-heart"></i> Favorit Saya</button>
-    </div>
-   </div>
-   <div class="hero-visual">
-    <div class="visual-orbit orbit-one"></div>
-    <div class="visual-orbit orbit-two"></div>
-    <div class="visual-glow glow-a"></div>
-    <div class="visual-glow glow-b"></div>
-    <div class="visual-card visual-card-main">
-     <div class="visual-window-bar">
-      <span></span><span></span><span></span>
-     </div>
-     <div class="visual-window-content">
-      <div class="visual-app-icon">
-       <i class="fa-solid fa-cubes-stacked"></i>
-      </div>
-      <div class="visual-lines">
-       <i></i><i></i><i></i>
-      </div>
-      <div class="visual-mini-grid">
-       <span><i class="fa-solid fa-download"></i></span> <span><i class="fa-solid fa-star"></i></span> <span><i class="fa-solid fa-bolt"></i></span>
-      </div>
-     </div>
-    </div>
-    <div class="visual-card visual-card-float float-one">
-     <i class="fa-solid fa-cloud-arrow-down"></i>
-    </div>
-    <div class="visual-card visual-card-float float-two">
-     <i class="fa-solid fa-shield-halved"></i>
-    </div>
-    <div class="visual-card visual-card-float float-three">
-     <i class="fa-solid fa-mobile-screen-button"></i>
-    </div>
-   </div>
-  </header>
-  <!-- =========================================================
+<header class="hero" id="mainHeader">
+<div class="hero-content">
+<div class="hero-badge">
+<i class="fa-solid fa-sparkles"></i>
+                PLATFORM APLIKASI MANDIRI
+            </div>
+<h1>
+                Semua Aplikasi.
+                <br/>
+<span>Satu Tempat.</span>
+</h1>
+<p class="hero-description">
+                Temukan, unduh, dan kelola aplikasi digital favorit
+                Anda melalui SayutiHub. Dirancang cepat, sederhana,
+                modern, dan nyaman digunakan di desktop maupun mobile.
+            </p>
+<div class="hero-actions">
+<button class="hero-btn primary" onclick="document.getElementById('searchInput').focus()">
+<i class="fa-solid fa-magnifying-glass"></i>
+                    Jelajahi Aplikasi
+                </button>
+<button class="hero-btn" onclick="switchView('favorites')">
+<i class="fa-solid fa-heart"></i>
+                    Favorit Saya
+                </button>
+</div>
+</div>
+<div class="hero-visual">
+<div class="visual-orbit orbit-one"></div>
+<div class="visual-orbit orbit-two"></div>
+<div class="visual-glow glow-a"></div>
+<div class="visual-glow glow-b"></div>
+<div class="visual-card visual-card-main">
+<div class="visual-window-bar">
+<span></span><span></span><span></span>
+</div>
+<div class="visual-window-content">
+<div class="visual-app-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+<div class="visual-lines"><i></i><i></i><i></i></div>
+<div class="visual-mini-grid">
+<span><i class="fa-solid fa-download"></i></span>
+<span><i class="fa-solid fa-star"></i></span>
+<span><i class="fa-solid fa-bolt"></i></span>
+</div>
+</div>
+</div>
+<div class="visual-card visual-card-float float-one"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+<div class="visual-card visual-card-float float-two"><i class="fa-solid fa-shield-halved"></i></div>
+<div class="visual-card visual-card-float float-three"><i class="fa-solid fa-mobile-screen-button"></i></div>
+</div></header>
+<!-- =========================================================
          MAIN
     ========================================================== -->
-  <main class="container">
-   <!-- =====================================================
+<main class="container">
+<!-- =====================================================
              HOME
         ====================================================== -->
-   <section class="view-section active" id="homeView">
-    <div class="section-heading">
-     <div>
-      <h2><i class="fa-solid fa-grid-2" style="color:var(--primary-light)"></i> Koleksi Aplikasi</h2>
-      <p>Pilih aplikasi yang ingin Anda gunakan.</p>
-     </div>
-    </div>
-    <!-- SEARCH & FILTER -->
-    <div class="controls-wrapper">
-     <div class="search-sort-row">
-      <div class="search-box">
-       <i class="fa-solid fa-magnifying-glass"></i> <input aria-label="Cari aplikasi" autocomplete="off" id="searchInput" oninput="renderApps()" placeholder="Cari nama aplikasi atau deskripsi..." type="search">
-      </div>
-      <select aria-label="Urutkan aplikasi" class="sort-select" id="sortSelect" onchange="renderApps()"> <option value="default"> Terbaru </option> <option value="name-asc"> Nama A - Z </option> <option value="rating-desc"> Rating Tertinggi </option> <option value="downloads-desc"> Unduhan Terbanyak </option> </select>
-     </div>
-     <div aria-label="Filter aplikasi" class="filter-tabs" role="tablist">
-      <button class="filter-btn active" onclick="setCategory('all', this)"><i class="fa-solid fa-border-all"></i> Semua</button>
-      <button class="filter-btn" onclick="setCategory('featured', this)"><i class="fa-solid fa-star"></i> Featured</button>
-      <button class="filter-btn" onclick="setCategory('trending', this)"><i class="fa-solid fa-fire"></i> Trending</button>
-      <button class="filter-btn" onclick="setCategory('android', this)"><i class="fa-brands fa-android"></i> Android</button>
-      <button class="filter-btn" onclick="setCategory('windows', this)"><i class="fa-brands fa-windows"></i> Windows</button>
-      <button class="filter-btn" onclick="setCategory('tools', this)"><i class="fa-solid fa-wrench"></i> Tools</button>
-     </div>
-    </div>
-    <!-- APP GRID -->
-    <div aria-live="polite" class="app-grid" id="appGrid"></div>
-    <!-- EMPTY -->
-    <div class="empty-state" id="emptyState" style="display:none;">
-     <div class="empty-state-icon">
-      <i class="fa-solid fa-box-open"></i>
-     </div>
-     <h3>Aplikasi Tidak Ditemukan</h3>
-     <p>Coba gunakan kata kunci atau kategori yang berbeda.</p>
-    </div>
-   </section>
-   <!-- =====================================================
+<section class="view-section active" id="homeView">
+<div class="section-heading">
+<div>
+<h2>
+<i class="fa-solid fa-grid-2" style="color:var(--primary-light)"></i>
+ 
+                        Koleksi Aplikasi
+                    </h2>
+<p>
+                        Pilih aplikasi yang ingin Anda gunakan.
+                    </p>
+</div>
+</div>
+<!-- SEARCH & FILTER -->
+<div class="controls-wrapper">
+<div class="search-sort-row">
+<div class="search-box">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Cari aplikasi" autocomplete="off" id="searchInput" oninput="renderApps()" placeholder="Cari nama aplikasi atau deskripsi..." type="search"/>
+</div>
+<select aria-label="Urutkan aplikasi" class="sort-select" id="sortSelect" onchange="renderApps()">
+<option value="default">
+                            Terbaru
+                        </option>
+<option value="name-asc">
+                            Nama A - Z
+                        </option>
+<option value="rating-desc">
+                            Rating Tertinggi
+                        </option>
+<option value="downloads-desc">
+                            Unduhan Terbanyak
+                        </option>
+</select>
+</div>
+<div aria-label="Filter aplikasi" class="filter-tabs" role="tablist">
+<button class="filter-btn active" onclick="setCategory('all', this)">
+<i class="fa-solid fa-border-all"></i>
+                        Semua
+                    </button>
+<button class="filter-btn" onclick="setCategory('featured', this)">
+<i class="fa-solid fa-star"></i>
+                        Featured
+                    </button>
+<button class="filter-btn" onclick="setCategory('trending', this)">
+<i class="fa-solid fa-fire"></i>
+                        Trending
+                    </button>
+<button class="filter-btn" onclick="setCategory('android', this)">
+<i class="fa-brands fa-android"></i>
+                        Android
+                    </button>
+<button class="filter-btn" onclick="setCategory('windows', this)">
+<i class="fa-brands fa-windows"></i>
+                        Windows
+                    </button>
+<button class="filter-btn" onclick="setCategory('tools', this)">
+<i class="fa-solid fa-wrench"></i>
+                        Tools
+                    </button>
+</div>
+</div>
+<!-- APP GRID -->
+<div aria-live="polite" class="app-grid" id="appGrid"></div>
+<!-- EMPTY -->
+<div class="empty-state" id="emptyState" style="display:none;">
+<div class="empty-state-icon">
+<i class="fa-solid fa-box-open"></i>
+</div>
+<h3>
+                    Aplikasi Tidak Ditemukan
+                </h3>
+<p>
+                    Coba gunakan kata kunci atau kategori yang berbeda.
+                </p>
+</div>
+</section>
+<!-- =====================================================
              FAVORITES
         ====================================================== -->
-   <section class="view-section" id="favoritesView">
-    <div class="section-heading">
-     <div>
-      <h2><i class="fa-solid fa-heart" style="color:var(--accent-rose)"></i> Aplikasi Favorit</h2>
-      <p>Aplikasi yang Anda simpan untuk akses cepat.</p>
-     </div>
-    </div>
-    <div class="app-grid" id="favoritesGrid"></div>
-   </section>
-   <!-- =====================================================
+<section class="view-section" id="favoritesView">
+<div class="section-heading">
+<div>
+<h2>
+<i class="fa-solid fa-heart" style="color:var(--accent-rose)"></i>
+ 
+                        Aplikasi Favorit
+                    </h2>
+<p>
+                        Aplikasi yang Anda simpan untuk akses cepat.
+                    </p>
+</div>
+</div>
+<div class="app-grid" id="favoritesGrid"></div>
+</section>
+<!-- =====================================================
              ANALYTICS
         ====================================================== -->
-   <section class="view-section" id="analyticsView">
-    <div class="dashboard-header">
-     <div>
-      <h2 style="font-size:1.2rem; margin:0;"><i class="fa-solid fa-chart-line" style="color:var(--primary-light)"></i> Analisis Sistem</h2>
-      <p style="
+<section class="view-section" id="analyticsView">
+<div class="dashboard-header">
+<div>
+<h2 style="font-size:1.2rem; margin:0;">
+<i class="fa-solid fa-chart-line" style="color:var(--primary-light)"></i>
+ 
+                        Analisis Sistem
+                    </h2>
+<p style="
                             margin:5px 0 0;
                             color:var(--text-muted);
                             font-size:.72rem;
-                        ">Statistik aktivitas SayutiHub.</p>
-     </div>
-    </div>
-    <div class="stats-grid">
-     <div class="stat-card">
-      <h4>TOTAL APLIKASI</h4>
-      <div class="val" id="statTotalApps">0</div>
-     </div>
-     <div class="stat-card">
-      <h4>TOTAL UNDUHAN</h4>
-      <div class="val" id="statTotalDownloads">0</div>
-     </div>
-     <div class="stat-card">
-      <h4>TOTAL ULASAN</h4>
-      <div class="val" id="statTotalReviews">0</div>
-     </div>
-    </div>
-   </section>
-   <!-- =====================================================
+                        ">
+                        Statistik aktivitas SayutiHub.
+                    </p>
+</div>
+</div>
+<div class="stats-grid">
+<div class="stat-card">
+<h4>
+                        TOTAL APLIKASI
+                    </h4>
+<div class="val" id="statTotalApps">
+                        0
+                    </div>
+</div>
+<div class="stat-card">
+<h4>
+                        TOTAL UNDUHAN
+                    </h4>
+<div class="val" id="statTotalDownloads">
+                        0
+                    </div>
+</div>
+<div class="stat-card">
+<h4>
+                        TOTAL ULASAN
+                    </h4>
+<div class="val" id="statTotalReviews">
+                        0
+                    </div>
+</div>
+</div>
+</section>
+<!-- =====================================================
              ADMIN
         ====================================================== -->
-   <section class="view-section" id="adminView">
-    <div class="dashboard-header">
-     <div>
-      <h2 style="font-size:1.15rem; margin:0;"><i class="fa-solid fa-user-shield" style="color:#818cf8"></i> Panel Admin</h2>
-      <p style="
+<section class="view-section" id="adminView">
+<div class="dashboard-header">
+<div>
+<h2 style="font-size:1.15rem; margin:0;">
+<i class="fa-solid fa-user-shield" style="color:#818cf8"></i>
+ 
+                        Panel Admin
+                    </h2>
+<p style="
                             margin:5px 0 0;
                             color:var(--text-muted);
                             font-size:.7rem;
-                        ">Kelola aplikasi dan katalog SayutiHub.</p>
-     </div>
-     <div style="
+                        ">
+                        Kelola aplikasi dan katalog SayutiHub.
+                    </p>
+</div>
+<div style="
                         display:flex;
                         gap:7px;
                         flex-wrap:wrap;
                     ">
-      <button class="nav-btn primary-action" onclick="openAppFormModal()"><i class="fa-solid fa-plus"></i> Tambah</button>
-      <button class="nav-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Keluar</button>
-     </div>
-    </div>
-    <div class="admin-table-wrapper">
-     <table>
-      <thead>
-       <tr>
-        <th>Aplikasi</th>
-        <th>Kategori</th>
-        <th>Versi</th>
-        <th>Unduhan</th>
-        <th>Aksi</th>
-       </tr>
-      </thead>
-      <tbody id="adminAppTableBody"></tbody>
-     </table>
-    </div>
-   </section>
-  </main>
-  <!-- =========================================================
+<button class="nav-btn primary-action" onclick="openAppFormModal()">
+<i class="fa-solid fa-plus"></i>
+                        Tambah
+                    </button>
+<button class="nav-btn" onclick="switchView('home')">
+<i class="fa-solid fa-arrow-left"></i>
+                        Keluar
+                    </button>
+</div>
+</div>
+<div class="admin-table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Aplikasi</th>
+<th>Kategori</th>
+<th>Versi</th>
+<th>Unduhan</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="adminAppTableBody"></tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- =========================================================
          DETAIL MODAL
     ========================================================== -->
-  <div aria-labelledby="detailTitle" aria-modal="true" class="modal-overlay" id="detailModal" onclick="closeModal(event, 'detailModal')" role="dialog">
-   <div class="modal-container">
-    <button aria-label="Tutup" class="modal-close" onclick="closeModalDirect('detailModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
+<div aria-labelledby="detailTitle" aria-modal="true" class="modal-overlay" id="detailModal" onclick="closeModal(event, 'detailModal')" role="dialog">
+<div class="modal-container">
+<button aria-label="Tutup" class="modal-close" onclick="closeModalDirect('detailModal')">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div style="
                     display:flex;
                     align-items:center;
                     gap:13px;
                     margin-bottom:14px;
                     padding-right:30px;
                 ">
-     <div class="app-icon" id="detailIcon" style="
+<div class="app-icon" id="detailIcon" style="
                         width:58px;
                         height:58px;
                         font-size:1.6rem;
                     "></div>
-     <div>
-      <h2 id="detailTitle" style="
+<div>
+<h2 id="detailTitle" style="
                             font-size:1.15rem;
                             margin:0 0 4px;
                         "></h2>
-      <div style="
+<div style="
                             font-size:.68rem;
                             color:var(--text-muted);
                         ">
-       Versi: <span id="detailVersion" style="color:var(--text-main);"></span> &nbsp;•&nbsp; Format: <span id="detailFormat" style="color:var(--text-main);"></span> &nbsp;•&nbsp; Unduhan: <span id="detailDownloads" style="color:var(--text-main);"></span>x
-      </div>
-     </div>
-    </div>
-    <p id="detailDesc" style="
+ 
+                        Versi:
+                        <span id="detailVersion" style="color:var(--text-main);"></span>
+ 
+                         • 
+ 
+                        Format:
+                        <span id="detailFormat" style="color:var(--text-main);"></span>
+ 
+                         • 
+ 
+                        Unduhan:
+                        <span id="detailDownloads" style="color:var(--text-main);"></span>x
+ 
+                    </div>
+</div>
+</div>
+<p id="detailDesc" style="
                     color:var(--text-muted);
                     font-size:.82rem;
                     line-height:1.65;
                     margin-bottom:14px;
                 "></p>
-    <div style="
+<div style="
                     background:rgba(15,23,42,.65);
                     padding:12px;
                     border-radius:12px;
@@ -1875,28 +1982,40 @@
                     color:var(--text-muted);
                     border:1px solid rgba(255,255,255,.05);
                 ">
-     <strong style="color:var(--text-soft);"> <i class="fa-solid fa-list-check"></i> Changelog </strong>
-     <p id="detailChangelog" style="margin:5px 0 0;"></p>
-    </div>
-    <div style="
+<strong style="color:var(--text-soft);">
+<i class="fa-solid fa-list-check"></i>
+                    Changelog
+                </strong>
+<p id="detailChangelog" style="margin:5px 0 0;"></p>
+</div>
+<div style="
                     display:grid;
                     grid-template-columns:1fr auto;
                     gap:8px;
                     margin-bottom:17px;
                 ">
-     <a class="btn-download" href="#" id="detailDownloadBtn" onclick="incrementDownload()"> <i class="fa-solid fa-download"></i> Unduh Sekarang </a>
-     <button aria-label="Bagikan aplikasi" class="nav-btn" onclick="openShareModal()"><i class="fa-solid fa-qrcode"></i></button>
-    </div>
-    <!-- REVIEWS -->
-    <div style="
+<a class="btn-download" href="#" id="detailDownloadBtn" onclick="incrementDownload()">
+<i class="fa-solid fa-download"></i>
+                    Unduh Sekarang
+                </a>
+<button aria-label="Bagikan aplikasi" class="nav-btn" onclick="openShareModal()">
+<i class="fa-solid fa-qrcode"></i>
+</button>
+</div>
+<!-- REVIEWS -->
+<div style="
                     border-top:1px solid var(--border-color);
                     padding-top:15px;
                 ">
-     <h4 style="
+<h4 style="
                         margin:0 0 9px;
                         font-size:.88rem;
-                    "><i class="fa-solid fa-star-half-stroke" style="color:#fbbf24;"></i> Ulasan Pengguna</h4>
-     <div style="
+                    ">
+<i class="fa-solid fa-star-half-stroke" style="color:#fbbf24;"></i>
+ 
+                    Ulasan Pengguna
+                </h4>
+<div style="
                         background:rgba(15,23,42,.45);
                         padding:11px;
                         border-radius:12px;
@@ -1906,35 +2025,45 @@
                         gap:7px;
                         border:1px solid rgba(255,255,255,.05);
                     ">
-      <div id="starPicker" style="
+<div id="starPicker" style="
                             display:flex;
                             gap:6px;
                             font-size:1rem;
                             color:#fbbf24;
                             cursor:pointer;
                         ">
-       <i class="fa-solid fa-star" onclick="setRating(1)"></i> <i class="fa-solid fa-star" onclick="setRating(2)"></i> <i class="fa-solid fa-star" onclick="setRating(3)"></i> <i class="fa-solid fa-star" onclick="setRating(4)"></i> <i class="fa-solid fa-star" onclick="setRating(5)"></i>
-      </div>
-      <input class="form-control" id="reviewName" maxlength="30" placeholder="Nama Anda..." type="text"> <textarea class="form-control" id="reviewComment" maxlength="150" placeholder="Bagikan pengalaman Anda..." rows="3"></textarea>
-      <button class="nav-btn primary-action" onclick="submitReview()" style="align-self:flex-end;"><i class="fa-solid fa-paper-plane"></i> Kirim Ulasan</button>
-     </div>
-     <div id="reviewsList" style="
+<i class="fa-solid fa-star" onclick="setRating(1)"></i>
+<i class="fa-solid fa-star" onclick="setRating(2)"></i>
+<i class="fa-solid fa-star" onclick="setRating(3)"></i>
+<i class="fa-solid fa-star" onclick="setRating(4)"></i>
+<i class="fa-solid fa-star" onclick="setRating(5)"></i>
+</div>
+<input class="form-control" id="reviewName" maxlength="30" placeholder="Nama Anda..." type="text"/>
+<textarea class="form-control" id="reviewComment" maxlength="150" placeholder="Bagikan pengalaman Anda..." rows="3"></textarea>
+<button class="nav-btn primary-action" onclick="submitReview()" style="align-self:flex-end;">
+<i class="fa-solid fa-paper-plane"></i>
+                        Kirim Ulasan
+                    </button>
+</div>
+<div id="reviewsList" style="
                         display:flex;
                         flex-direction:column;
                         gap:7px;
                         max-height:180px;
                         overflow-y:auto;
                     "></div>
-    </div>
-   </div>
-  </div>
-  <!-- =========================================================
+</div>
+</div>
+</div>
+<!-- =========================================================
          ADMIN LOGIN
     ========================================================== -->
-  <div aria-modal="true" class="modal-overlay" id="adminLoginModal" onclick="closeModal(event, 'adminLoginModal')" role="dialog">
-   <div class="modal-container" style="max-width:380px;">
-    <button class="modal-close" onclick="closeModalDirect('adminLoginModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
+<div aria-modal="true" class="modal-overlay" id="adminLoginModal" onclick="closeModal(event, 'adminLoginModal')" role="dialog">
+<div class="modal-container" style="max-width:380px;">
+<button class="modal-close" onclick="closeModalDirect('adminLoginModal')">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div style="
                     width:50px;
                     height:50px;
                     display:grid;
@@ -1944,41 +2073,53 @@
                     color:#818cf8;
                     margin-bottom:12px;
                 ">
-     <i class="fa-solid fa-user-shield"></i>
-    </div>
-    <h3 style="
+<i class="fa-solid fa-user-shield"></i>
+</div>
+<h3 style="
                     margin:0 0 5px;
                     font-size:1.1rem;
-                ">Login Admin</h3>
-    <p style="
+                ">
+                Login Admin
+            </h3>
+<p style="
                     color:var(--text-muted);
                     font-size:.72rem;
                     margin:0 0 17px;
-                ">Masukkan PIN administrator untuk melanjutkan.</p>
-    <div class="form-group">
-     <label for="adminPinInput"> PIN Administrator </label> <input autocomplete="current-password" class="form-control" id="adminPinInput" placeholder="Masukkan PIN..." type="password">
-    </div>
-    <button class="nav-btn primary-action" onclick="verifyAdminLogin()" style="
+                ">
+                Masukkan PIN administrator untuk melanjutkan.
+            </p>
+<div class="form-group">
+<label for="adminPinInput">
+                    PIN Administrator
+                </label>
+<input autocomplete="current-password" class="form-control" id="adminPinInput" placeholder="Masukkan PIN..." type="password"/>
+</div>
+<button class="nav-btn primary-action" onclick="verifyAdminLogin()" style="
                     width:100%;
                     justify-content:center;
                     min-height:44px;
-                "><i class="fa-solid fa-right-to-bracket"></i> Masuk ke Panel</button>
-   </div>
-  </div>
-  <!-- =========================================================
+                ">
+<i class="fa-solid fa-right-to-bracket"></i>
+                Masuk ke Panel
+            </button>
+</div>
+</div>
+<!-- =========================================================
          APP FORM
     ========================================================== -->
-  <div aria-modal="true" class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')" role="dialog">
-   <div class="modal-container">
-    <button class="modal-close" onclick="closeModalDirect('appFormModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
+<div aria-modal="true" class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')" role="dialog">
+<div class="modal-container">
+<button class="modal-close" onclick="closeModalDirect('appFormModal')">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div style="
                     display:flex;
                     align-items:center;
                     gap:10px;
                     margin-bottom:17px;
                     padding-right:30px;
                 ">
-     <div style="
+<div style="
                         width:42px;
                         height:42px;
                         display:grid;
@@ -1991,92 +2132,168 @@
                             #8b5cf6
                         );
                     ">
-      <i class="fa-solid fa-cloud-arrow-up"></i>
-     </div>
-     <div>
-      <h3 id="formModalTitle" style="
+<i class="fa-solid fa-cloud-arrow-up"></i>
+</div>
+<div>
+<h3 id="formModalTitle" style="
                             margin:0;
                             font-size:1rem;
-                        ">Tambah Aplikasi</h3>
-      <p style="
+                        ">
+                        Tambah Aplikasi
+                    </h3>
+<p style="
                             margin:3px 0 0;
                             color:var(--text-muted);
                             font-size:.68rem;
-                        ">Tambahkan aplikasi ke katalog.</p>
-     </div>
-    </div>
-    <input id="editAppId" type="hidden">
-    <div class="form-group">
-     <label> Nama Aplikasi </label> <input class="form-control" id="inputTitle" placeholder="Contoh: Sayuti Store" type="text">
-    </div>
-    <div class="form-group">
-     <label> Kategori </label> <select class="form-control" id="inputCategory"> <option value="android"> Android </option> <option value="windows"> Windows </option> <option value="tools"> Tools </option> </select>
-    </div>
-    <div class="form-group">
-     <label> Status </label> <select class="form-control" id="inputStatus"> <option value=""> Normal </option> <option value="Featured"> Featured </option> <option value="Trending"> Trending </option> <option value="New"> New </option> </select>
-    </div>
-    <div class="form-group">
-     <label> Icon FontAwesome </label> <input class="form-control" id="inputIcon" placeholder="fa-store" type="text">
-    </div>
-    <div class="form-group">
-     <label> Upload Logo / Ikon </label> <input accept="image/png,image/jpeg,image/webp,image/svg+xml" class="form-control" id="inputIconFile" type="file">
-    </div>
-    <div class="form-group">
-     <label> Deskripsi Singkat </label> <input class="form-control" id="inputShortDesc" placeholder="Ringkasan aplikasi..." type="text">
-    </div>
-    <div class="form-group">
-     <label> Deskripsi Lengkap </label> <textarea class="form-control" id="inputFullDesc" placeholder="Jelaskan fungsi dan fitur aplikasi..." rows="3"></textarea>
-    </div>
-    <div class="form-group">
-     <label> Versi &amp; Format </label>
-     <div style="
+                        ">
+                        Tambahkan aplikasi ke katalog.
+                    </p>
+</div>
+</div>
+<input id="editAppId" type="hidden"/>
+<div class="form-group">
+<label>
+                    Nama Aplikasi
+                </label>
+<input class="form-control" id="inputTitle" placeholder="Contoh: Sayuti Store" type="text"/>
+</div>
+<div class="form-group">
+<label>
+                    Kategori
+                </label>
+<select class="form-control" id="inputCategory">
+<option value="android">
+                        Android
+                    </option>
+<option value="windows">
+                        Windows
+                    </option>
+<option value="tools">
+                        Tools
+                    </option>
+</select>
+</div>
+<div class="form-group">
+<label>
+                    Status
+                </label>
+<select class="form-control" id="inputStatus">
+<option value="">
+                        Normal
+                    </option>
+<option value="Featured">
+                        Featured
+                    </option>
+<option value="Trending">
+                        Trending
+                    </option>
+<option value="New">
+                        New
+                    </option>
+</select>
+</div>
+<div class="form-group">
+<label>
+                    Icon FontAwesome
+                </label>
+<input class="form-control" id="inputIcon" placeholder="fa-store" type="text"/>
+</div>
+<div class="form-group">
+<label>
+                    Upload Logo / Ikon
+                </label>
+<input accept="image/png,image/jpeg,image/webp,image/svg+xml" class="form-control" id="inputIconFile" type="file"/>
+</div>
+<div class="form-group">
+<label>
+                    Deskripsi Singkat
+                </label>
+<input class="form-control" id="inputShortDesc" placeholder="Ringkasan aplikasi..." type="text"/>
+</div>
+<div class="form-group">
+<label>
+                    Deskripsi Lengkap
+                </label>
+<textarea class="form-control" id="inputFullDesc" placeholder="Jelaskan fungsi dan fitur aplikasi..." rows="3"></textarea>
+</div>
+<div class="form-group">
+<label>
+                    Versi &amp; Format
+                </label>
+<div style="
                         display:grid;
                         grid-template-columns:1fr 1fr;
                         gap:8px;
                     ">
-      <input class="form-control" id="inputVersion" placeholder="v1.0.0" type="text"> <input class="form-control" id="inputFormat" placeholder="APK / 15 MB" type="text">
-     </div>
-    </div>
-    <div class="form-group">
-     <label> File APK </label> <input accept=".apk" class="form-control" id="inputApkFile" type="file"> <small style="
+<input class="form-control" id="inputVersion" placeholder="v1.0.0" type="text"/>
+<input class="form-control" id="inputFormat" placeholder="APK / 15 MB" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label>
+                    File APK
+                </label>
+<input accept=".apk" class="form-control" id="inputApkFile" type="file"/>
+<small style="
                         display:block;
                         margin-top:5px;
                         color:#64748b;
                         font-size:.62rem;
-                    "> Gunakan file APK jika ingin mengunggah aplikasi langsung dari panel. </small>
-    </div>
-    <div class="form-group">
-     <label> GitHub Token </label> <input autocomplete="new-password" class="form-control" id="inputGithubToken" placeholder="Masukkan token hanya jika diperlukan" type="password"> <small style="
+                    ">
+                    Gunakan file APK jika ingin mengunggah aplikasi
+                    langsung dari panel.
+                </small>
+</div>
+<div class="form-group">
+<label>
+                    GitHub Token
+                </label>
+<input autocomplete="new-password" class="form-control" id="inputGithubToken" placeholder="Masukkan token hanya jika diperlukan" type="password"/>
+<small style="
                         display:block;
                         margin-top:5px;
                         color:#64748b;
                         font-size:.62rem;
-                    "> Jangan menaruh token rahasia secara hard-code di source HTML. </small>
-    </div>
-    <div class="form-group">
-     <label> URL Unduhan </label> <input class="form-control" id="inputDownloadUrl" placeholder="https://..." type="url">
-    </div>
-    <div class="form-group">
-     <label> Changelog </label> <input class="form-control" id="inputChangelog" placeholder="Pembaruan versi terbaru..." type="text">
-    </div>
-    <button class="nav-btn primary-action" onclick="saveAppFromForm()" style="
+                    ">
+                    Jangan menaruh token rahasia secara hard-code
+                    di source HTML.
+                </small>
+</div>
+<div class="form-group">
+<label>
+                    URL Unduhan
+                </label>
+<input class="form-control" id="inputDownloadUrl" placeholder="https://..." type="url"/>
+</div>
+<div class="form-group">
+<label>
+                    Changelog
+                </label>
+<input class="form-control" id="inputChangelog" placeholder="Pembaruan versi terbaru..." type="text"/>
+</div>
+<button class="nav-btn primary-action" onclick="saveAppFromForm()" style="
                     width:100%;
                     justify-content:center;
                     min-height:45px;
                     margin-top:5px;
-                "><i class="fa-solid fa-floppy-disk"></i> Simpan Aplikasi</button>
-   </div>
-  </div>
-  <!-- =========================================================
+                ">
+<i class="fa-solid fa-floppy-disk"></i>
+                Simpan Aplikasi
+            </button>
+</div>
+</div>
+<!-- =========================================================
          SHARE / QR MODAL
     ========================================================== -->
-  <div aria-modal="true" class="modal-overlay" id="shareModal" onclick="closeModal(event, 'shareModal')" role="dialog">
-   <div class="modal-container" style="
+<div aria-modal="true" class="modal-overlay" id="shareModal" onclick="closeModal(event, 'shareModal')" role="dialog">
+<div class="modal-container" style="
                 max-width:360px;
                 text-align:center;
             ">
-    <button class="modal-close" onclick="closeModalDirect('shareModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
+<button class="modal-close" onclick="closeModalDirect('shareModal')">
+<i class="fa-solid fa-xmark"></i>
+</button>
+<div style="
                     width:48px;
                     height:48px;
                     display:grid;
@@ -2086,18 +2303,22 @@
                     color:#818cf8;
                     background:rgba(99,102,241,.1);
                 ">
-     <i class="fa-solid fa-qrcode"></i>
-    </div>
-    <h3 style="
+<i class="fa-solid fa-qrcode"></i>
+</div>
+<h3 style="
                     margin:0 0 5px;
                     font-size:1.05rem;
-                ">Bagikan Aplikasi</h3>
-    <p style="
+                ">
+                Bagikan Aplikasi
+            </h3>
+<p style="
                     margin:0 0 15px;
                     color:var(--text-muted);
                     font-size:.7rem;
-                ">Scan QR Code untuk membuka halaman aplikasi.</p>
-    <div id="qrcodeContainer" style="
+                ">
+                Scan QR Code untuk membuka halaman aplikasi.
+            </p>
+<div id="qrcodeContainer" style="
                     background:#fff;
                     padding:12px;
                     border-radius:14px;
@@ -2105,44 +2326,56 @@
                     margin-bottom:14px;
                     box-shadow:0 15px 35px rgba(0,0,0,.25);
                 ">
-     <img alt="QR Code aplikasi" id="qrImg" src="" style="
+<img alt="QR Code aplikasi" id="qrImg" src="" style="
                         width:170px;
                         height:170px;
                         display:block;
-                    ">
-    </div>
-    <button class="nav-btn primary-action" onclick="copyAppShareLink()" style="
+                    "/>
+</div>
+<button class="nav-btn primary-action" onclick="copyAppShareLink()" style="
                     width:100%;
                     justify-content:center;
                     min-height:44px;
-                "><i class="fa-solid fa-copy"></i> Salin Tautan</button>
-   </div>
-  </div>
-  <!-- =========================================================
+                ">
+<i class="fa-solid fa-copy"></i>
+                Salin Tautan
+            </button>
+</div>
+</div>
+<!-- =========================================================
          TOAST
     ========================================================== -->
-  <div aria-live="polite" class="toast" id="toast" role="status">
-   <i class="fa-solid fa-circle-check"></i> <span id="toastMsg"> Berhasil! </span>
-  </div>
-  <!-- =========================================================
+<div aria-live="polite" class="toast" id="toast" role="status">
+<i class="fa-solid fa-circle-check"></i>
+<span id="toastMsg">
+            Berhasil!
+        </span>
+</div>
+<!-- =========================================================
          FOOTER
     ========================================================== -->
-  <footer>
-   <p>© 2026 <strong>SayutiHub</strong>. Semua hak dilindungi.</p>
-   <p style="
+<footer>
+<p>
+            © 2026
+            <strong>SayutiHub</strong>.
+            Semua hak dilindungi.
+        </p>
+<p style="
                 margin-top:5px;
                 opacity:.65;
-            ">Built for a faster digital experience.</p>
-  </footer>
-  <!-- =========================================================
+            ">
+            Built for a faster digital experience.
+        </p>
+</footer>
+<!-- =========================================================
          JAVASCRIPT
     ========================================================== -->
-  <script src="js/main.js?v=3"></script>
-  <!-- =========================================================
+<script src="js/main.js?v=3"></script>
+<!-- =========================================================
          SMALL UI ENHANCEMENT
          Tidak menggantikan main.js
     ========================================================== -->
-  <script>
+<script>
  
         /*
          * Sinkronisasi statistik Hero dengan
@@ -2292,5 +2525,5 @@
         );
  
     </script>
- </body>
+</body>
 </html>
