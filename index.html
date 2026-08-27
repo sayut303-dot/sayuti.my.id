@@ -1252,16 +1252,30 @@
 
         @media (max-width: 720px) {
             nav {
-                padding: 11px 4%;
+                padding: 10px 12px;
+                gap: 8px;
             }
 
             .brand-text {
+                display: flex !important;
+                min-width: 0;
+            }
+
+            .brand-name {
+                font-size: .86rem;
+                white-space: nowrap;
+            }
+
+            .brand-sub {
                 display: none;
             }
 
             .nav-actions {
-                width: 100%;
+                flex: 1 1 auto;
+                min-width: 0;
                 justify-content: flex-end;
+                gap: 5px;
+                overflow-x: auto;
             }
 
             .nav-btn {
@@ -2964,11 +2978,75 @@
          * secara dinamis.
          */
 
-        setInterval(syncHeroStats, 800);
+        /*
+         * Total unduhan selalu dihitung dari angka unduhan setiap aplikasi.
+         * Jadi dashboard/hero tidak memakai angka total yang terpisah.
+         */
+        function parseDownloadNumber(value) {
+            if (!value) return 0;
+            const text = String(value).trim().toLowerCase().replace(/\s+/g, "");
+            const match = text.match(/([0-9]+(?:[.,][0-9]+)?)(k|m|jt|juta)?/i);
+            if (!match) return 0;
+            let number = parseFloat(match[1].replace(',', '.'));
+            const unit = match[2] || '';
+            if (unit === 'k') number *= 1000;
+            else if (unit === 'm' || unit === 'jt' || unit === 'juta') number *= 1000000;
+            return Math.round(number);
+        }
+
+        function syncDownloadTotalFromApps() {
+            const cards = document.querySelectorAll('#appGrid .app-card, #favoritesGrid .app-card');
+            const seen = new Set();
+            let total = 0;
+
+            cards.forEach(function(card) {
+                const key = card.dataset.appId || card.querySelector('h3')?.textContent?.trim();
+                if (key && seen.has(key)) return;
+                if (key) seen.add(key);
+
+                const candidates = card.querySelectorAll('[data-downloads], .downloads, .app-meta span, .app-meta');
+                let value = null;
+                for (const el of candidates) {
+                    if (el.dataset.downloads) {
+                        value = el.dataset.downloads;
+                        break;
+                    }
+                    const text = el.textContent || '';
+                    const downloadMatch = text.match(/([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?\s*(?:unduhan|downloads?)/i);
+                    if (downloadMatch) {
+                        value = downloadMatch[1] + (downloadMatch[2] || '');
+                        break;
+                    }
+                    const reverseMatch = text.match(/(?:unduhan|downloads?)\s*[:\-]?\s*([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?/i);
+                    if (reverseMatch) {
+                        value = reverseMatch[1] + (reverseMatch[2] || '');
+                        break;
+                    }
+                }
+                if (value != null) total += parseDownloadNumber(value);
+            });
+
+            /* Jika card belum selesai dirender, jangan menimpa statistik yang valid. */
+            if (!cards.length) return;
+
+            const formatted = total.toLocaleString('id-ID');
+            const dashboard = document.getElementById('statTotalDownloads');
+            const hero = document.getElementById('heroTotalDownloads');
+            if (dashboard) dashboard.textContent = formatted;
+            if (hero) hero.textContent = formatted;
+        }
+
+        setInterval(function() {
+            syncHeroStats();
+            syncDownloadTotalFromApps();
+        }, 500);
 
         document.addEventListener(
             "DOMContentLoaded",
-            syncHeroStats
+            function() {
+                syncHeroStats();
+                syncDownloadTotalFromApps();
+            }
         );
 
 
