@@ -55,23 +55,7 @@ let dbApps = [
         "downloadUrl": "KlikWaCepat v2.1.apk",
         "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 2.1.0.",
         "id": 1787488454945,
-        "downloads": 241,
-        "reviews": [],
-        "screenshots": []
-    },
-    {
-        "title": "Test",
-        "category": "android",
-        "status": "New",
-        "icon": "fa-cube",
-        "shortDesc": "",
-        "fullDesc": "",
-        "version": "",
-        "format": "APK File",
-        "downloadUrl": "Beta.apk",
-        "changelog": "",
-        "id": 1787806062738,
-        "downloads": 0,
+        "downloads": 2,
         "reviews": [],
         "screenshots": []
     }
@@ -109,6 +93,28 @@ function loadDownloadCounts() {
 }
 
 
+
+function restoreDownloadCounts() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('sayuti_downloads') || '[]');
+        if (!Array.isArray(saved)) return;
+
+        saved.forEach(item => {
+            const app = dbApps.find(a => a.id === item.id);
+            if (app && Number.isFinite(Number(item.downloads))) {
+                app.downloads = Number(item.downloads);
+            }
+        });
+    } catch (e) {
+        console.warn('Gagal memulihkan counter unduhan:', e);
+    }
+}
+
+function getTotalDownloads() {
+    return dbApps.reduce((total, app) => {
+        return total + (Number(app.downloads) || 0);
+    }, 0);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     loadDownloadCounts();
@@ -516,56 +522,100 @@ async function saveAppFromForm() {
 
     // 2. Proses Upload File Logo/Ikon ke GitHub (jika ada)
     if (iconFileInput) {
-        showToast('Mengunggah logo aplikasi...');
+        showToast('Memproses logo aplikasi...');
+
         try {
+            // GitHub Contents API memiliki batas praktis sekitar 1 MB untuk upload
+            // file melalui endpoint ini. Beri pesan yang jelas jika terlalu besar.
+            if (iconFileInput.size > 900 * 1024) {
+                alert('Logo terlalu besar. Gunakan PNG/JPG/WebP di bawah 900 KB.');
+                return;
+            }
+
+            const allowedTypes = [
+                'image/png',
+                'image/jpeg',
+                'image/webp',
+                'image/svg+xml'
+            ];
+
+            if (!allowedTypes.includes(iconFileInput.type)) {
+                alert('Format logo tidak didukung. Gunakan PNG, JPG, WebP, atau SVG.');
+                return;
+            }
+
             let base64Icon = await toBase64(iconFileInput);
-            let iconFileName = 'logo_' + Date.now() + '_' + iconFileInput.name;
+
+            // Bersihkan nama file agar aman digunakan sebagai path GitHub.
+            let originalName = iconFileInput.name || 'logo.png';
+            let safeName = originalName
+                .replace(/[^a-zA-Z0-9._-]/g, '_')
+                .replace(/_+/g, '_');
+
+            let iconFileName = 'logo_' + Date.now() + '_' + safeName;
             let encodedIconFileName = encodeURIComponent(iconFileName);
-            
-            let existingShaIcon = null;
-            let checkIconRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`, {
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            if (checkIconRes.ok) {
-                let fileDataIcon = await checkIconRes.json();
-                existingShaIcon = fileDataIcon.sha;
+
+            const githubHeaders = {
+                'Authorization': `token ${githubToken}`,
+                'Accept': 'application/vnd.github+json'
+            };
+
+            // Cek apakah token benar-benar dapat mengakses repository.
+            let repoCheck = await fetch(
+                `https://api.github.com/repos/${repoOwnerAndName}`,
+                { headers: githubHeaders }
+            );
+
+            if (!repoCheck.ok) {
+                let errText = 'Token GitHub tidak dapat mengakses repository.';
+                try {
+                    const errData = await repoCheck.json();
+                    if (errData.message) errText += '\n\nGitHub: ' + errData.message;
+                } catch (e) {}
+                alert(errText);
+                return;
             }
 
             let bodyIconData = {
-                message: `Upload logo ${iconFileName} via Admin Panel`,
+                message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
                 content: base64Icon
             };
-            if (existingShaIcon) {
-                bodyIconData.sha = existingShaIcon;
-            }
-            
-            let responseIcon = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(bodyIconData)
-            });
+
+            showToast('Mengunggah logo ke GitHub...');
+
+            let responseIcon = await fetch(
+                `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        ...githubHeaders,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyIconData)
+                }
+            );
 
             if (responseIcon.ok) {
                 iconValue = iconFileName;
                 showToast('Logo berhasil di-upload!');
             } else {
-                let errData = await responseIcon.json();
-                alert('Gagal upload logo: ' + (errData.message || 'Periksa token.'));
+                let errMessage = 'Gagal upload logo.';
+                try {
+                    let errData = await responseIcon.json();
+                    if (errData.message) errMessage += '\n\nGitHub: ' + errData.message;
+                } catch (e) {}
+                alert(errMessage);
                 return;
             }
+
         } catch (error) {
-            console.error(error);
-            alert('Error jaringan/upload logo: ' + error.message);
+            console.error('Logo upload error:', error);
+            alert('Error upload logo: ' + (error.message || 'Kesalahan tidak diketahui.'));
             return;
         }
     }
 
+    // 3.
     let appData = {
         title,
         category: document.getElementById('inputCategory') ? document.getElementById('inputCategory').value : 'android',
