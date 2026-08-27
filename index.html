@@ -1638,6 +1638,12 @@
 }
 </style>
 
+
+<style id="admin-only-analytics">
+#analyticsView { display: none !important; }
+#analyticsView.active { display: block !important; }
+</style>
+
 </head>
 <body>
 <!-- =========================================================
@@ -1663,11 +1669,6 @@
 </div>
 </div>
 <div class="nav-actions">
-
-<button aria-label="Buka analytics" class="nav-btn" onclick="switchView('analytics')">
-<i class="fa-solid fa-chart-line"></i>
-<span>Analytics</span>
-</button>
 <button aria-label="Login admin" class="nav-btn primary-action" onclick="openAdminLoginModal()">
 <i class="fa-solid fa-lock"></i>
 <span>Admin</span>
@@ -1909,6 +1910,12 @@
                         Keluar
                     </button>
 </div>
+</div>
+<div style="display:flex; justify-content:flex-end; margin:0 0 14px;">
+<button class="nav-btn" onclick="switchView('analytics')">
+<i class="fa-solid fa-chart-line"></i>
+<span>Analisis Sistem</span>
+</button>
 </div>
 <div class="admin-table-wrapper">
 <table>
