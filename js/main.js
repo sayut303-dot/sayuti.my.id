@@ -55,7 +55,7 @@ let dbApps = [
         "downloadUrl": "KlikWaCepat v2.1.apk",
         "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 2.1.0.",
         "id": 1787488454945,
-        "downloads": 2,
+        "downloads": 241,
         "reviews": [],
         "screenshots": []
     }
@@ -66,7 +66,36 @@ let currentCategory = 'all';
 let activeAppId = null;
 let selectedRating = 5;
 
+// === Sinkronisasi jumlah unduhan ===
+function getTotalDownloads() {
+    return dbApps.reduce((total, app) => total + (Number(app.downloads) || 0), 0);
+}
+
+function formatNumber(value) {
+    return new Intl.NumberFormat('id-ID').format(Number(value) || 0);
+}
+
+function saveDownloadCounts() {
+    const counts = {};
+    dbApps.forEach(app => counts[app.id] = Number(app.downloads) || 0);
+    localStorage.setItem('sayuti_download_counts', JSON.stringify(counts));
+}
+
+function loadDownloadCounts() {
+    try {
+        const counts = JSON.parse(localStorage.getItem('sayuti_download_counts') || '{}');
+        dbApps.forEach(app => {
+            if (Object.prototype.hasOwnProperty.call(counts, app.id)) {
+                app.downloads = Number(counts[app.id]) || 0;
+            }
+        });
+    } catch (e) { console.warn('Gagal memuat counter unduhan', e); }
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
+    loadDownloadCounts();
     renderApps();
     updateFavBadge();
 });
@@ -165,7 +194,7 @@ function renderApps() {
                 </div>
                 <div>
                     <div class="app-meta">
-                        <span><i class="fa-solid fa-download"></i> ${app.downloads}</span>
+                        <span><i class="fa-solid fa-download"></i> ${formatNumber(app.downloads)}</span>
                         <span><i class="fa-solid fa-code-branch"></i> ${app.version}</span>
                     </div>
                     <a href="${app.downloadUrl}" class="btn-download" onclick="triggerDownload(event, ${app.id})">
@@ -234,10 +263,14 @@ function openDetailModal(appId) {
     if(document.getElementById('detailDesc')) document.getElementById('detailDesc').innerText = app.fullDesc;
     if(document.getElementById('detailVersion')) document.getElementById('detailVersion').innerText = app.version;
     if(document.getElementById('detailFormat')) document.getElementById('detailFormat').innerText = app.format;
-    if(document.getElementById('detailDownloads')) document.getElementById('detailDownloads').innerText = app.downloads;
+    if(document.getElementById('detailDownloads')) document.getElementById('detailDownloads').innerText = formatNumber(app.downloads);
     if(document.getElementById('detailChangelog')) document.getElementById('detailChangelog').innerText = app.changelog;
     if(document.getElementById('detailIcon')) document.getElementById('detailIcon').innerHTML = iconContent;
-    if(document.getElementById('detailDownloadBtn')) document.getElementById('detailDownloadBtn').href = app.downloadUrl;
+    if(document.getElementById('detailDownloadBtn')) {
+        const btn = document.getElementById('detailDownloadBtn');
+        btn.href = app.downloadUrl;
+        btn.onclick = (event) => triggerDownload(event, app.id);
+    }
 
     renderReviews(app);
     let modal = document.getElementById('detailModal');
@@ -246,13 +279,17 @@ function openDetailModal(appId) {
 
 function triggerDownload(event, appId) {
     event.stopPropagation();
-    let app = dbApps.find(a => a.id === appId); 
-    let githubToken = localStorage.getItem('sayuti_gh_token');
-    if (app) {
-        app.downloads++;
-        if (githubToken) updateMainJsOnGitHub(githubToken).catch(e => {});
-        showToast('Mengunduh ' + app.title + '...');
-    }
+    let app = dbApps.find(a => a.id === appId);
+    if (!app) return;
+    app.downloads = (Number(app.downloads) || 0) + 1;
+    saveDownloadCounts();
+    renderApps();
+    renderAnalytics();
+    if (activeAppId === app.id) openDetailModal(app.id);
+
+    const githubToken = localStorage.getItem('sayuti_gh_token');
+    if (githubToken) updateMainJsOnGitHub(githubToken).catch(e => console.warn('Sinkronisasi gagal:', e));
+    showToast('Mengunduh ' + app.title + '...');
 }
 
 function renderReviews(app) {
@@ -299,10 +336,10 @@ async function submitReview() {
 }
 
 function renderAnalytics() {
-    let totalDl = dbApps.reduce((acc, curr) => acc + curr.downloads, 0);
+    let totalDl = getTotalDownloads();
     let totalRev = dbApps.reduce((acc, curr) => acc + (curr.reviews ? curr.reviews.length : 0), 0);
     if(document.getElementById('statTotalApps')) document.getElementById('statTotalApps').innerText = dbApps.length;
-    if(document.getElementById('statTotalDownloads')) document.getElementById('statTotalDownloads').innerText = totalDl;
+    if(document.getElementById('statTotalDownloads')) document.getElementById('statTotalDownloads').innerText = formatNumber(totalDl);
     if(document.getElementById('statTotalReviews')) document.getElementById('statTotalReviews').innerText = totalRev;
 }
 
@@ -334,7 +371,7 @@ function renderAdminTable() {
             <td><strong>${app.title}</strong></td>
             <td>${app.category}</td>
             <td>${app.version}</td>
-            <td>${app.downloads}</td>
+            <td>${formatNumber(app.downloads)}</td>
             <td>
                 <div class="action-btns">
                     <button class="btn-icon-action" onclick="openAppFormModal(${app.id})"><i class="fa-solid fa-pen"></i></button>
@@ -538,6 +575,7 @@ async function saveAppFromForm() {
         appData.screenshots = [];
         dbApps.push(appData);
     }
+    saveDownloadCounts();
 
     try {
         showToast('Menyinkronkan database ke GitHub...');
