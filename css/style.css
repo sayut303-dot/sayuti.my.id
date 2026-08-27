@@ -2319,3 +2319,633 @@ textarea:focus-visible {
     }
 
 }
+/* =========================================================
+   MOBILE UI FIX v6
+   Fokus: HP 360px - 639px
+========================================================= */
+
+@media (max-width: 639px) {
+
+    /* =========================
+       BODY
+    ========================= */
+
+    body {
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+
+    /* =========================
+       NAVBAR
+    ========================= */
+
+    nav {
+        min-height: 58px;
+        padding: 9px 10px;
+        gap: 8px;
+    }
+
+    .brand {
+        gap: 7px;
+        max-width: 42%;
+        font-size: 0.82rem;
+    }
+
+    .brand > i {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .nav-actions {
+        flex: 1;
+        justify-content: flex-end;
+        gap: 5px;
+        overflow-x: auto;
+    }
+
+    .nav-btn {
+        min-height: 35px;
+        padding: 7px 9px;
+        border-radius: 9px;
+        font-size: 0.68rem;
+    }
+
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+        padding: 25px 14px 14px;
+    }
+
+    header h1 {
+        margin-bottom: 7px;
+        font-size: clamp(1.35rem, 6vw, 1.55rem);
+        line-height: 1.2;
+    }
+
+    header p {
+        max-width: 340px;
+        font-size: 0.76rem;
+        line-height: 1.55;
+    }
+
+
+    /* =========================
+       MAIN CONTAINER
+    ========================= */
+
+    .container {
+        width: 100%;
+        padding: 7px 10px 30px;
+    }
+
+
+    /* =========================
+       SEARCH + SORT
+    ========================= */
+
+    .controls-wrapper {
+        gap: 9px;
+        margin-bottom: 14px;
+    }
+
+    .search-sort-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 125px;
+        gap: 7px;
+    }
+
+    .search-box input {
+        height: 43px;
+        padding: 10px 34px 10px 39px;
+        border-radius: 11px;
+        font-size: 0.78rem;
+    }
+
+    .search-box i {
+        left: 13px;
+        font-size: 0.78rem;
+    }
+
+    .sort-select {
+        width: 100%;
+        min-width: 0;
+        height: 43px;
+        padding: 0 9px;
+        border-radius: 11px;
+        font-size: 0.75rem;
+    }
+
+
+    /* =========================
+       FILTER TABS
+    ========================= */
+
+    .filter-tabs {
+        gap: 6px;
+        padding: 1px 1px 5px;
+    }
+
+    .filter-btn {
+        min-height: 35px;
+        padding: 8px 11px;
+        border-radius: 9px;
+        font-size: 0.70rem;
+    }
+
+
+    /* =========================
+       APP GRID
+    ========================= */
+
+    .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+
+    /* =========================
+       APP CARD
+    ========================= */
+
+    .app-card {
+        padding: 12px;
+        border-radius: 14px;
+        box-shadow:
+            0 7px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    .app-card:hover {
+        transform: none;
+    }
+
+    .app-header {
+        gap: 8px;
+        margin-bottom: 8px;
+        padding-right: 27px;
+    }
+
+
+    /* =========================
+       APP ICON
+    ========================= */
+
+    .app-icon {
+        width: 39px;
+        height: 39px;
+        border-radius: 10px;
+        font-size: 1.05rem;
+    }
+
+
+    /* =========================
+       APP TITLE
+    ========================= */
+
+    .app-title-group h3 {
+        margin-bottom: 3px;
+        font-size: 0.76rem;
+        line-height: 1.25;
+    }
+
+
+    /* =========================
+       BADGES
+    ========================= */
+
+    .badges {
+        gap: 3px;
+    }
+
+    .badge {
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-size: 0.48rem;
+    }
+
+
+    /* =========================
+       DESCRIPTION
+    ========================= */
+
+    .app-desc {
+        min-height: 0;
+        margin-bottom: 7px;
+        font-size: 0.67rem;
+        line-height: 1.45;
+
+        -webkit-line-clamp: 2;
+    }
+
+
+    /* =========================
+       RATING
+    ========================= */
+
+    .app-rating {
+        gap: 4px;
+        margin-bottom: 7px;
+        font-size: 0.63rem;
+    }
+
+    .app-rating span {
+        font-size: 0.58rem;
+    }
+
+
+    /* =========================
+       META
+    ========================= */
+
+    .app-meta {
+        gap: 5px;
+        margin-bottom: 8px;
+        padding-top: 7px;
+        font-size: 0.57rem;
+    }
+
+
+    /* =========================
+       FAVORITE
+    ========================= */
+
+    .fav-btn-card {
+        top: 9px;
+        right: 9px;
+        width: 27px;
+        height: 27px;
+        font-size: 0.68rem;
+    }
+
+
+    /* =========================
+       DOWNLOAD BUTTON
+    ========================= */
+
+    .btn-download {
+        min-height: 36px;
+        padding: 8px 5px;
+        border-radius: 9px;
+        font-size: 0.66rem;
+    }
+
+
+    /* =========================
+       DASHBOARD
+    ========================= */
+
+    .dashboard-header {
+        margin-bottom: 12px;
+    }
+
+    .dashboard-header h2 {
+        font-size: 1rem;
+    }
+
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    .stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card {
+        padding: 11px 7px;
+        border-radius: 11px;
+    }
+
+    .stat-card h4 {
+        margin-bottom: 4px;
+        font-size: 0.52rem;
+        white-space: nowrap;
+    }
+
+    .stat-card .val {
+        font-size: 1.05rem;
+    }
+
+
+    /* =========================
+       ADMIN TABLE
+    ========================= */
+
+    .admin-table-wrapper {
+        padding: 3px;
+        border-radius: 12px;
+    }
+
+    table {
+        min-width: 600px;
+        font-size: 0.72rem;
+    }
+
+    th,
+    td {
+        padding: 9px 10px;
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .modal-container {
+        width: 100%;
+        max-width: none;
+        max-height: 92vh;
+
+        padding: 17px 14px calc(18px + env(safe-area-inset-bottom));
+
+        border-radius: 20px 20px 0 0;
+
+        transform:
+            translateY(25px)
+            scale(0.98);
+    }
+
+    .modal-overlay.active .modal-container {
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+    .modal-close {
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+    }
+
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-group {
+        margin-bottom: 11px;
+    }
+
+    .form-group label {
+        margin-bottom: 5px;
+        font-size: 0.72rem;
+    }
+
+    .form-control {
+        min-height: 42px;
+        padding: 9px 10px;
+        border-radius: 9px;
+        font-size: 0.78rem;
+    }
+
+
+    /* =========================
+       SCREENSHOTS
+    ========================= */
+
+    .screenshots-slider {
+        gap: 7px;
+        margin: 8px 0;
+    }
+
+    .screenshot-thumb {
+        width: 86px;
+        height: 135px;
+        border-radius: 8px;
+    }
+
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .toast {
+        left: 10px;
+        right: 10px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+
+        padding: 11px 13px;
+
+        border-radius: 10px;
+
+        font-size: 0.74rem;
+
+        text-align: center;
+    }
+
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+        padding:
+            18px 12px
+            calc(18px + env(safe-area-inset-bottom));
+
+        font-size: 0.70rem;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONE
+   360px - 430px
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .brand {
+        max-width: 38%;
+    }
+
+    .brand > i {
+        width: 32px;
+        height: 32px;
+    }
+
+    .nav-btn {
+        padding: 6px 8px;
+        font-size: 0.63rem;
+    }
+
+    .search-sort-row {
+        grid-template-columns: minmax(0, 1fr) 112px;
+    }
+
+    .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .app-card {
+        padding: 11px;
+    }
+
+    .app-icon {
+        width: 37px;
+        height: 37px;
+        font-size: 0.98rem;
+    }
+
+    .app-title-group h3 {
+        font-size: 0.73rem;
+    }
+
+    .app-desc {
+        font-size: 0.64rem;
+    }
+
+    .btn-download {
+        font-size: 0.63rem;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONE
+   320px - 359px
+========================================================= */
+
+@media (max-width: 359px) {
+
+    nav {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .brand {
+        max-width: 36%;
+        font-size: 0.74rem;
+    }
+
+    .brand > i {
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+    }
+
+    .nav-actions {
+        gap: 4px;
+    }
+
+    .nav-btn {
+        min-height: 33px;
+        padding: 5px 7px;
+        font-size: 0.59rem;
+    }
+
+    header {
+        padding-top: 21px;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    header p {
+        font-size: 0.70rem;
+    }
+
+    .container {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .search-sort-row {
+        grid-template-columns: 1fr;
+    }
+
+    .sort-select {
+        height: 40px;
+    }
+
+    .search-box input {
+        height: 40px;
+    }
+
+    .app-grid {
+        gap: 7px;
+    }
+
+    .app-card {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .app-header {
+        gap: 6px;
+        padding-right: 25px;
+    }
+
+    .app-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 0.88rem;
+    }
+
+    .app-title-group h3 {
+        font-size: 0.68rem;
+    }
+
+    .badge {
+        font-size: 0.43rem;
+    }
+
+    .app-desc {
+        font-size: 0.60rem;
+    }
+
+    .app-rating {
+        font-size: 0.58rem;
+    }
+
+    .app-rating span {
+        font-size: 0.53rem;
+    }
+
+    .app-meta {
+        font-size: 0.52rem;
+    }
+
+    .btn-download {
+        min-height: 34px;
+        font-size: 0.58rem;
+    }
+
+    .fav-btn-card {
+        width: 25px;
+        height: 25px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .stats-grid {
+        gap: 5px;
+    }
+
+    .stat-card {
+        padding: 10px 5px;
+    }
+
+    .stat-card h4 {
+        font-size: 0.48rem;
+    }
+
+    .stat-card .val {
+        font-size: 0.95rem;
+    }
+}
