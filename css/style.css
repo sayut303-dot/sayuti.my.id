@@ -2949,3 +2949,72 @@ textarea:focus-visible {
         font-size: 0.95rem;
     }
 }
+
+/* =========================================================
+   FIX MOBILE HEADER / JUDUL
+========================================================= */
+
+@media (max-width: 639px) {
+
+    header {
+        display: block !important;
+        position: relative !important;
+        z-index: 10 !important;
+
+        width: 100% !important;
+        min-height: auto !important;
+
+        padding: 30px 16px 20px !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        overflow: visible !important;
+
+        text-align: center !important;
+    }
+
+    header h1 {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 0 8px !important;
+        padding: 0 !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        color: #ffffff !important;
+
+        font-size: 1.55rem !important;
+        line-height: 1.25 !important;
+        font-weight: 800 !important;
+
+        white-space: normal !important;
+        overflow: visible !important;
+
+        background: none !important;
+
+        -webkit-text-fill-color: #ffffff !important;
+        -webkit-background-clip: initial !important;
+        background-clip: initial !important;
+    }
+
+    header p {
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 auto !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        color: #94a3b8 !important;
+
+        font-size: 0.78rem !important;
+        line-height: 1.55 !important;
+    }
+}
