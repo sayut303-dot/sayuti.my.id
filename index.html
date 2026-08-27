@@ -1364,7 +1364,302 @@
                 transition-duration: .01ms !important;
             }
         }
-    </style>
+    
+
+/* =========================
+   HERO CENTER + VISUAL DECORATION
+========================= */
+.hero {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
+    gap: 38px;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 720px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.hero-badge,
+.hero-description {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-actions {
+    justify-content: center;
+}
+
+.hero-visual {
+    position: relative;
+    min-height: 330px;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.visual-orbit {
+    position: absolute;
+    border: 1px solid rgba(129,140,248,.14);
+    border-radius: 50%;
+    transform: rotate(-18deg);
+}
+
+.orbit-one {
+    width: 320px;
+    height: 210px;
+}
+
+.orbit-two {
+    width: 410px;
+    height: 275px;
+    transform: rotate(28deg);
+}
+
+.visual-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(35px);
+    pointer-events: none;
+}
+
+.glow-a {
+    width: 150px;
+    height: 150px;
+    background: rgba(99,102,241,.16);
+}
+
+.glow-b {
+    width: 100px;
+    height: 100px;
+    background: rgba(34,211,238,.12);
+    right: 12%;
+    bottom: 12%;
+}
+
+.visual-card {
+    position: absolute;
+    border: 1px solid rgba(255,255,255,.09);
+    background: linear-gradient(145deg, rgba(30,41,59,.88), rgba(15,23,42,.72));
+    box-shadow: 0 24px 55px rgba(0,0,0,.25);
+    backdrop-filter: blur(16px);
+}
+
+.visual-card-main {
+    position: relative;
+    width: 285px;
+    height: 215px;
+    border-radius: 24px;
+    transform: perspective(900px) rotateY(-8deg) rotateX(3deg);
+    overflow: hidden;
+    z-index: 3;
+}
+
+.visual-window-bar {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 13px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,.025);
+}
+
+.visual-window-bar span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.22);
+}
+
+.visual-window-content {
+    padding: 22px;
+}
+
+.visual-app-icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border-radius: 17px;
+    color: #c7d2fe;
+    background: linear-gradient(135deg, rgba(99,102,241,.38), rgba(34,211,238,.18));
+    border: 1px solid rgba(129,140,248,.2);
+    font-size: 1.45rem;
+    box-shadow: 0 12px 30px rgba(99,102,241,.18);
+}
+
+.visual-lines {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+}
+
+.visual-lines i {
+    display: block;
+    height: 7px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.09);
+}
+
+.visual-lines i:nth-child(1) { width: 72%; }
+.visual-lines i:nth-child(2) { width: 48%; }
+.visual-lines i:nth-child(3) { width: 61%; }
+
+.visual-mini-grid {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.visual-mini-grid span {
+    width: 32px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    color: #a5b4fc;
+    background: rgba(255,255,255,.045);
+    font-size: .65rem;
+}
+
+.visual-card-float {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    color: #c7d2fe;
+    font-size: 1rem;
+    z-index: 4;
+}
+
+.float-one {
+    top: 48px;
+    right: 22px;
+    animation: heroFloatOne 5s ease-in-out infinite;
+}
+
+.float-two {
+    bottom: 45px;
+    left: 18px;
+    animation: heroFloatTwo 6s ease-in-out infinite;
+}
+
+.float-three {
+    bottom: 22px;
+    right: 56px;
+    animation: heroFloatThree 5.5s ease-in-out infinite;
+}
+
+@keyframes heroFloatOne {
+    0%,100% { transform: translateY(0) rotate(5deg); }
+    50% { transform: translateY(-9px) rotate(8deg); }
+}
+
+@keyframes heroFloatTwo {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(8px) rotate(-8deg); }
+}
+
+@keyframes heroFloatThree {
+    0%,100% { transform: translateY(0) rotate(3deg); }
+    50% { transform: translateY(-7px) rotate(-3deg); }
+}
+
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .hero-content {
+        max-width: 760px;
+    }
+
+    .hero-visual {
+        min-height: 290px;
+        margin-top: -5px;
+    }
+}
+
+@media (max-width: 520px) {
+    .hero {
+        width: min(94%, 1200px);
+    }
+
+    .hero-visual {
+        min-height: 250px;
+    }
+
+    .visual-card-main {
+        width: 245px;
+        height: 185px;
+    }
+
+    .visual-window-content {
+        padding: 17px;
+    }
+
+    .visual-app-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .visual-card-float {
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+    }
+
+    .float-one { right: 5px; top: 28px; }
+    .float-two { left: 3px; bottom: 28px; }
+    .float-three { right: 28px; bottom: 5px; }
+}
+
+/* Visual hero hanya untuk desktop */
+@media (max-width: 900px) {
+    .hero-visual {
+        display: none !important;
+    }
+}
+
+
+/* =========================
+   MOBILE NAV ACTIONS
+   Favorit & Analytics tidak berada di atas
+========================= */
+@media (max-width: 700px) {
+    nav {
+        position: relative;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    nav .nav-actions {
+        width: 100%;
+        order: 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 2px;
+    }
+
+    nav .nav-actions .nav-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 42px;
+    }
+
+    nav .nav-actions .primary-action {
+        grid-column: 1 / -1;
+    }
+}
+
+</style>
 </head>
 <body>
 <!-- =========================================================
@@ -1436,8 +1731,29 @@
                 </button>
 </div>
 </div>
-
-</header>
+<div class="hero-visual">
+<div class="visual-orbit orbit-one"></div>
+<div class="visual-orbit orbit-two"></div>
+<div class="visual-glow glow-a"></div>
+<div class="visual-glow glow-b"></div>
+<div class="visual-card visual-card-main">
+<div class="visual-window-bar">
+<span></span><span></span><span></span>
+</div>
+<div class="visual-window-content">
+<div class="visual-app-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+<div class="visual-lines"><i></i><i></i><i></i></div>
+<div class="visual-mini-grid">
+<span><i class="fa-solid fa-download"></i></span>
+<span><i class="fa-solid fa-star"></i></span>
+<span><i class="fa-solid fa-bolt"></i></span>
+</div>
+</div>
+</div>
+<div class="visual-card visual-card-float float-one"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+<div class="visual-card visual-card-float float-two"><i class="fa-solid fa-shield-halved"></i></div>
+<div class="visual-card visual-card-float float-three"><i class="fa-solid fa-mobile-screen-button"></i></div>
+</div></header>
 <!-- =========================================================
          MAIN
     ========================================================== -->
