@@ -1,5 +1,5 @@
 /* =========================================================
-   SAYUTIHUB v4
+   SAYUTIHUB v5
    Modern Dark / Purple UI
    Responsive + Clean + Optimized
    Tanpa upload logo
@@ -45,7 +45,7 @@
         0 18px 45px rgba(0, 0, 0, 0.30);
 
     --transition:
-        all 0.22s ease;
+        0.22s ease;
 }
 
 
@@ -53,25 +53,19 @@
    RESET
 ========================================================= */
 
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
-    font-family:
-        'Plus Jakarta Sans',
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        sans-serif;
-
-    -webkit-tap-highlight-color: transparent;
 }
 
 html {
+    min-height: 100%;
     scroll-behavior: smooth;
     scrollbar-color: rgba(148, 163, 184, 0.18) transparent;
+    scrollbar-width: thin;
 }
 
 body {
@@ -102,6 +96,18 @@ body {
             #090d16 0%,
             #080c14 100%
         );
+
+    font-family:
+        "Plus Jakarta Sans",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -110,8 +116,8 @@ body {
 ========================================================= */
 
 ::selection {
-    background: rgba(99, 102, 241, 0.35);
     color: #fff;
+    background: rgba(99, 102, 241, 0.35);
 }
 
 
@@ -153,7 +159,7 @@ body {
 
     z-index: -1;
 
-    opacity: 0.75;
+    opacity: 0.7;
 
     will-change: transform;
 }
@@ -196,12 +202,11 @@ nav {
 
     gap: 12px;
 
-    padding: 14px 16px;
+    padding: 13px 16px;
 
-    background: rgba(9, 13, 22, 0.86);
+    background: rgba(9, 13, 22, 0.88);
 
-    border-bottom:
-        1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -216,10 +221,12 @@ nav {
 ========================================================= */
 
 .brand {
-    display: flex;
+    display: inline-flex;
     align-items: center;
 
     gap: 9px;
+
+    min-width: 0;
 
     flex-shrink: 0;
 
@@ -228,10 +235,13 @@ nav {
     font-size: 1.05rem;
     font-weight: 800;
 
+    text-decoration: none;
+
     cursor: pointer;
     user-select: none;
 
-    transition: transform 0.2s ease;
+    transition:
+        transform var(--transition);
 }
 
 .brand:hover {
@@ -264,7 +274,9 @@ nav {
     box-shadow:
         0 7px 22px var(--primary-glow);
 
-    transition: var(--transition);
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 .brand:hover > i {
@@ -288,13 +300,14 @@ nav {
 
     gap: 8px;
 
+    min-width: 0;
     max-width: 100%;
 
     overflow-x: auto;
 
-    scrollbar-width: none;
-
     padding: 2px;
+
+    scrollbar-width: none;
 }
 
 .nav-actions::-webkit-scrollbar {
@@ -307,7 +320,7 @@ nav {
 ========================================================= */
 
 .nav-btn {
-    min-height: 36px;
+    min-height: 38px;
 
     display: inline-flex;
     align-items: center;
@@ -317,17 +330,19 @@ nav {
 
     flex-shrink: 0;
 
-    padding: 7px 12px;
+    padding: 8px 12px;
 
     color: var(--text-main);
 
-    background: rgba(255, 255, 255, 0.05);
+    background:
+        rgba(255, 255, 255, 0.05);
 
     border:
         1px solid var(--border-color);
 
     border-radius: var(--radius-sm);
 
+    font: inherit;
     font-size: 0.78rem;
     font-weight: 600;
 
@@ -335,11 +350,17 @@ nav {
 
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.10);
+    background:
+        rgba(255, 255, 255, 0.10);
 
     border-color:
         rgba(255, 255, 255, 0.14);
@@ -390,7 +411,7 @@ header {
     position: relative;
 
     padding:
-        36px 20px 20px;
+        38px 20px 22px;
 
     text-align: center;
 }
@@ -400,11 +421,8 @@ header h1 {
 
     color: transparent;
 
-    font-size: clamp(
-        1.55rem,
-        4vw,
-        2.1rem
-    );
+    font-size:
+        clamp(1.55rem, 4vw, 2.1rem);
 
     font-weight: 800;
 
@@ -512,6 +530,7 @@ header p {
     position: relative;
 
     flex: 1;
+
     min-width: 0;
 }
 
@@ -521,13 +540,16 @@ header p {
     left: 16px;
     top: 50%;
 
-    transform: translateY(-50%);
+    z-index: 1;
 
     color: var(--text-muted);
 
+    transform: translateY(-50%);
+
     pointer-events: none;
 
-    transition: color 0.2s ease;
+    transition:
+        color var(--transition);
 }
 
 .search-box:focus-within i {
@@ -539,7 +561,7 @@ header p {
     height: 48px;
 
     padding:
-        14px 42px 14px 46px;
+        12px 42px 12px 46px;
 
     color: var(--text-main);
 
@@ -553,11 +575,16 @@ header p {
 
     outline: none;
 
+    font: inherit;
     font-size: 0.90rem;
 
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
-    transition: var(--transition);
+    transition:
+        background var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
 }
 
 .search-box input::placeholder {
@@ -593,7 +620,8 @@ header p {
     min-width: 170px;
     height: 48px;
 
-    padding: 0 16px;
+    padding:
+        0 14px;
 
     color: var(--text-main);
 
@@ -607,11 +635,15 @@ header p {
 
     outline: none;
 
-    font-size: 0.9rem;
+    font: inherit;
+    font-size: 0.90rem;
 
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
 }
 
 .sort-select:hover {
@@ -645,9 +677,12 @@ header p {
 
     overflow-x: auto;
 
-    padding-bottom: 4px;
+    padding:
+        2px 2px 5px;
 
     scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .filter-tabs::-webkit-scrollbar {
@@ -664,7 +699,8 @@ header p {
 
     flex-shrink: 0;
 
-    padding: 9px 14px;
+    padding:
+        9px 14px;
 
     color: var(--text-muted);
 
@@ -676,6 +712,7 @@ header p {
 
     border-radius: 12px;
 
+    font: inherit;
     font-size: 0.82rem;
     font-weight: 600;
 
@@ -683,7 +720,12 @@ header p {
 
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 .filter-btn:hover {
@@ -726,10 +768,12 @@ header p {
     grid-template-columns:
         repeat(
             auto-fill,
-            minmax(280px, 1fr)
+            minmax(270px, 1fr)
         );
 
     gap: 16px;
+
+    align-items: stretch;
 }
 
 
@@ -744,6 +788,7 @@ header p {
     flex-direction: column;
 
     min-width: 0;
+    min-height: 100%;
 
     overflow: hidden;
 
@@ -761,7 +806,8 @@ header p {
 
     border-radius: 18px;
 
-    box-shadow: var(--shadow-card);
+    box-shadow:
+        var(--shadow-card);
 
     cursor: pointer;
 
@@ -792,7 +838,8 @@ header p {
 
     pointer-events: none;
 
-    transition: background 0.3s ease;
+    transition:
+        background 0.3s ease;
 }
 
 .app-card:hover {
@@ -826,8 +873,8 @@ header p {
 
     z-index: 3;
 
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
 
     display: flex;
     align-items: center;
@@ -843,9 +890,16 @@ header p {
 
     border-radius: 50%;
 
+    font: inherit;
+
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 .fav-btn-card:hover {
@@ -892,7 +946,7 @@ header p {
 
     margin-bottom: 10px;
 
-    padding-right: 40px;
+    padding-right: 42px;
 }
 
 
@@ -931,7 +985,9 @@ header p {
         inset 0 1px 0
         rgba(255, 255, 255, 0.05);
 
-    transition: var(--transition);
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 .app-card:hover .app-icon {
@@ -949,6 +1005,7 @@ header p {
 
 .app-title-group {
     min-width: 0;
+    flex: 1;
 }
 
 .app-title-group h3 {
@@ -982,7 +1039,11 @@ header p {
 }
 
 .badge {
-    padding: 3px 7px;
+    display: inline-flex;
+    align-items: center;
+
+    padding:
+        3px 7px;
 
     border-radius: 5px;
 
@@ -998,22 +1059,26 @@ header p {
 
 .badge-cat {
     color: #818cf8;
-    background: rgba(99, 102, 241, 0.15);
+    background:
+        rgba(99, 102, 241, 0.15);
 }
 
 .badge-featured {
     color: var(--accent-amber);
-    background: rgba(245, 158, 11, 0.15);
+    background:
+        rgba(245, 158, 11, 0.15);
 }
 
 .badge-trending {
     color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.15);
+    background:
+        rgba(16, 185, 129, 0.15);
 }
 
 .badge-new {
     color: var(--accent-cyan);
-    background: rgba(34, 211, 238, 0.12);
+    background:
+        rgba(34, 211, 238, 0.12);
 }
 
 
@@ -1022,6 +1087,8 @@ header p {
 ========================================================= */
 
 .app-desc {
+    min-height: 2.55em;
+
     margin-bottom: 9px;
 
     overflow: hidden;
@@ -1074,7 +1141,9 @@ header p {
 
     gap: 10px;
 
+    margin-top: auto;
     margin-bottom: 11px;
+
     padding-top: 10px;
 
     color: var(--text-muted);
@@ -1092,7 +1161,7 @@ header p {
 
 .btn-download {
     width: 100%;
-    min-height: 39px;
+    min-height: 42px;
 
     display: flex;
     align-items: center;
@@ -1100,7 +1169,8 @@ header p {
 
     gap: 6px;
 
-    padding: 10px;
+    padding:
+        10px;
 
     color: #fff;
 
@@ -1119,10 +1189,14 @@ header p {
 
     text-decoration: none;
 
+    font: inherit;
     font-size: 0.85rem;
     font-weight: 600;
 
-    transition: var(--transition);
+    transition:
+        background var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
 .btn-download:hover {
@@ -1201,11 +1275,12 @@ header p {
 
     border-radius: 15px;
 
-    box-shadow: var(--shadow-card);
+    box-shadow:
+        var(--shadow-card);
 
     transition:
-        transform 0.2s ease,
-        border-color 0.2s ease;
+        transform var(--transition),
+        border-color var(--transition);
 }
 
 .stat-card:hover {
@@ -1260,6 +1335,8 @@ header p {
 ========================================================= */
 
 .admin-table-wrapper {
+    width: 100%;
+
     overflow-x: auto;
 
     padding: 5px;
@@ -1272,13 +1349,15 @@ header p {
 
     border-radius: 15px;
 
-    box-shadow: var(--shadow-card);
+    box-shadow:
+        var(--shadow-card);
 
     -webkit-overflow-scrolling: touch;
 }
 
 table {
     width: 100%;
+    min-width: 650px;
 
     border-collapse: collapse;
 
@@ -1291,7 +1370,8 @@ table {
 
 th,
 td {
-    padding: 11px 12px;
+    padding:
+        11px 12px;
 
     border-bottom:
         1px solid var(--border-color);
@@ -1312,7 +1392,8 @@ td {
 }
 
 tbody tr {
-    transition: background 0.2s ease;
+    transition:
+        background var(--transition);
 }
 
 tbody tr:hover {
@@ -1336,12 +1417,14 @@ tbody tr:last-child td {
 }
 
 .btn-icon-action {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    flex-shrink: 0;
 
     color: var(--text-main);
 
@@ -1353,9 +1436,15 @@ tbody tr:last-child td {
 
     border-radius: 7px;
 
+    font: inherit;
+
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition);
 }
 
 .btn-icon-action:hover {
@@ -1366,6 +1455,10 @@ tbody tr:last-child td {
 
     border-color:
         rgba(99, 102, 241, 0.25);
+}
+
+.btn-icon-action:active {
+    transform: scale(0.96);
 }
 
 .btn-icon-action.danger:hover {
@@ -1406,7 +1499,8 @@ tbody tr:last-child td {
 
     pointer-events: none;
 
-    transition: opacity 0.25s ease;
+    transition:
+        opacity 0.25s ease;
 }
 
 .modal-overlay.active {
@@ -1430,6 +1524,8 @@ tbody tr:last-child td {
     overflow-y: auto;
 
     padding: 20px;
+
+    color: var(--text-main);
 
     background:
         linear-gradient(
@@ -1457,6 +1553,8 @@ tbody tr:last-child td {
     transition:
         transform 0.3s cubic-bezier(.1, .9, .2, 1),
         opacity 0.25s ease;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.active .modal-container {
@@ -1478,8 +1576,8 @@ tbody tr:last-child td {
     top: 15px;
     right: 15px;
 
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
 
     display: flex;
     align-items: center;
@@ -1496,9 +1594,15 @@ tbody tr:last-child td {
 
     border-radius: 50%;
 
+    font: inherit;
+
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition);
 }
 
 .modal-close:hover {
@@ -1525,7 +1629,7 @@ tbody tr:last-child td {
 .form-group label {
     display: block;
 
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 
     color: var(--text-muted);
 
@@ -1537,7 +1641,8 @@ tbody tr:last-child td {
     width: 100%;
     min-height: 42px;
 
-    padding: 10px 12px;
+    padding:
+        10px 12px;
 
     color: var(--text-main);
 
@@ -1551,12 +1656,13 @@ tbody tr:last-child td {
 
     outline: none;
 
+    font: inherit;
     font-size: 0.85rem;
 
     transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
 }
 
 .form-control::placeholder {
@@ -1581,7 +1687,7 @@ tbody tr:last-child td {
 }
 
 textarea.form-control {
-    min-height: 80px;
+    min-height: 90px;
 
     resize: vertical;
 }
@@ -1602,7 +1708,8 @@ input[type="file"].form-control {
 input[type="file"]::file-selector-button {
     margin-right: 8px;
 
-    padding: 7px 10px;
+    padding:
+        7px 10px;
 
     color: #a5b4fc;
 
@@ -1614,6 +1721,14 @@ input[type="file"]::file-selector-button {
     border-radius: 7px;
 
     cursor: pointer;
+
+    transition:
+        background var(--transition);
+}
+
+input[type="file"]::file-selector-button:hover {
+    background:
+        rgba(99, 102, 241, 0.22);
 }
 
 
@@ -1622,6 +1737,20 @@ input[type="file"]::file-selector-button {
 ========================================================= */
 
 #qrcodeContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+
+    margin: 0 auto;
+
+    padding: 10px;
+
+    background: #fff;
+
+    border-radius: 10px;
+
     box-shadow:
         0 15px 35px
         rgba(0, 0, 0, 0.30);
@@ -1641,7 +1770,8 @@ input[type="file"]::file-selector-button {
 
     margin: 10px 0;
 
-    padding-bottom: 5px;
+    padding:
+        2px 2px 6px;
 
     scrollbar-width: thin;
 
@@ -1663,6 +1793,17 @@ input[type="file"]::file-selector-button {
         1px solid var(--border-color);
 
     border-radius: 9px;
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition);
+}
+
+.screenshot-thumb:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        var(--border-hover);
 }
 
 
@@ -1671,6 +1812,11 @@ input[type="file"]::file-selector-button {
 ========================================================= */
 
 .empty-state {
+    padding:
+        35px 15px;
+
+    text-align: center;
+
     animation:
         viewFade 0.25s ease;
 }
@@ -1699,7 +1845,8 @@ input[type="file"]::file-selector-button {
 
     gap: 8px;
 
-    padding: 12px 16px;
+    padding:
+        12px 16px;
 
     color: #fff;
 
@@ -1742,7 +1889,8 @@ input[type="file"]::file-selector-button {
 ========================================================= */
 
 footer {
-    padding: 22px 20px;
+    padding:
+        22px 20px;
 
     color: var(--text-muted);
 
@@ -1765,6 +1913,14 @@ footer strong {
 /* =========================================================
    ACCESSIBILITY
 ========================================================= */
+
+button,
+a,
+input,
+select,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
 
 button:focus-visible,
 a:focus-visible,
@@ -1846,7 +2002,7 @@ textarea:focus-visible {
     }
 
     .nav-btn {
-        min-height: 34px;
+        min-height: 36px;
 
         padding:
             7px 9px;
@@ -1907,12 +2063,15 @@ textarea:focus-visible {
     }
 
     .badge {
-        padding: 2px 5px;
+        padding:
+            2px 5px;
 
         font-size: 0.54rem;
     }
 
     .app-desc {
+        min-height: 2.9em;
+
         margin-bottom: 7px;
 
         font-size: 0.69rem;
@@ -1938,19 +2097,20 @@ textarea:focus-visible {
     }
 
     .btn-download {
-        min-height: 35px;
+        min-height: 38px;
 
-        padding: 9px 6px;
+        padding:
+            9px 6px;
 
         font-size: 0.70rem;
     }
 
     .fav-btn-card {
-        top: 12px;
-        right: 12px;
+        top: 11px;
+        right: 11px;
 
-        width: 27px;
-        height: 27px;
+        width: 29px;
+        height: 29px;
 
         font-size: 0.72rem;
     }
@@ -1963,7 +2123,8 @@ textarea:focus-visible {
     }
 
     .stat-card {
-        padding: 12px 9px;
+        padding:
+            12px 9px;
 
         border-radius: 12px;
     }
@@ -2010,19 +2171,27 @@ textarea:focus-visible {
     }
 
     .app-desc {
+        min-height: 0;
+
         font-size: 0.74rem;
     }
 
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            repeat(3, 1fr);
     }
 
     .stat-card {
-        padding: 14px;
+        padding:
+            13px 8px;
+    }
+
+    .stat-card h4 {
+        font-size: 0.56rem;
     }
 
     .stat-card .val {
-        font-size: 1.35rem;
+        font-size: 1.15rem;
     }
 
     .filter-btn {
@@ -2080,6 +2249,10 @@ textarea:focus-visible {
         padding: 12px;
     }
 
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
 }
 
 
@@ -2098,8 +2271,51 @@ textarea:focus-visible {
     *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
-
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .app-card:hover,
+    .stat-card:hover,
+    .nav-btn:hover,
+    .filter-btn:hover,
+    .btn-download:hover {
+        transform: none;
+    }
+
+    .app-card:active {
+        transform: scale(0.99);
+    }
+
+    .btn-download:active {
+        transform: scale(0.98);
+    }
+
+}
+
+
+/* =========================================================
+   FALLBACK FOR BROWSERS WITHOUT BACKDROP FILTER
+========================================================= */
+
+@supports not (
+    backdrop-filter: blur(10px)
+) {
+
+    nav,
+    .search-box input,
+    .app-card,
+    .modal-overlay {
+        background-color:
+            rgba(9, 13, 22, 0.96);
     }
 
 }
