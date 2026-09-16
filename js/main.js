@@ -9,7 +9,7 @@ let dbApps = [
         "fullDesc": "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis.",
         "version": "v7.0",
         "format": "APK File",
-        "downloads": 4121,
+        "downloads": 4120,
         "downloadUrl": "tokoSembako v7.0.apk",
         "changelog": "Peningkatan stabilitas aplikasi.",
         "screenshots": [],
@@ -56,6 +56,22 @@ let dbApps = [
         "changelog": "Rilis perdana aplikasi Klik untuk Chat versi 2.1.0.",
         "id": 1787488454945,
         "downloads": 241,
+        "reviews": [],
+        "screenshots": []
+    },
+    {
+        "title": "NETmeter",
+        "category": "android",
+        "status": "New",
+        "icon": "logo_1789563104872_1000267274.jpg",
+        "shortDesc": "NETmeter adalah aplikasi pemantau kecepatan internet secara real-time yang dilengkapi fitur Speed Test untuk mengukur kecepatan Download, Upload, Ping, dan kualitas koneksi internet.",
+        "fullDesc": "NETmeter adalah aplikasi monitoring jaringan yang membantu Anda memantau kondisi dan kecepatan koneksi internet dengan mudah. Kecepatan internet dapat ditampilkan secara real-time sehingga Anda bisa mengetahui penggunaan jaringan secara langsung dari perangkat.\nFitur utama:\n📶 Monitor kecepatan internet secara real-time\n🚀 Speed Test untuk mengukur kecepatan Download\n📤 Mengukur kecepatan Upload\n⚡ Menampilkan Ping/Latency\n📊 Informasi koneksi jaringan\n🔔 Pemantauan kecepatan melalui notifikasi/status bar\n📱 Tampilan sederhana, modern, dan ringan\n🌐 Membantu mengetahui kondisi koneksi saat menggunakan Wi-Fi maupun data seluler\nNETmeter dirancang agar pengguna dapat mengetahui performa koneksi internet dengan cepat tanpa tampilan yang rumit.",
+        "version": "V1.0.0",
+        "format": "APK File",
+        "downloadUrl": "NETmeter.apk",
+        "changelog": "Rilis perdana NETmeter dengan fitur monitoring kecepatan internet real-time, Speed Test Download & Upload, Ping/Latency, serta indikator kecepatan pada notifikasi. Dilengkapi tampilan modern dan ringan.",
+        "id": 1789563107175,
+        "downloads": 0,
         "reviews": [],
         "screenshots": []
     }
