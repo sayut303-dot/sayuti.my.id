@@ -71,7 +71,7 @@ let dbApps = [
         "downloadUrl": "NETmeter.apk",
         "changelog": "Rilis perdana NETmeter dengan fitur monitoring kecepatan internet real-time, Speed Test Download & Upload, Ping/Latency, serta indikator kecepatan pada notifikasi. Dilengkapi tampilan modern dan ringan.",
         "id": 1789563107175,
-        "downloads": 0,
+        "downloads": 1,
         "reviews": [],
         "screenshots": []
     }
