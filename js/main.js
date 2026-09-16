@@ -9,7 +9,7 @@ let dbApps = [
         "fullDesc": "Sistem POS (Point of Sale) lengkap khusus untuk toko sembako dan kelontong. Dilengkapi pencatatan stok otomatis.",
         "version": "v7.0",
         "format": "APK File",
-        "downloads": 4120,
+        "downloads": 4121,
         "downloadUrl": "tokoSembako v7.0.apk",
         "changelog": "Peningkatan stabilitas aplikasi.",
         "screenshots": [],
@@ -71,7 +71,7 @@ let dbApps = [
         "downloadUrl": "NETmeter.apk",
         "changelog": "Rilis perdana NETmeter dengan fitur monitoring kecepatan internet real-time, Speed Test Download & Upload, Ping/Latency, serta indikator kecepatan pada notifikasi. Dilengkapi tampilan modern dan ringan.",
         "id": 1789563107175,
-        "downloads": 1,
+        "downloads": 2,
         "reviews": [],
         "screenshots": []
     }
