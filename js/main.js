@@ -138,7 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updateFavBadge();
 });
 
+let isAdminLoggedIn = false;
+
 function switchView(viewName) {
+    if (viewName === 'admin' && !isAdminLoggedIn) {
+        openAdminLoginModal();
+        return;
+    }
+    if (viewName === 'analytics' && !isAdminLoggedIn) {
+        openAdminLoginModal();
+        return;
+    }
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
     let targetView = document.getElementById(viewName + 'View');
     if (targetView) targetView.classList.add('active');
@@ -390,6 +400,7 @@ function verifyAdminLogin() {
     let pinInput = document.getElementById('adminPinInput');
     let pin = pinInput ? pinInput.value : '';
     if (pin === '157303') {
+        isAdminLoggedIn = true;
         closeModalDirect('adminLoginModal');
         switchView('admin');
         showToast('Berhasil masuk Admin!');
