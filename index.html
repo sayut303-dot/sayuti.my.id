@@ -8,7 +8,7 @@
   <meta content="yes" name="apple-mobile-web-app-capable">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
   <meta content="SayutiHub — pusat aplikasi, marketplace digital, unduhan APK dan software dengan tampilan modern." name="description">
-  <title>SayutiHub v3 — Pusat Aplikasi &amp; Marketplace</title>
+  <title>SayutiHub — Pusat Aplikasi &amp; Marketplace Jawa</title>
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
@@ -1635,7 +1635,303 @@
   }
 }
 </style>
- </head>
+ <style id="jawa-theme">
+/* =========================================================
+   SAYUTIHUB — JAVANESE BATIK EDITION
+   VISUAL ONLY: existing HTML IDs/classes and JS behavior stay intact.
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --primary:#7a2e1d !important;
+  --primary-light:#d4a64a !important;
+  --primary-dark:#552014 !important;
+  --accent-cyan:#2f6f68 !important;
+  --accent-green:#4d6b45 !important;
+  --accent-amber:#d4a64a !important;
+  --accent-rose:#a13b35 !important;
+  --bg-main:#f3ead8 !important;
+  --bg-card:rgba(255,250,238,.9) !important;
+  --bg-card-solid:#fffaf0 !important;
+  --text-main:#2d211b !important;
+  --text-muted:#75665b !important;
+  --text-soft:#493a31 !important;
+  --border-color:rgba(103,61,35,.16) !important;
+  --shadow-lg:0 24px 70px rgba(73,42,23,.16) !important;
+  --radius-xl:24px !important;
+  --radius-lg:18px !important;
+  --radius-md:14px !important;
+}
+
+html{background:#f3ead8 !important}
+body{
+  color:var(--text-main) !important;
+  font-family:"Plus Jakarta Sans",sans-serif !important;
+  background:
+    radial-gradient(circle at 15% 8%,rgba(122,46,29,.10),transparent 27%),
+    radial-gradient(circle at 86% 18%,rgba(47,111,104,.09),transparent 24%),
+    repeating-linear-gradient(135deg,rgba(91,54,30,.025) 0 2px,transparent 2px 13px),
+    linear-gradient(180deg,#f7efdf 0%,#efe2cc 52%,#f7efdf 100%) !important;
+  position:relative;
+}
+body:before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.55;
+  background:
+    repeating-linear-gradient(45deg,transparent 0 20px,rgba(122,46,29,.035) 20px 22px,transparent 22px 42px),
+    repeating-linear-gradient(-45deg,transparent 0 30px,rgba(47,111,104,.028) 30px 32px,transparent 32px 60px);
+}
+body:after{
+  content:"BATIK  •  JAWA  •  SAYUTIHUB  •  BATIK  •  JAWA";
+  position:fixed; left:-80px; bottom:28px; transform:rotate(-90deg);
+  color:rgba(122,46,29,.08); font-family:Cinzel,serif; font-size:11px; letter-spacing:5px;
+  pointer-events:none; z-index:-1;
+}
+
+.glow-orb{filter:blur(95px)!important;opacity:.16!important}
+.glow-1{background:#9b4a2d!important}
+.glow-2{background:#4d8279!important}
+
+nav{
+  padding:12px 5%!important;
+  background:rgba(247,239,223,.94)!important;
+  border-bottom:1px solid rgba(122,46,29,.18)!important;
+  box-shadow:0 8px 28px rgba(73,42,23,.10)!important;
+  backdrop-filter:blur(18px)!important;
+}
+nav:after{
+  content:""; position:absolute; left:0; right:0; bottom:-3px; height:3px;
+  background:repeating-linear-gradient(90deg,#7a2e1d 0 16px,#d4a64a 16px 22px,#2f6f68 22px 38px,#7a2e1d 38px 54px);
+  opacity:.7;
+}
+.brand-icon{
+  background:linear-gradient(135deg,#7a2e1d,#a54b2e)!important;
+  border:2px solid rgba(212,166,74,.55)!important;
+  box-shadow:0 9px 25px rgba(122,46,29,.22)!important;
+}
+.brand-name{font-family:Cinzel,serif!important;letter-spacing:.02em!important;color:#5b281b!important}
+.brand-sub{color:#8a6d55!important;letter-spacing:.08em!important}
+.nav-btn{
+  color:#604c40!important;
+  background:rgba(255,250,240,.78)!important;
+  border-color:rgba(122,46,29,.16)!important;
+}
+.nav-btn:hover{color:#7a2e1d!important;background:#fffaf0!important;border-color:rgba(122,46,29,.3)!important}
+.nav-btn.primary-action{
+  color:#fffaf0!important;
+  background:linear-gradient(135deg,#7a2e1d,#9e4328)!important;
+  border-color:#7a2e1d!important;
+  box-shadow:0 9px 24px rgba(122,46,29,.22)!important;
+}
+
+.hero{
+  position:relative;
+  margin-top:62px!important;
+  margin-bottom:38px!important;
+}
+.hero:before{
+  content:""; position:absolute; inset:-28px -40px auto; height:155px; z-index:-1; opacity:.7;
+  background:
+    repeating-linear-gradient(45deg,transparent 0 18px,rgba(122,46,29,.07) 18px 21px,transparent 21px 38px),
+    repeating-linear-gradient(-45deg,transparent 0 18px,rgba(212,166,74,.09) 18px 20px,transparent 20px 38px);
+  mask-image:linear-gradient(to bottom,#000,transparent);
+}
+.hero-badge{
+  color:#7a2e1d!important;
+  background:rgba(122,46,29,.07)!important;
+  border-color:rgba(122,46,29,.2)!important;
+}
+.hero-badge i{color:#b0782d!important}
+.hero h1{
+  font-family:Cinzel,serif!important;
+  color:#3c281f!important;
+  letter-spacing:-.035em!important;
+  text-shadow:0 3px 18px rgba(122,46,29,.08);
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#7a2e1d,#b0782d,#2f6f68)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+}
+.hero-description{color:#766459!important}
+.hero-btn{
+  color:#5a463a!important;
+  background:rgba(255,250,240,.78)!important;
+  border-color:rgba(122,46,29,.18)!important;
+}
+.hero-btn:hover{background:#fffaf0!important}
+.hero-btn.primary{
+  color:#fffaf0!important;
+  background:linear-gradient(135deg,#7a2e1d,#a3482b)!important;
+  box-shadow:0 12px 28px rgba(122,46,29,.2)!important;
+}
+
+.hero-panel,.visual-card{
+  background:linear-gradient(145deg,rgba(255,250,240,.94),rgba(236,218,191,.82))!important;
+  border-color:rgba(122,46,29,.16)!important;
+  box-shadow:0 24px 55px rgba(73,42,23,.16)!important;
+}
+.hero-panel-title strong,.section-heading h2,.dashboard-header h2{color:#4b3024!important}
+.online-dot{color:#4d6b45!important}
+.online-dot span{background:#4d6b45!important;box-shadow:0 0 12px rgba(77,107,69,.45)!important}
+.quick-stat{
+  background:rgba(255,255,255,.48)!important;
+  border-color:rgba(122,46,29,.10)!important;
+}
+.quick-stat i{color:#9a6330!important}
+.quick-stat small{color:#806e60!important}
+.quick-stat .number{color:#3f2c22!important}
+
+.visual-orbit{border-color:rgba(122,46,29,.14)!important}
+.visual-app-icon{
+  color:#7a2e1d!important;
+  background:linear-gradient(135deg,rgba(122,46,29,.14),rgba(47,111,104,.10))!important;
+  border-color:rgba(122,46,29,.18)!important;
+}
+.visual-lines i{background:rgba(122,46,29,.12)!important}
+.visual-mini-grid span{color:#7a2e1d!important;background:rgba(122,46,29,.06)!important}
+.visual-card-float{color:#7a2e1d!important}
+
+.container{margin-bottom:55px!important}
+.section-heading{border-left:4px solid #d4a64a;padding-left:14px}
+.section-heading h2{font-family:Cinzel,serif!important;font-size:1.22rem!important}
+.section-heading h2 i{color:#7a2e1d!important}
+.section-heading p{color:#806e60!important}
+
+.search-box input,.sort-select,.form-control{
+  color:#3c2b22!important;
+  background:rgba(255,250,240,.9)!important;
+  border-color:rgba(122,46,29,.17)!important;
+}
+.search-box input::placeholder{color:#a08d7e!important}
+.search-box i{color:#9a7a62!important}
+.search-box input:focus,.sort-select:focus,.form-control:focus{
+  border-color:rgba(122,46,29,.48)!important;
+  box-shadow:0 0 0 3px rgba(122,46,29,.08)!important;
+}
+.filter-btn{
+  color:#806e60!important;
+  background:rgba(255,250,240,.65)!important;
+  border-color:rgba(122,46,29,.15)!important;
+}
+.filter-btn:hover{color:#7a2e1d!important;background:#fffaf0!important}
+.filter-btn.active{
+  color:#fffaf0!important;
+  background:linear-gradient(135deg,#7a2e1d,#9e4328)!important;
+  box-shadow:0 7px 20px rgba(122,46,29,.18)!important;
+}
+
+.app-grid{gap:16px!important}
+.app-card{
+  background:
+    linear-gradient(145deg,rgba(255,250,240,.96),rgba(241,226,204,.88))!important;
+  border-color:rgba(122,46,29,.14)!important;
+  box-shadow:0 12px 34px rgba(73,42,23,.10)!important;
+}
+.app-card:before{
+  background:
+    repeating-linear-gradient(45deg,transparent 0 13px,rgba(122,46,29,.045) 13px 15px,transparent 15px 28px)!important;
+  opacity:.75;
+}
+.app-card:hover{
+  border-color:rgba(122,46,29,.35)!important;
+  box-shadow:0 22px 46px rgba(73,42,23,.17)!important;
+}
+.app-icon{
+  background:linear-gradient(135deg,#7a2e1d,#a94e2d)!important;
+  box-shadow:0 10px 24px rgba(122,46,29,.2)!important;
+  border:2px solid rgba(212,166,74,.35)!important;
+}
+.favorite-btn{
+  color:#987d6b!important;
+  background:rgba(255,250,240,.75)!important;
+  border-color:rgba(122,46,29,.14)!important;
+}
+.favorite-btn:hover,.favorite-btn.active{
+  color:#a13b35!important;
+  background:rgba(161,59,53,.08)!important;
+  border-color:rgba(161,59,53,.22)!important;
+}
+.app-card h3{color:#3d2b22!important}
+.app-card p{color:#78675b!important}
+.app-meta{
+  border-top-color:rgba(122,46,29,.10)!important;
+  color:#8a7768!important;
+}
+.app-meta i{color:#c08b31!important}
+.btn-download{
+  color:#fffaf0!important;
+  background:linear-gradient(135deg,#7a2e1d,#9e4328)!important;
+  border-color:#7a2e1d!important;
+}
+.btn-download:hover{box-shadow:0 10px 24px rgba(122,46,29,.2)!important}
+
+.empty-state{
+  background:rgba(255,250,240,.65)!important;
+  border-color:rgba(122,46,29,.14)!important;
+  color:#4a3429!important;
+}
+.empty-state-icon{color:#9a6331!important;background:rgba(122,46,29,.08)!important}
+
+.stats-grid{gap:15px!important}
+.stat-card{
+  background:linear-gradient(145deg,rgba(255,250,240,.94),rgba(237,220,193,.82))!important;
+  border-color:rgba(122,46,29,.14)!important;
+}
+.stat-card:after{background:rgba(122,46,29,.09)!important}
+.stat-card h4{color:#806e60!important}
+.stat-card .val{color:#4a2f23!important}
+.admin-table-wrapper{
+  background:rgba(255,250,240,.7)!important;
+  border-color:rgba(122,46,29,.15)!important;
+}
+th{color:#806e60!important;background:rgba(122,46,29,.045)!important}
+td{color:#57443a!important;border-top-color:rgba(122,46,29,.08)!important}
+tr:hover td{background:rgba(122,46,29,.035)!important}
+
+.modal-overlay{background:rgba(55,31,20,.55)!important;backdrop-filter:blur(14px)!important}
+.modal-container{
+  background:linear-gradient(145deg,#fffaf0,#f1e1c8)!important;
+  border-color:rgba(122,46,29,.2)!important;
+  box-shadow:0 30px 100px rgba(55,31,20,.35)!important;
+}
+.modal-close{
+  color:#806e60!important;
+  background:rgba(122,46,29,.05)!important;
+  border-color:rgba(122,46,29,.14)!important;
+}
+.modal-close:hover{color:#7a2e1d!important;background:rgba(122,46,29,.1)!important}
+.form-group label{color:#60483b!important}
+.modal-container p{color:#78675b!important}
+.modal-container [style*="background:rgba(15,23,42"]{
+  background:rgba(122,46,29,.045)!important;
+  border-color:rgba(122,46,29,.10)!important;
+}
+.modal-container [style*="background:rgba(99,102,241"]{
+  background:rgba(122,46,29,.09)!important;
+  color:#7a2e1d!important;
+}
+#qrcodeContainer{background:#fff!important}
+
+.toast{
+  color:#fff7ed!important;
+  background:rgba(78,57,40,.96)!important;
+  border-color:rgba(212,166,74,.38)!important;
+}
+footer{
+  border-top-color:rgba(122,46,29,.16)!important;
+  color:#8b7868!important;
+}
+footer strong{color:#7a2e1d!important}
+
+@media(max-width:720px){
+  nav{padding:10px 12px!important}
+  .brand-name{color:#5b281b!important}
+  .hero{margin-top:42px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important}
+}
+</style>\n</head>
  <body>
   <!-- =========================================================
          BACKGROUND
