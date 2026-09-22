@@ -2281,7 +2281,6 @@ footer strong{color:#c9a45a !important}
     </div>
    </div>
    <div class="nav-actions">
-    <button aria-label="Buka analytics" class="nav-btn" onclick="switchView('analytics')"><i class="fa-solid fa-chart-line"></i> <span>Analytics</span></button>
     <button aria-label="Login admin" class="nav-btn primary-action" onclick="openAdminLoginModal()"><i class="fa-solid fa-lock"></i> <span>Admin</span></button>
    </div>
   </nav>
@@ -2391,7 +2390,31 @@ footer strong{color:#c9a45a !important}
    <!-- =====================================================
              ANALYTICS
         ====================================================== -->
-   <section class="view-section" id="analyticsView">
+   
+   <!-- =====================================================
+             ADMIN
+        ====================================================== -->
+   <section class="view-section" id="adminView">
+    <div class="dashboard-header">
+     <div>
+      <h2 style="font-size:1.15rem; margin:0;"><i class="fa-solid fa-user-shield" style="color:#818cf8"></i> Panel Admin</h2>
+      <p style="
+                            margin:5px 0 0;
+                            color:var(--text-muted);
+                            font-size:.7rem;
+                        ">Kelola aplikasi dan katalog SayutiHub.</p>
+     </div>
+     <div style="
+                        display:flex;
+                        gap:7px;
+                        flex-wrap:wrap;
+                    ">
+      <button class="nav-btn primary-action" onclick="openAppFormModal()"><i class="fa-solid fa-plus"></i> Tambah</button>
+      <button class="nav-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Keluar</button>
+     </div>
+    </div>
+    <div class="admin-analytics-access" style="margin:0 0 18px;">
+
     <div class="dashboard-header">
      <div>
       <h2 style="font-size:1.2rem; margin:0;"><i class="fa-solid fa-chart-line" style="color:var(--primary-light)"></i> Analisis Sistem</h2>
@@ -2416,30 +2439,9 @@ footer strong{color:#c9a45a !important}
       <div class="val" id="statTotalReviews">0</div>
      </div>
     </div>
-   </section>
-   <!-- =====================================================
-             ADMIN
-        ====================================================== -->
-   <section class="view-section" id="adminView">
-    <div class="dashboard-header">
-     <div>
-      <h2 style="font-size:1.15rem; margin:0;"><i class="fa-solid fa-user-shield" style="color:#818cf8"></i> Panel Admin</h2>
-      <p style="
-                            margin:5px 0 0;
-                            color:var(--text-muted);
-                            font-size:.7rem;
-                        ">Kelola aplikasi dan katalog SayutiHub.</p>
-     </div>
-     <div style="
-                        display:flex;
-                        gap:7px;
-                        flex-wrap:wrap;
-                    ">
-      <button class="nav-btn primary-action" onclick="openAppFormModal()"><i class="fa-solid fa-plus"></i> Tambah</button>
-      <button class="nav-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Keluar</button>
-     </div>
-    </div>
-    <div class="admin-table-wrapper">
+   
+</div>
+<div class="admin-table-wrapper">
      <table>
       <thead>
        <tr>
