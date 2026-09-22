@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="260" viewBox="0 0 260 260">
+<defs>
+ <pattern id="kawung" width="130" height="130" patternUnits="userSpaceOnUse">
+  <rect width="130" height="130" fill="#3b2118"/>
+  <g transform="translate(65 65) rotate(45)">
+   <ellipse cx="-25" cy="0" rx="28" ry="17" fill="#c99a45"/>
+   <ellipse cx="25" cy="0" rx="28" ry="17" fill="#c99a45"/>
+   <ellipse cx="0" cy="-25" rx="17" ry="28" fill="#f3e5c2"/>
+   <ellipse cx="0" cy="25" rx="17" ry="28" fill="#f3e5c2"/>
+   <circle r="9" fill="#6e2b25"/>
+   <path d="M-43 43 Q-30 30 -17 43 Q-30 56 -43 43M17 43 Q30 30 43 43 Q30 56 17 43" fill="none" stroke="#164c4a" stroke-width="4"/>
+  </g>
+ </pattern>
+ <pattern id="parang" width="90" height="90" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)">
+   <rect width="90" height="90" fill="#241611"/>
+   <path d="M-10 25 Q20 5 50 25 T110 25" fill="none" stroke="#c99a45" stroke-width="12"/>
+   <path d="M-10 25 Q20 45 50 25 T110 25" fill="none" stroke="#6e2b25" stroke-width="5"/>
+   <circle cx="25" cy="25" r="5" fill="#f3e5c2"/>
+   <circle cx="70" cy="25" r="5" fill="#f3e5c2"/>
+ </pattern>
+</defs>
+<rect width="260" height="260" fill="url(#kawung)"/>
+<path d="M0 0h260v260H0z" fill="url(#parang)" opacity=".20"/>
+</svg>
