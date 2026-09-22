@@ -155,7 +155,7 @@ function switchView(viewName) {
     
     if(viewName === 'favorites') renderFavorites();
     if(viewName === 'analytics') renderAnalytics();
-    if(viewName === 'admin') renderAdminTable();
+    if(viewName === 'admin') { renderAdminTable(); renderAnalytics(); }
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
