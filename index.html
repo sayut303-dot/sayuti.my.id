@@ -1931,6 +1931,140 @@ footer strong{color:#7a2e1d!important}
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important}
 }
+
+/* =========================================================
+   BATIK JAWA VISIBLE LAYER — visual only, no JS/features changed
+   ========================================================= */
+:root{
+  --jawa-batik-cream:#f3e5c2;
+  --jawa-batik-gold:#c99a45;
+  --jawa-batik-brown:#3b2118;
+  --jawa-batik-maroon:#6e2b25;
+  --jawa-batik-teal:#164c4a;
+  --jawa-batik-ink:#241611;
+}
+body{
+  background-color:#1b100d !important;
+  background-image:
+    linear-gradient(rgba(27,16,13,.78),rgba(27,16,13,.9)),
+    url("assets/batik-jawa.svg") !important;
+  background-repeat:repeat !important;
+  background-size:auto, 260px 260px !important;
+}
+body::before{
+  content:"";
+  position:fixed;
+  left:0;right:0;top:0;
+  height:5px;
+  z-index:1001;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(135deg,
+      var(--jawa-batik-gold) 0 7px,
+      var(--jawa-batik-maroon) 7px 14px,
+      var(--jawa-batik-cream) 14px 21px,
+      var(--jawa-batik-teal) 21px 28px);
+  box-shadow:0 1px 12px rgba(0,0,0,.45);
+}
+nav{
+  background:
+    linear-gradient(rgba(48,27,20,.93),rgba(31,17,14,.96)),
+    url("assets/batik-jawa.svg") !important;
+  background-size:auto,180px 180px !important;
+  border-bottom:3px solid var(--jawa-batik-gold) !important;
+}
+nav::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-7px;
+  height:4px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--jawa-batik-gold) 0 18px,
+      transparent 18px 24px,
+      var(--jawa-batik-cream) 24px 42px,
+      transparent 42px 48px);
+  opacity:.9;
+}
+.brand-icon{
+  background:
+    linear-gradient(rgba(59,33,24,.18),rgba(59,33,24,.18)),
+    url("assets/batik-jawa.svg") center/95px 95px,
+    linear-gradient(135deg,var(--jawa-batik-maroon),var(--jawa-batik-brown)) !important;
+  border:2px solid var(--jawa-batik-gold);
+  box-shadow:0 8px 24px rgba(0,0,0,.35) !important;
+}
+.hero{
+  position:relative;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:-24px -28px auto;
+  height:74px;
+  pointer-events:none;
+  border-top:1px solid rgba(201,154,69,.55);
+  border-bottom:1px solid rgba(201,154,69,.35);
+  background:
+    linear-gradient(rgba(59,33,24,.72),rgba(59,33,24,.72)),
+    url("assets/batik-jawa.svg") center/150px 150px;
+  opacity:.9;
+  mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent);
+}
+.hero-content,.hero-panel{
+  position:relative;
+  z-index:1;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#f0c96b,#f3e5c2,#c98d4b) !important;
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+.hero-badge{
+  color:#f3e5c2 !important;
+  background:rgba(110,43,37,.3) !important;
+  border-color:rgba(201,154,69,.55) !important;
+}
+.hero-panel,.app-card,.modal-container,.analytics-card,.admin-panel{
+  background:
+    linear-gradient(rgba(45,25,19,.88),rgba(27,16,13,.9)),
+    url("assets/batik-jawa.svg") center/190px 190px !important;
+  border-color:rgba(201,154,69,.32) !important;
+}
+.app-card::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:7px;
+  background:
+    repeating-linear-gradient(135deg,
+      var(--jawa-batik-maroon) 0 8px,
+      var(--jawa-batik-gold) 8px 16px,
+      var(--jawa-batik-cream) 16px 24px,
+      var(--jawa-batik-teal) 24px 32px);
+  opacity:.9;
+}
+.app-card:hover{
+  border-color:rgba(201,154,69,.75) !important;
+  box-shadow:0 22px 50px rgba(40,16,10,.45) !important;
+}
+.filter-btn.active,.nav-btn.primary-action,.hero-btn.primary{
+  background:linear-gradient(135deg,var(--jawa-batik-maroon),var(--jawa-batik-brown)) !important;
+  border-color:var(--jawa-batik-gold) !important;
+  box-shadow:0 8px 24px rgba(59,33,24,.4) !important;
+}
+footer{
+  position:relative;
+  margin-top:30px;
+  padding-top:34px !important;
+  border-top:8px solid transparent !important;
+  border-image:url("assets/batik-jawa.svg") 30 round !important;
+  background:
+    linear-gradient(rgba(35,19,15,.95),rgba(25,13,11,.98)),
+    url("assets/batik-jawa.svg") center/220px 220px !important;
+}
+
 </style>\n</head>
  <body>
   <!-- =========================================================
