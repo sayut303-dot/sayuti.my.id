@@ -552,43 +552,73 @@ async function saveAppFromForm() {
         showToast('Memproses logo aplikasi...');
 
         try {
-            // GitHub Contents API memiliki batas praktis sekitar 1 MB untuk upload
-            // file melalui endpoint ini. Beri pesan yang jelas jika terlalu besar.
-            if (iconFileInput.size > 900 * 1024) {
-                alert('Logo terlalu besar. Gunakan PNG/JPG/WebP di bawah 900 KB.');
-                return;
-            }
+            const originalName = iconFileInput.name || 'logo';
+            const extension = originalName.split('.').pop().toLowerCase();
+            const detectedType = iconFileInput.type ||
+                ({ png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+                   webp: 'image/webp', svg: 'image/svg+xml' }[extension] || '');
 
-            const allowedTypes = [
-                'image/png',
-                'image/jpeg',
-                'image/webp',
-                'image/svg+xml'
-            ];
-
-            if (!allowedTypes.includes(iconFileInput.type)) {
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
+            if (!allowedTypes.includes(detectedType)) {
                 alert('Format logo tidak didukung. Gunakan PNG, JPG, WebP, atau SVG.');
                 return;
             }
 
-            let base64Icon = await toBase64(iconFileInput);
+            // Raster besar otomatis diperkecil dan dikompresi menjadi WebP.
+            // Ini menghindari payload Base64 besar dan lebih cocok untuk ikon aplikasi.
+            let uploadBlob = iconFileInput;
+            let uploadName = originalName.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/_+/g, '_');
 
-            // Bersihkan nama file agar aman digunakan sebagai path GitHub.
-            let originalName = iconFileInput.name || 'logo.png';
-            let safeName = originalName
-                .replace(/[^a-zA-Z0-9._-]/g, '_')
-                .replace(/_+/g, '_');
+            if (detectedType !== 'image/svg+xml') {
+                try {
+                    const bitmap = await createImageBitmap(iconFileInput);
+                    const maxDimension = 1024;
+                    const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+                    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) throw new Error('Browser tidak dapat memproses gambar.');
+                    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+                    bitmap.close();
 
-            let iconFileName = 'logo_' + Date.now() + '_' + safeName;
-            let encodedIconFileName = encodeURIComponent(iconFileName);
+                    const compressedBlob = await new Promise((resolve, reject) => {
+                        canvas.toBlob(blob => {
+                            if (blob) resolve(blob);
+                            else reject(new Error('Kompresi gambar gagal.'));
+                        }, 'image/webp', 0.88);
+                    });
+                    uploadBlob = compressedBlob;
+                    uploadName = uploadName.replace(/\.[^.]+$/, '') + '.webp';
+                } catch (compressionError) {
+                    console.warn('Kompresi logo gagal:', compressionError);
+                    if (iconFileInput.size > 5 * 1024 * 1024) {
+                        alert('Gambar terlalu besar untuk diproses browser. Coba JPG/PNG yang lebih sederhana atau SVG yang dioptimalkan.');
+                        return;
+                    }
+                    // Untuk gambar kecil, coba unggah file asli bila browser tak mendukung kompresi.
+                }
+            } else if (iconFileInput.size > 5 * 1024 * 1024) {
+                alert('SVG terlalu besar (maksimal 5 MB). Optimalkan SVG terlebih dahulu.');
+                return;
+            }
+
+            // Batas setelah kompresi, bukan pada ukuran file asli.
+            if (uploadBlob.size > 5 * 1024 * 1024) {
+                alert('Ukuran logo setelah diproses masih lebih dari 5 MB. Coba gambar lain.');
+                return;
+            }
+
+            const base64Icon = await toBase64(uploadBlob);
+            const iconFileName = 'logo_' + Date.now() + '_' + uploadName;
+            const encodedIconFileName = encodeURIComponent(iconFileName);
 
             const githubHeaders = {
                 'Authorization': `token ${githubToken}`,
                 'Accept': 'application/vnd.github+json'
             };
 
-            // Cek apakah token benar-benar dapat mengakses repository.
-            let repoCheck = await fetch(
+            const repoCheck = await fetch(
                 `https://api.github.com/repos/${repoOwnerAndName}`,
                 { headers: githubHeaders }
             );
@@ -603,14 +633,8 @@ async function saveAppFromForm() {
                 return;
             }
 
-            let bodyIconData = {
-                message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
-                content: base64Icon
-            };
-
             showToast('Mengunggah logo ke GitHub...');
-
-            let responseIcon = await fetch(
+            const responseIcon = await fetch(
                 `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`,
                 {
                     method: 'PUT',
@@ -618,7 +642,10 @@ async function saveAppFromForm() {
                         ...githubHeaders,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(bodyIconData)
+                    body: JSON.stringify({
+                        message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
+                        content: base64Icon
+                    })
                 }
             );
 
@@ -628,13 +655,12 @@ async function saveAppFromForm() {
             } else {
                 let errMessage = 'Gagal upload logo.';
                 try {
-                    let errData = await responseIcon.json();
+                    const errData = await responseIcon.json();
                     if (errData.message) errMessage += '\n\nGitHub: ' + errData.message;
                 } catch (e) {}
                 alert(errMessage);
                 return;
             }
-
         } catch (error) {
             console.error('Logo upload error:', error);
             alert('Error upload logo: ' + (error.message || 'Kesalahan tidak diketahui.'));
