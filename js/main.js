@@ -494,55 +494,69 @@ async function saveAppFromForm() {
     let iconValue = document.getElementById('inputIcon') && document.getElementById('inputIcon').value ? document.getElementById('inputIcon').value.trim() : 'fa-cube';
     let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
 
-    // 1. Proses Upload File APK ke GitHub (jika ada)
+    // 1. Upload APK. Saat mengedit aplikasi, gunakan path APK lama agar file lama
+    // ditimpa dan tautan unduhan yang sudah ada tetap berfungsi.
     if (apkFileInput) {
-        showToast('Mengunggah file APK ke GitHub...');
+        showToast('Mengunggah APK terbaru dan menggantikan versi lama...');
         try {
-            let base64Content = await toBase64(apkFileInput);
-            let fileName = apkFileInput.name;
-            let encodedFileName = encodeURIComponent(fileName);
-            
+            const base64Content = await toBase64(apkFileInput);
+            const existingApp = id ? dbApps.find(a => String(a.id) === String(id)) : null;
+            const previousUrl = existingApp && typeof existingApp.downloadUrl === 'string'
+                ? existingApp.downloadUrl.trim()
+                : '';
+            const isRepoFile = previousUrl && previousUrl !== '#' &&
+                !/^https?:\/\//i.test(previousUrl) && !/^data:/i.test(previousUrl) &&
+                !previousUrl.startsWith('/');
+            const fileName = isRepoFile ? previousUrl : apkFileInput.name;
+            const encodedFileName = fileName.split('/').map(part => encodeURIComponent(part)).join('/');
+            const apiUrl = `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedFileName}`;
+            const githubHeaders = {
+                'Authorization': `token ${githubToken}`,
+                'Accept': 'application/vnd.github+json'
+            };
+
             let existingSha = null;
-            let checkRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedFileName}`, {
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
+            const checkRes = await fetch(apiUrl, { headers: githubHeaders });
             if (checkRes.ok) {
-                let fileData = await checkRes.json();
+                const fileData = await checkRes.json();
                 existingSha = fileData.sha;
+            } else if (checkRes.status !== 404) {
+                let message = 'Tidak dapat memeriksa file APK lama di GitHub.';
+                try {
+                    const errorData = await checkRes.json();
+                    if (errorData.message) message += '\nGitHub: ' + errorData.message;
+                } catch (e) {}
+                throw new Error(message);
             }
 
-            let bodyData = {
-                message: `Upload ${fileName} via Admin Panel SayutiHub`,
+            const bodyData = {
+                message: existingSha
+                    ? `Perbarui APK ${fileName} via Admin Panel SayutiHub`
+                    : `Upload APK ${fileName} via Admin Panel SayutiHub`,
                 content: base64Content
             };
-            if (existingSha) {
-                bodyData.sha = existingSha;
-            }
-            
-            let response = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedFileName}`, {
+            if (existingSha) bodyData.sha = existingSha;
+
+            const response = await fetch(apiUrl, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `token ${githubToken}`,
-                    'Content-Type': 'application/json',
-                },
+                headers: { ...githubHeaders, 'Content-Type': 'application/json' },
                 body: JSON.stringify(bodyData)
             });
 
-            if (response.ok) {
-                downloadUrl = fileName; 
-                format = 'APK File';
-                showToast('APK Berhasil di-upload!');
-            } else {
-                let errData = await response.json();
-                alert('Gagal upload APK: ' + (errData.message || 'Periksa token Anda.'));
-                return;
+            if (!response.ok) {
+                let errorData = {};
+                try { errorData = await response.json(); } catch (e) {}
+                throw new Error(errorData.message || 'Periksa token dan izin GitHub Anda.');
             }
+
+            downloadUrl = fileName;
+            format = 'APK File';
+            showToast(existingSha
+                ? 'APK lama berhasil digantikan dengan versi terbaru!'
+                : 'APK berhasil di-upload!');
         } catch (error) {
-            console.error(error);
-            alert('Error jaringan/upload APK: ' + error.message);
+            console.error('APK upload error:', error);
+            alert('Gagal upload/update APK: ' + (error.message || 'Kesalahan tidak diketahui.'));
             return;
         }
     }
