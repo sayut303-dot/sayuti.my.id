@@ -423,13 +423,93 @@ function renderAdminTable() {
             <td>${formatNumber(app.downloads)}</td>
             <td>
                 <div class="action-btns">
-                    <button class="btn-icon-action" onclick="openAppFormModal(${app.id})"><i class="fa-solid fa-pen"></i></button>
-                    <button class="btn-icon-action danger" onclick="deleteApp(${app.id})"><i class="fa-solid fa-trash"></i></button>
+                    <button class="btn-icon-action" title="Upload APK terbaru" onclick="openQuickApkUpload(${app.id})"><i class="fa-solid fa-upload"></i></button>
+                    <button class="btn-icon-action" title="Edit detail aplikasi" onclick="openAppFormModal(${app.id})"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-icon-action danger" title="Hapus aplikasi" onclick="deleteApp(${app.id})"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+// Upload APK cepat: pilih aplikasi yang sudah ada, lalu unggah APK terbaru saja.
+let quickApkAppId = null;
+
+function openQuickApkUpload(appId) {
+    const app = dbApps.find(item => String(item.id) === String(appId));
+    if (!app) return;
+    quickApkAppId = app.id;
+    const title = document.getElementById('quickApkAppTitle');
+    const fileInput = document.getElementById('quickApkFile');
+    const tokenInput = document.getElementById('quickApkGithubToken');
+    if (title) title.textContent = app.title;
+    if (fileInput) fileInput.value = '';
+    if (tokenInput) tokenInput.value = localStorage.getItem('sayuti_gh_token') || '';
+    const modal = document.getElementById('quickApkModal');
+    if (modal) modal.classList.add('active');
+}
+
+async function uploadApkOnly() {
+    const app = dbApps.find(item => String(item.id) === String(quickApkAppId));
+    const fileInput = document.getElementById('quickApkFile');
+    const tokenInput = document.getElementById('quickApkGithubToken');
+    const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    const token = tokenInput ? tokenInput.value.trim() : '';
+    if (!app) { alert('Pilih aplikasi yang akan diperbarui.'); return; }
+    if (!file) { alert('Pilih file APK terbaru terlebih dahulu.'); return; }
+    if (!/\.apk$/i.test(file.name)) { alert('File harus berformat .apk'); return; }
+    if (!token) { alert('Masukkan GitHub Token untuk mengunggah APK.'); return; }
+
+    const repo = 'sayut303-dot/sayuti.my.id';
+    const oldPath = typeof app.downloadUrl === 'string' ? app.downloadUrl.trim() : '';
+    const isRepoPath = oldPath && oldPath !== '#' &&
+        !/^https?:\/\//i.test(oldPath) && !/^data:/i.test(oldPath) &&
+        !oldPath.startsWith('/');
+    const filePath = isRepoPath ? oldPath : file.name;
+    const encodedPath = filePath.split('/').map(part => encodeURIComponent(part)).join('/');
+    const apiUrl = `https://api.github.com/repos/${repo}/contents/${encodedPath}`;
+    const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' };
+
+    try {
+        localStorage.setItem('sayuti_gh_token', token);
+        showToast('Mengunggah APK terbaru...');
+        const base64 = await toBase64(file);
+        const check = await fetch(apiUrl, { headers });
+        let sha = null;
+        if (check.ok) {
+            const existing = await check.json();
+            sha = existing.sha;
+        } else if (check.status !== 404) {
+            let detail = '';
+            try { detail = (await check.json()).message || ''; } catch (e) {}
+            throw new Error(detail || 'Tidak dapat memeriksa APK di GitHub.');
+        }
+
+        const payload = { message: `Perbarui APK ${filePath} melalui Panel Admin`, content: base64 };
+        if (sha) payload.sha = sha;
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: { ...headers, 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            let detail = '';
+            try { detail = (await response.json()).message || ''; } catch (e) {}
+            throw new Error(detail || 'Upload gagal. Periksa token, izin repository, dan ukuran APK.');
+        }
+
+        app.downloadUrl = filePath;
+        app.format = 'APK File';
+        await updateMainJsOnGitHub(token);
+        closeModalDirect('quickApkModal');
+        renderAdminTable();
+        renderApps();
+        showToast('APK berhasil diperbarui. File lama telah digantikan!');
+    } catch (error) {
+        console.error('Upload APK cepat gagal:', error);
+        alert('Gagal memperbarui APK: ' + (error.message || 'Kesalahan tidak diketahui.'));
+    }
 }
 
 function openAppFormModal(appId = null) {
