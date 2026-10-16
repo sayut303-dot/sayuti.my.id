@@ -423,7 +423,7 @@ function renderAdminTable() {
             <td>${formatNumber(app.downloads)}</td>
             <td>
                 <div class="action-btns">
-                    <button class="btn-icon-action" title="Upload APK terbaru" onclick="openQuickApkUpload(${app.id})"><i class="fa-solid fa-upload"></i></button>
+                    <button class="btn-icon-action" title="Upload APK terbaru" style="white-space:nowrap;padding:6px 9px;" onclick="openQuickApkUpload(${app.id})"><i class="fa-solid fa-upload"></i> Upload</button>
                     <button class="btn-icon-action" title="Edit detail aplikasi" onclick="openAppFormModal(${app.id})"><i class="fa-solid fa-pen"></i></button>
                     <button class="btn-icon-action danger" title="Hapus aplikasi" onclick="deleteApp(${app.id})"><i class="fa-solid fa-trash"></i></button>
                 </div>
