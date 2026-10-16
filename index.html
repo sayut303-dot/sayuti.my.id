@@ -2596,6 +2596,30 @@ footer strong{color:#c9a45a !important}
   <!-- =========================================================
          APP FORM
     ========================================================== -->
+  <!-- QUICK APK UPDATE MODAL -->
+  <div aria-modal="true" class="modal-overlay" id="quickApkModal" onclick="closeModal(event, 'quickApkModal')" role="dialog">
+   <div class="modal-container" style="max-width:440px;">
+    <button class="modal-close" onclick="closeModalDirect('quickApkModal')"><i class="fa-solid fa-xmark"></i></button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+     <div style="width:44px;height:44px;display:grid;place-items:center;border-radius:12px;color:white;background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+     <div>
+      <h3 style="margin:0;font-size:1rem;">Upload APK Terbaru</h3>
+      <p style="margin:4px 0 0;color:var(--text-muted);font-size:.75rem;">Aplikasi: <strong id="quickApkAppTitle">-</strong></p>
+     </div>
+    </div>
+    <p style="color:var(--text-muted);font-size:.8rem;line-height:1.6;">Pilih APK versi terbaru saja. File lama akan digantikan dan tautan unduhan tetap sama.</p>
+    <div class="form-group">
+     <label for="quickApkFile">File APK terbaru</label>
+     <input accept=".apk,application/vnd.android.package-archive" class="form-control" id="quickApkFile" type="file">
+    </div>
+    <div class="form-group">
+     <label for="quickApkGithubToken">GitHub Token</label>
+     <input autocomplete="new-password" class="form-control" id="quickApkGithubToken" placeholder="Token GitHub (otomatis terisi jika tersimpan)" type="password">
+     <small style="display:block;margin-top:5px;color:#64748b;font-size:.68rem;">Token diperlukan untuk mengunggah file ke repository.</small>
+    </div>
+    <button class="nav-btn primary-action" onclick="uploadApkOnly()" style="width:100%;justify-content:center;min-height:45px;"><i class="fa-solid fa-upload"></i> Upload dan Ganti APK Lama</button>
+   </div>
+  </div>
   <div aria-modal="true" class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')" role="dialog">
    <div class="modal-container">
     <button class="modal-close" onclick="closeModalDirect('appFormModal')"><i class="fa-solid fa-xmark"></i></button>
