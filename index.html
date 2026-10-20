@@ -2608,6 +2608,16 @@ footer strong{color:#c9a45a !important}
      </div>
     </div>
     <p style="color:var(--text-muted);font-size:.8rem;line-height:1.6;">Pilih APK versi terbaru saja. File lama akan digantikan dan tautan unduhan tetap sama.</p>
+    <div id="quickApkProgressWrap" style="display:none;margin:0 0 15px;padding:12px;border:1px solid rgba(129,140,248,.28);border-radius:12px;background:rgba(99,102,241,.08);">
+     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;">
+      <span id="quickApkProgressStatus" role="status" aria-live="polite" style="font-size:.76rem;color:var(--text-soft);">Menunggu upload...</span>
+      <strong id="quickApkProgressPercent" style="font-size:.85rem;color:#a5b4fc;">0%</strong>
+     </div>
+     <div style="height:8px;overflow:hidden;border-radius:999px;background:rgba(148,163,184,.18);">
+      <div id="quickApkProgressBar" role="progressbar" aria-label="Progres upload APK" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#22d3ee);transition:width .15s ease;"></div>
+     </div>
+     <small style="display:block;margin-top:7px;color:var(--text-muted);font-size:.68rem;">Progres mencakup pembacaan file, transfer APK, dan penyimpanan katalog.</small>
+    </div>
     <div class="form-group">
      <label for="quickApkFile">File APK terbaru</label>
      <input accept=".apk,application/vnd.android.package-archive" class="form-control" id="quickApkFile" type="file">
@@ -2789,7 +2799,7 @@ footer strong{color:#c9a45a !important}
   <!-- =========================================================
          JAVASCRIPT
     ========================================================== -->
-  <script src="js/main.js?v=4"></script>
+  <script src="js/main.js?v=5"></script>
   <!-- =========================================================
          SMALL UI ENHANCEMENT
          Tidak menggantikan main.js
