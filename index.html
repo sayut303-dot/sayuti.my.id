@@ -2851,8 +2851,8 @@ footer strong{color:#c9a45a !important}
       document.addEventListener('DOMContentLoaded', function () {
         var adminButton = document.querySelector('[aria-label="Login admin"]');
         var loginButton = document.querySelector('#adminLoginModal button.primary-action');
-        if (adminButton) adminButton.addEventListener('click', showAdminLogin, true);
-        if (loginButton) loginButton.addEventListener('click', enterAdminPanel, true);
+        if (adminButton) adminButton.addEventListener('click', function (event) { event.preventDefault(); event.stopImmediatePropagation(); showAdminLogin(); }, true);
+        if (loginButton) loginButton.addEventListener('click', function (event) { event.preventDefault(); event.stopImmediatePropagation(); enterAdminPanel(); }, true);
         var input = document.getElementById('adminPinInput');
         if (input) input.addEventListener('keydown', function (event) {
           if (event.key === 'Enter') enterAdminPanel();
