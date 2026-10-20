@@ -673,7 +673,7 @@ async function uploadApkOnly() {
 
         setQuickApkProgress(25, sha ? 'Mengganti file APK lama...' : 'Mengunggah APK ke lokasi unduhan...');
         const uploaded = await putGithubContentsWithProgress(apiUrl, token, payload, pct => {
-            setQuickApkProgress(25 + pct * 0.68, 'Transfer APK (' + pct + '%)...');
+            setQuickApkProgress(25 + pct * 0.68, pct >= 100 ? 'Transfer terkirim, menunggu konfirmasi GitHub...' : 'Transfer APK (' + pct + '%)...');
         });
         apkUploaded = true;
 
@@ -837,7 +837,7 @@ async function saveAppFromForm() {
 
             setAppFormProgress(22, existingSha ? 'Mengganti APK lama...' : 'Mengunggah APK baru...');
             const uploadedData = await putGithubContentsWithProgress(apiUrl, githubToken, bodyData, pct => {
-                setAppFormProgress(22 + pct * 0.53, 'Transfer APK (' + pct + '%)...');
+                setAppFormProgress(22 + pct * 0.53, pct >= 100 ? 'Transfer terkirim, menunggu konfirmasi GitHub...' : 'Transfer APK (' + pct + '%)...');
             });
             if (!uploadedData) throw new Error('GitHub tidak mengonfirmasi hasil upload.');
 
