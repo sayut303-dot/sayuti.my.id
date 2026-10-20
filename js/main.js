@@ -677,6 +677,22 @@ function openAppFormModal(appId = null) {
     if(formModal) formModal.classList.add('active');
 }
 
+
+function setAppFormProgress(percent, message) {
+    const wrap = document.getElementById('appFormProgressWrap');
+    const bar = document.getElementById('appFormProgressBar');
+    const label = document.getElementById('appFormProgressPercent');
+    const status = document.getElementById('appFormProgressStatus');
+    if (wrap) wrap.style.display = 'block';
+    const value = Math.max(0, Math.min(100, Math.round(percent)));
+    if (bar) {
+        bar.style.width = value + '%';
+        bar.setAttribute('aria-valuenow', String(value));
+    }
+    if (label) label.textContent = value + '%';
+    if (status && message) status.textContent = message;
+}
+
 async function saveAppFromForm() {
     let editIdElem = document.getElementById('editAppId');
     let titleElem = document.getElementById('inputTitle');
@@ -691,6 +707,7 @@ async function saveAppFromForm() {
     if (!githubToken) { alert('GitHub Token wajib diisi untuk sinkronisasi publik!'); return; }
 
     localStorage.setItem('sayuti_gh_token', githubToken);
+    setAppFormProgress(2, 'Memeriksa data aplikasi...');
 
     let downloadUrl = document.getElementById('inputDownloadUrl') ? document.getElementById('inputDownloadUrl').value : '#';
     let format = document.getElementById('inputFormat') ? document.getElementById('inputFormat').value : 'APK File';
@@ -700,9 +717,12 @@ async function saveAppFromForm() {
     // 1. Upload APK. Saat mengedit aplikasi, gunakan path APK lama agar file lama
     // ditimpa dan tautan unduhan yang sudah ada tetap berfungsi.
     if (apkFileInput) {
-        showToast('Mengunggah APK terbaru dan menggantikan versi lama...');
+        showToast('Mengunggah APK aplikasi...');
+        setAppFormProgress(5, 'Memeriksa file APK...');
         try {
-            const base64Content = await toBase64(apkFileInput);
+            const base64Content = await readFileAsBase64WithProgress(apkFileInput, pct => {
+                setAppFormProgress(5 + pct * 0.15, 'Membaca file APK (' + pct + '%)...');
+            });
             const existingApp = id ? dbApps.find(a => String(a.id) === String(id)) : null;
             const previousUrl = existingApp && typeof existingApp.downloadUrl === 'string'
                 ? existingApp.downloadUrl.trim()
@@ -740,17 +760,11 @@ async function saveAppFromForm() {
             };
             if (existingSha) bodyData.sha = existingSha;
 
-            const response = await fetch(apiUrl, {
-                method: 'PUT',
-                headers: { ...githubHeaders, 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyData)
+            setAppFormProgress(22, existingSha ? 'Mengganti APK lama...' : 'Mengunggah APK baru...');
+            const uploadedData = await putGithubContentsWithProgress(apiUrl, githubToken, bodyData, pct => {
+                setAppFormProgress(22 + pct * 0.53, 'Transfer APK (' + pct + '%)...');
             });
-
-            if (!response.ok) {
-                let errorData = {};
-                try { errorData = await response.json(); } catch (e) {}
-                throw new Error(errorData.message || 'Periksa token dan izin GitHub Anda.');
-            }
+            if (!uploadedData) throw new Error('GitHub tidak mengonfirmasi hasil upload.');
 
             downloadUrl = fileName;
             format = 'APK File';
@@ -766,6 +780,7 @@ async function saveAppFromForm() {
 
     // 2. Proses Upload File Logo/Ikon ke GitHub (jika ada)
     if (iconFileInput) {
+        setAppFormProgress(76, 'Memproses logo aplikasi...');
         showToast('Memproses logo aplikasi...');
 
         try {
@@ -826,6 +841,7 @@ async function saveAppFromForm() {
                 return;
             }
 
+            setAppFormProgress(80, 'Membaca file logo...');
             const base64Icon = await toBase64(uploadBlob);
             const iconFileName = 'logo_' + Date.now() + '_' + uploadName;
             const encodedIconFileName = encodeURIComponent(iconFileName);
@@ -850,6 +866,7 @@ async function saveAppFromForm() {
                 return;
             }
 
+            setAppFormProgress(83, 'Mengunggah logo ke GitHub...');
             showToast('Mengunggah logo ke GitHub...');
             const responseIcon = await fetch(
                 `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`,
@@ -885,7 +902,8 @@ async function saveAppFromForm() {
         }
     }
 
-    // 3.
+    // 3. Simpan metadata aplikasi ke katalog.
+    setAppFormProgress(88, 'Menyimpan informasi aplikasi...');
     let appData = {
         title,
         category: document.getElementById('inputCategory') ? document.getElementById('inputCategory').value : 'android',
@@ -914,10 +932,13 @@ async function saveAppFromForm() {
     saveDownloadCounts();
 
     try {
+        setAppFormProgress(93, 'Menyinkronkan katalog ke GitHub...');
         showToast('Menyinkronkan database ke GitHub...');
         await updateMainJsOnGitHub(githubToken);
+        setAppFormProgress(100, 'Selesai! Aplikasi berhasil disimpan.');
         showToast('Berhasil disimpan & disinkronkan ke publik!');
     } catch (err) {
+        setAppFormProgress(0, 'Gagal menyimpan: ' + (err.message || 'Kesalahan tidak diketahui.'));
         alert('Gagal sinkronisasi ke GitHub: ' + err.message);
         return;
     }
