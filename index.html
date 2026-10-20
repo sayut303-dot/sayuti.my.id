@@ -2668,6 +2668,16 @@ footer strong{color:#c9a45a !important}
      </div>
     </div>
     <input id="editAppId" type="hidden">
+    <div id="appFormProgressWrap" style="display:none;margin:0 0 15px;padding:12px;border:1px solid rgba(129,140,248,.28);border-radius:12px;background:rgba(99,102,241,.08);">
+     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;">
+      <span id="appFormProgressStatus" role="status" aria-live="polite" style="font-size:.76rem;color:var(--text-soft);">Menunggu proses...</span>
+      <strong id="appFormProgressPercent" style="font-size:.85rem;color:#a5b4fc;">0%</strong>
+     </div>
+     <div style="height:8px;overflow:hidden;border-radius:999px;background:rgba(148,163,184,.18);">
+      <div id="appFormProgressBar" role="progressbar" aria-label="Progres tambah aplikasi" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#22d3ee);transition:width .15s ease;"></div>
+     </div>
+     <small style="display:block;margin-top:7px;color:var(--text-muted);font-size:.68rem;">Menampilkan proses membaca file, upload APK/logo, dan sinkronisasi katalog.</small>
+    </div>
     <div class="form-group">
      <label> Nama Aplikasi </label> <input class="form-control" id="inputTitle" placeholder="Contoh: Sayuti Store" type="text">
     </div>
@@ -2799,7 +2809,7 @@ footer strong{color:#c9a45a !important}
   <!-- =========================================================
          JAVASCRIPT
     ========================================================== -->
-  <script src="js/main.js?v=6"></script>
+  <script src="js/main.js?v=7"></script>
   <!-- =========================================================
          SMALL UI ENHANCEMENT
          Tidak menggantikan main.js
