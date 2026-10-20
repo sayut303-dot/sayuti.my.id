@@ -2835,14 +2835,24 @@ footer strong{color:#c9a45a !important}
         try { isAdminLoggedIn = true; } catch (e) { window.isAdminLoggedIn = true; }
         var modal = document.getElementById('adminLoginModal');
         if (modal) modal.classList.remove('active');
-        if (typeof window.switchView === 'function') {
-          window.switchView('admin');
-        } else {
-          document.querySelectorAll('.view-section').forEach(function (el) { el.classList.remove('active'); });
-          var panel = document.getElementById('adminView');
-          if (panel) panel.classList.add('active');
-          else console.error('Panel admin tidak ditemukan (#adminView).');
+
+        // Aktifkan panel secara langsung agar tidak bergantung pada switchView.
+        document.querySelectorAll('.view-section').forEach(function (el) { el.classList.remove('active'); });
+        var panel = document.getElementById('adminView');
+        if (!panel) {
+          alert('Login berhasil, tetapi panel admin tidak ditemukan. Muat ulang halaman dan coba lagi.');
+          console.error('Panel admin tidak ditemukan (#adminView).');
+          return;
         }
+        panel.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Jika salah satu fungsi dashboard gagal, panel tetap terbuka dan error tercatat di Console.
+        try { if (typeof window.renderAdminTable === 'function') window.renderAdminTable(); }
+        catch (renderError) { console.error('Panel admin terbuka, tetapi tabel gagal dirender:', renderError); }
+        try { if (typeof window.renderAnalytics === 'function') window.renderAnalytics(); }
+        catch (analyticsError) { console.error('Panel admin terbuka, tetapi statistik gagal dirender:', analyticsError); }
+        try { if (typeof window.showToast === 'function') window.showToast('Berhasil masuk Admin!'); } catch (toastError) {}
         if (input) input.value = '';
       }
 
