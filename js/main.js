@@ -640,7 +640,7 @@ async function uploadApkOnly() {
     try {
         localStorage.setItem('sayuti_gh_token', token);
         setQuickApkProgress(2, 'Memeriksa file lama di GitHub...');
-        const check = await fetch(apiUrl, { headers });
+        const check = await fetchGithubWithRetry(apiUrl, { headers }, 4);
         let sha = null;
         if (check.ok) {
             const existing = await check.json();
@@ -806,7 +806,7 @@ async function saveAppFromForm() {
             };
 
             let existingSha = null;
-            const checkRes = await fetch(apiUrl, { headers: githubHeaders });
+            const checkRes = await fetchGithubWithRetry(apiUrl, { headers: githubHeaders }, 4);
             if (checkRes.ok) {
                 const fileData = await checkRes.json();
                 existingSha = fileData.sha;
@@ -918,9 +918,10 @@ async function saveAppFromForm() {
                 'Accept': 'application/vnd.github+json'
             };
 
-            const repoCheck = await fetch(
+            const repoCheck = await fetchGithubWithRetry(
                 `https://api.github.com/repos/${repoOwnerAndName}`,
-                { headers: githubHeaders }
+                { headers: githubHeaders },
+                4
             );
 
             if (!repoCheck.ok) {
@@ -935,33 +936,15 @@ async function saveAppFromForm() {
 
             setAppFormProgress(83, 'Mengunggah logo ke GitHub...');
             showToast('Mengunggah logo ke GitHub...');
-            const responseIcon = await fetch(
-                `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        ...githubHeaders,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
-                        content: base64Icon
-                    })
-                }
-            );
-
-            if (responseIcon.ok) {
-                iconValue = iconFileName;
-                showToast('Logo berhasil di-upload!');
-            } else {
-                let errMessage = 'Gagal upload logo.';
-                try {
-                    const errData = await responseIcon.json();
-                    if (errData.message) errMessage += '\n\nGitHub: ' + errData.message;
-                } catch (e) {}
-                alert(errMessage);
-                return;
-            }
+            const iconApiUrl = `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`;
+            await putGithubContentsWithProgress(iconApiUrl, githubToken, {
+                message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
+                content: base64Icon
+            }, pct => {
+                setAppFormProgress(83 + pct * 0.04, 'Mengunggah logo (' + pct + '%)...');
+            });
+            iconValue = iconFileName;
+            showToast('Logo berhasil di-upload!');
         } catch (error) {
             console.error('Logo upload error:', error);
             alert('Error upload logo: ' + (error.message || 'Kesalahan tidak diketahui.'));
