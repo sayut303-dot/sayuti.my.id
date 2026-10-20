@@ -77,7 +77,15 @@ let dbApps = [
     }
 ];
 
-let favorites = JSON.parse(localStorage.getItem('sayuti_favs') || '[]');
+let favorites = (() => {
+    try {
+        const savedFavorites = JSON.parse(localStorage.getItem('sayuti_favs') || '[]');
+        return Array.isArray(savedFavorites) ? savedFavorites : [];
+    } catch (error) {
+        console.warn('Data favorit lokal rusak; memulai daftar favorit kosong.', error);
+        return [];
+    }
+})();
 let currentCategory = 'all';
 let activeAppId = null;
 let selectedRating = 5;
