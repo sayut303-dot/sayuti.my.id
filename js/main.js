@@ -546,10 +546,10 @@ async function uploadApkOnly() {
 
     // GitHub Contents API tidak cocok untuk file sangat besar; batasi sebelum
     // Base64 menggandakan kebutuhan memori dan berikan pesan yang bisa ditindaklanjuti.
-    const maxBytes = 90 * 1024 * 1024;
+    const maxBytes = 70 * 1024 * 1024;
     if (file.size > maxBytes) {
         alert('Ukuran APK terlalu besar untuk metode upload ini (' +
-            (file.size / 1024 / 1024).toFixed(1) + ' MB). Batas aman saat ini 90 MB. ' +
+            (file.size / 1024 / 1024).toFixed(1) + ' MB). Batas aman saat ini 70 MB. ' +
             'Gunakan GitHub Releases atau penyimpanan file untuk APK yang lebih besar.');
         return;
     }
@@ -567,6 +567,7 @@ async function uploadApkOnly() {
         'Accept': 'application/vnd.github+json'
     };
 
+    let apkUploaded = false;
     setQuickApkUploading(true);
     setQuickApkProgress(0, 'Menyiapkan pembaruan...');
     try {
@@ -603,6 +604,7 @@ async function uploadApkOnly() {
         await putGithubContentsWithProgress(apiUrl, token, payload, pct => {
             setQuickApkProgress(25 + pct * 0.68, 'Mengunggah APK (' + pct + '%)...');
         });
+        apkUploaded = true;
 
         // APK sudah berada di GitHub. Perbarui database katalog dan tautan tetap.
         app.downloadUrl = filePath;
@@ -617,8 +619,11 @@ async function uploadApkOnly() {
         window.setTimeout(() => closeModalDirect('quickApkModal'), 700);
     } catch (error) {
         console.error('Upload APK cepat gagal:', error);
-        setQuickApkProgress(0, 'Gagal: ' + (error.message || 'Kesalahan tidak diketahui.'));
-        alert('Gagal memperbarui APK: ' + (error.message || 'Kesalahan tidak diketahui.') +
+        const detail = error.message || 'Kesalahan tidak diketahui.';
+        setQuickApkProgress(0, (apkUploaded ? 'APK sudah terunggah, tetapi katalog gagal disimpan: ' : 'Gagal: ') + detail);
+        alert((apkUploaded
+            ? 'APK sudah berhasil diunggah, tetapi informasi katalog belum tersimpan di js/main.js. Coba ulangi sinkronisasi. Detail: '
+            : 'Gagal memperbarui APK: ') + detail +
             '\n\nPastikan token memiliki izin Contents: Read and write, koneksi stabil, dan ukuran file tidak melewati batas GitHub.');
     } finally {
         setQuickApkUploading(false);
