@@ -549,7 +549,7 @@ async function putGithubContentsWithProgress(apiUrl, token, payload, onProgress)
             const result = await new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 xhr.open('PUT', apiUrl, true);
-                xhr.timeout = 0; // Jangan batalkan upload hanya karena koneksi lambat.
+                xhr.timeout = 180000; // Maksimal 3 menit menunggu respons GitHub setelah transfer.
                 xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                 xhr.setRequestHeader('Accept', 'application/vnd.github+json');
                 xhr.setRequestHeader('Content-Type', 'application/json');
@@ -570,7 +570,7 @@ async function putGithubContentsWithProgress(apiUrl, token, payload, onProgress)
                     reject(error);
                 };
                 xhr.onerror = () => reject(new Error('Koneksi terputus saat mengunggah.'));
-                xhr.ontimeout = () => reject(new Error('Koneksi terlalu lambat; upload akan dicoba kembali.'));
+                xhr.ontimeout = () => { const error = new Error('GitHub tidak memberi respons dalam 3 menit. Periksa koneksi lalu coba lagi.'); error.status = 408; reject(error); };
                 xhr.onabort = () => reject(new Error('Upload dibatalkan.'));
                 xhr.send(JSON.stringify(requestPayload));
             });
@@ -1038,7 +1038,7 @@ async function updateMainJsOnGitHub(githubToken) {
                 throw new Error('Format file js/main.js tidak dikenali.');
             }
 
-            const updatedCode = currentCode.substring(0, startIndex) + newDbAppsString + '\\n\\n' + currentCode.substring(endIndex);
+            const updatedCode = currentCode.substring(0, startIndex) + newDbAppsString + '\n\n' + currentCode.substring(endIndex);
             const putRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
                 method: 'PUT',
                 headers: {
