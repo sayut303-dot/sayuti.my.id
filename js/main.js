@@ -450,16 +450,109 @@ function openQuickApkUpload(appId) {
     if (modal) modal.classList.add('active');
 }
 
+function setQuickApkProgress(percent, message) {
+    const wrap = document.getElementById('quickApkProgressWrap');
+    const bar = document.getElementById('quickApkProgressBar');
+    const label = document.getElementById('quickApkProgressPercent');
+    const status = document.getElementById('quickApkProgressStatus');
+    if (wrap) wrap.style.display = 'block';
+    const safePercent = Math.max(0, Math.min(100, Math.round(percent)));
+    if (bar) {
+        bar.style.width = safePercent + '%';
+        bar.setAttribute('aria-valuenow', String(safePercent));
+    }
+    if (label) label.textContent = safePercent + '%';
+    if (status && message) status.textContent = message;
+}
+
+function setQuickApkUploading(isUploading) {
+    const button = document.querySelector('#quickApkModal button[onclick="uploadApkOnly()"]');
+    const fileInput = document.getElementById('quickApkFile');
+    const tokenInput = document.getElementById('quickApkGithubToken');
+    if (button) {
+        button.disabled = isUploading;
+        button.style.opacity = isUploading ? '0.65' : '1';
+        button.style.cursor = isUploading ? 'wait' : 'pointer';
+        button.innerHTML = isUploading
+            ? '<i class="fa-solid fa-spinner fa-spin"></i> Sedang memproses...'
+            : '<i class="fa-solid fa-upload"></i> Upload dan Ganti APK Lama';
+    }
+    if (fileInput) fileInput.disabled = isUploading;
+    if (tokenInput) tokenInput.disabled = isUploading;
+}
+
+function readFileAsBase64WithProgress(file, onProgress) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onprogress = event => {
+            if (event.lengthComputable && onProgress) {
+                onProgress(Math.round((event.loaded / event.total) * 100));
+            }
+        };
+        reader.onload = () => {
+            const result = String(reader.result || '');
+            const comma = result.indexOf(',');
+            if (comma < 0) return reject(new Error('File APK tidak dapat dibaca.'));
+            resolve(result.slice(comma + 1));
+        };
+        reader.onerror = () => reject(new Error('Gagal membaca file APK dari perangkat.'));
+        reader.onabort = () => reject(new Error('Pembacaan file dibatalkan.'));
+        reader.readAsDataURL(file);
+    });
+}
+
+function putGithubContentsWithProgress(apiUrl, token, payload, onProgress) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', apiUrl, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.upload.onprogress = event => {
+            if (event.lengthComputable && onProgress) {
+                onProgress(Math.round((event.loaded / event.total) * 100));
+            }
+        };
+        xhr.onload = () => {
+            let data = {};
+            try { data = JSON.parse(xhr.responseText || '{}'); } catch (e) {}
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(data);
+                return;
+            }
+            const detail = data.message || ('GitHub menolak upload (HTTP ' + xhr.status + ').');
+            const error = new Error(detail);
+            error.status = xhr.status;
+            reject(error);
+        };
+        xhr.onerror = () => reject(new Error('Koneksi terputus saat mengunggah. Periksa internet lalu coba lagi.'));
+        xhr.onabort = () => reject(new Error('Upload dibatalkan.'));
+        xhr.send(JSON.stringify(payload));
+    });
+}
+
+// Upload APK untuk aplikasi yang sudah ada. File lama ditimpa pada path yang sama.
 async function uploadApkOnly() {
     const app = dbApps.find(item => String(item.id) === String(quickApkAppId));
     const fileInput = document.getElementById('quickApkFile');
     const tokenInput = document.getElementById('quickApkGithubToken');
     const file = fileInput && fileInput.files ? fileInput.files[0] : null;
     const token = tokenInput ? tokenInput.value.trim() : '';
+
     if (!app) { alert('Pilih aplikasi yang akan diperbarui.'); return; }
     if (!file) { alert('Pilih file APK terbaru terlebih dahulu.'); return; }
     if (!/\.apk$/i.test(file.name)) { alert('File harus berformat .apk'); return; }
     if (!token) { alert('Masukkan GitHub Token untuk mengunggah APK.'); return; }
+
+    // GitHub Contents API tidak cocok untuk file sangat besar; batasi sebelum
+    // Base64 menggandakan kebutuhan memori dan berikan pesan yang bisa ditindaklanjuti.
+    const maxBytes = 90 * 1024 * 1024;
+    if (file.size > maxBytes) {
+        alert('Ukuran APK terlalu besar untuk metode upload ini (' +
+            (file.size / 1024 / 1024).toFixed(1) + ' MB). Batas aman saat ini 90 MB. ' +
+            'Gunakan GitHub Releases atau penyimpanan file untuk APK yang lebih besar.');
+        return;
+    }
 
     const repo = 'sayut303-dot/sayuti.my.id';
     const oldPath = typeof app.downloadUrl === 'string' ? app.downloadUrl.trim() : '';
@@ -468,47 +561,67 @@ async function uploadApkOnly() {
         !oldPath.startsWith('/');
     const filePath = isRepoPath ? oldPath : file.name;
     const encodedPath = filePath.split('/').map(part => encodeURIComponent(part)).join('/');
-    const apiUrl = `https://api.github.com/repos/${repo}/contents/${encodedPath}`;
-    const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' };
+    const apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + encodedPath;
+    const headers = {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/vnd.github+json'
+    };
 
+    setQuickApkUploading(true);
+    setQuickApkProgress(0, 'Menyiapkan pembaruan...');
     try {
+        // Simpan token hanya setelah pengguna memulai upload secara eksplisit.
         localStorage.setItem('sayuti_gh_token', token);
-        showToast('Mengunggah APK terbaru...');
-        const base64 = await toBase64(file);
+        setQuickApkProgress(2, 'Memeriksa file lama di GitHub...');
         const check = await fetch(apiUrl, { headers });
         let sha = null;
         if (check.ok) {
             const existing = await check.json();
-            sha = existing.sha;
+            sha = existing.sha || null;
+            if (!sha) throw new Error('GitHub tidak mengembalikan SHA file lama; pembaruan dihentikan agar tidak membuat duplikat.');
         } else if (check.status !== 404) {
             let detail = '';
-            try { detail = (await check.json()).message || ''; } catch (e) {}
-            throw new Error(detail || 'Tidak dapat memeriksa APK di GitHub.');
+            try {
+                const errorData = await check.json();
+                detail = errorData.message || '';
+            } catch (e) {}
+            throw new Error(detail || 'Tidak dapat memeriksa APK lama. Periksa token dan izin Contents repository.');
         }
 
-        const payload = { message: `Perbarui APK ${filePath} melalui Panel Admin`, content: base64 };
-        if (sha) payload.sha = sha;
-        const response = await fetch(apiUrl, {
-            method: 'PUT',
-            headers: { ...headers, 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+        setQuickApkProgress(5, 'Membaca file APK...');
+        const base64 = await readFileAsBase64WithProgress(file, pct => {
+            setQuickApkProgress(5 + pct * 0.2, 'Membaca file APK (' + pct + '%)...');
         });
-        if (!response.ok) {
-            let detail = '';
-            try { detail = (await response.json()).message || ''; } catch (e) {}
-            throw new Error(detail || 'Upload gagal. Periksa token, izin repository, dan ukuran APK.');
-        }
 
+        const payload = {
+            message: (sha ? 'Perbarui' : 'Upload') + ' APK ' + filePath + ' melalui Panel Admin',
+            content: base64
+        };
+        if (sha) payload.sha = sha;
+
+        setQuickApkProgress(25, 'Mengunggah APK ke GitHub...');
+        await putGithubContentsWithProgress(apiUrl, token, payload, pct => {
+            setQuickApkProgress(25 + pct * 0.68, 'Mengunggah APK (' + pct + '%)...');
+        });
+
+        // APK sudah berada di GitHub. Perbarui database katalog dan tautan tetap.
         app.downloadUrl = filePath;
         app.format = 'APK File';
+        setQuickApkProgress(95, 'APK terkirim. Menyimpan informasi aplikasi...');
         await updateMainJsOnGitHub(token);
-        closeModalDirect('quickApkModal');
+
+        setQuickApkProgress(100, 'Pembaruan selesai!');
         renderAdminTable();
         renderApps();
-        showToast('APK berhasil diperbarui. File lama telah digantikan!');
+        showToast('APK berhasil diperbarui. Tautan unduhan tetap sama.');
+        window.setTimeout(() => closeModalDirect('quickApkModal'), 700);
     } catch (error) {
         console.error('Upload APK cepat gagal:', error);
-        alert('Gagal memperbarui APK: ' + (error.message || 'Kesalahan tidak diketahui.'));
+        setQuickApkProgress(0, 'Gagal: ' + (error.message || 'Kesalahan tidak diketahui.'));
+        alert('Gagal memperbarui APK: ' + (error.message || 'Kesalahan tidak diketahui.') +
+            '\n\nPastikan token memiliki izin Contents: Read and write, koneksi stabil, dan ukuran file tidak melewati batas GitHub.');
+    } finally {
+        setQuickApkUploading(false);
     }
 }
 
