@@ -2809,7 +2809,57 @@ footer strong{color:#c9a45a !important}
   <!-- =========================================================
          JAVASCRIPT
     ========================================================== -->
-  <script src="js/main.js?v=9"></script>
+  <script src="js/main.js?v=10"></script>
+  <!-- ADMIN LOGIN FALLBACK: tetap aktif jika handler utama gagal dimuat -->
+  <script>
+    (function () {
+      function showAdminLogin() {
+        var modal = document.getElementById('adminLoginModal');
+        if (!modal) {
+          console.error('Modal login admin tidak ditemukan.');
+          return;
+        }
+        modal.classList.add('active');
+        var input = document.getElementById('adminPinInput');
+        if (input) setTimeout(function () { input.focus(); }, 50);
+      }
+
+      function enterAdminPanel() {
+        var input = document.getElementById('adminPinInput');
+        var pin = input ? input.value : '';
+        if (pin !== '157303') {
+          alert('PIN salah. Silakan coba lagi.');
+          if (input) { input.focus(); input.select(); }
+          return;
+        }
+        try { isAdminLoggedIn = true; } catch (e) { window.isAdminLoggedIn = true; }
+        var modal = document.getElementById('adminLoginModal');
+        if (modal) modal.classList.remove('active');
+        if (typeof window.switchView === 'function') {
+          window.switchView('admin');
+        } else {
+          document.querySelectorAll('.view-section').forEach(function (el) { el.classList.remove('active'); });
+          var panel = document.getElementById('adminView');
+          if (panel) panel.classList.add('active');
+          else console.error('Panel admin tidak ditemukan (#adminView).');
+        }
+        if (input) input.value = '';
+      }
+
+      window.openAdminLoginModal = showAdminLogin;
+      window.verifyAdminLogin = enterAdminPanel;
+      document.addEventListener('DOMContentLoaded', function () {
+        var adminButton = document.querySelector('[aria-label="Login admin"]');
+        var loginButton = document.querySelector('#adminLoginModal button.primary-action');
+        if (adminButton) adminButton.addEventListener('click', showAdminLogin, true);
+        if (loginButton) loginButton.addEventListener('click', enterAdminPanel, true);
+        var input = document.getElementById('adminPinInput');
+        if (input) input.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter') enterAdminPanel();
+        });
+      });
+    })();
+  </script>
   <!-- =========================================================
          SMALL UI ENHANCEMENT
          Tidak menggantikan main.js
