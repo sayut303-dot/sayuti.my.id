@@ -566,7 +566,7 @@
          JAVASCRIPT
     ========================================================== -->
   <script src="js/main.js?v=19"></script>
-  <!-- ADMIN LOGIN FALLBACK: tetap aktif jika handler utama gagal dimuat -->
+  <!-- ADMIN LOGIN FALLBACK: hanya membuka modal; autentikasi tetap melalui Cloudflare Worker di main.js -->
   <script>
     (function () {
       function showAdminLogin() {
@@ -580,48 +580,28 @@
         if (input) setTimeout(function () { input.focus(); }, 50);
       }
 
-      function enterAdminPanel() {
-        var input = document.getElementById('adminPinInput');
-        var pin = input ? input.value : '';
-        if (pin !== '157303') {
-          alert('PIN salah. Silakan coba lagi.');
-          if (input) { input.focus(); input.select(); }
-          return;
-        }
-        try { isAdminLoggedIn = true; } catch (e) { window.isAdminLoggedIn = true; }
-        var modal = document.getElementById('adminLoginModal');
-        if (modal) modal.classList.remove('active');
-
-        // Aktifkan panel secara langsung agar tidak bergantung pada switchView.
-        document.querySelectorAll('.view-section').forEach(function (el) { el.classList.remove('active'); });
-        var panel = document.getElementById('adminView');
-        if (!panel) {
-          alert('Login berhasil, tetapi panel admin tidak ditemukan. Muat ulang halaman dan coba lagi.');
-          console.error('Panel admin tidak ditemukan (#adminView).');
-          return;
-        }
-        panel.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // Jika salah satu fungsi dashboard gagal, panel tetap terbuka dan error tercatat di Console.
-        try { if (typeof window.renderAdminTable === 'function') window.renderAdminTable(); }
-        catch (renderError) { console.error('Panel admin terbuka, tetapi tabel gagal dirender:', renderError); }
-        try { if (typeof window.renderAnalytics === 'function') window.renderAnalytics(); }
-        catch (analyticsError) { console.error('Panel admin terbuka, tetapi statistik gagal dirender:', analyticsError); }
-        try { if (typeof window.showToast === 'function') window.showToast('Berhasil masuk Admin!'); } catch (toastError) {}
-        if (input) input.value = '';
-      }
-
       window.openAdminLoginModal = showAdminLogin;
-      window.verifyAdminLogin = enterAdminPanel;
+
       document.addEventListener('DOMContentLoaded', function () {
         var adminButton = document.querySelector('[aria-label="Login admin"]');
-        var loginButton = document.querySelector('#adminLoginModal button.primary-action');
-        if (adminButton) adminButton.addEventListener('click', function (event) { event.preventDefault(); event.stopImmediatePropagation(); showAdminLogin(); }, true);
-        if (loginButton) loginButton.addEventListener('click', function (event) { event.preventDefault(); event.stopImmediatePropagation(); enterAdminPanel(); }, true);
+        if (adminButton) {
+          adminButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            showAdminLogin();
+          }, true);
+        }
+
         var input = document.getElementById('adminPinInput');
         if (input) input.addEventListener('keydown', function (event) {
-          if (event.key === 'Enter') enterAdminPanel();
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            if (typeof window.verifyAdminLogin === 'function') {
+              window.verifyAdminLogin();
+            } else {
+              alert('Fungsi login belum dimuat. Muat ulang halaman dan coba lagi.');
+            }
+          }
         });
       });
     })();
