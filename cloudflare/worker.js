@@ -46,7 +46,7 @@ async function sign(value, secret) {
 async function makeSession(secret) {
   const payload = b64url(new TextEncoder().encode(JSON.stringify({
     exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS,
-    scope: "apk:write"
+    scope: "admin:write"
   })));
   return payload + "." + b64url(await sign(payload, secret));
 }
@@ -63,7 +63,7 @@ async function validSession(request, secret) {
   if (diff !== 0) return false;
   try {
     const payload = JSON.parse(new TextDecoder().decode(fromB64url(parts[0])));
-    return payload.scope === "apk:write" && payload.exp > Math.floor(Date.now() / 1000);
+    return payload.scope === "admin:write" && payload.exp > Math.floor(Date.now() / 1000);
   } catch { return false; }
 }
 function toBase64(bytes) {
@@ -115,6 +115,46 @@ export default {
         return json({ ok: false, error: "PIN admin salah." }, 401, cors);
       }
       return json({ ok: true, token: await makeSession(env.SESSION_SECRET), expiresIn: SESSION_TTL_SECONDS }, 200, cors);
+    }
+    if (url.pathname === "/catalog" && request.method === "POST") {
+      if (!env.GITHUB_TOKEN || !env.SESSION_SECRET) return json({ ok: false, error: "Worker belum dikonfigurasi." }, 503, cors);
+      if (!(await validSession(request, env.SESSION_SECRET))) return json({ ok: false, error: "Sesi admin habis. Login kembali." }, 401, cors);
+      let body;
+      try { body = await request.json(); } catch { return json({ ok: false, error: "Data katalog tidak valid." }, 400, cors); }
+      if (!Array.isArray(body.apps)) return json({ ok: false, error: "Daftar aplikasi tidak ditemukan." }, 400, cors);
+      const getUrl = "https://api.github.com/repos/" + REPO + "/contents/js/main.js?ref=" + BRANCH;
+      const get = await fetch(getUrl, { headers: {
+        "Authorization": "Bearer " + env.GITHUB_TOKEN,
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28"
+      }});
+      if (!get.ok) return json({ ok: false, error: "Gagal membaca katalog GitHub (HTTP " + get.status + ")." }, get.status, cors);
+      const file = await get.json();
+      if (!file.sha || !file.content) return json({ ok: false, error: "Isi katalog GitHub tidak lengkap." }, 502, cors);
+      const raw = atob(file.content.replace(/\\s/g, ""));
+      const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
+      const source = new TextDecoder("utf-8").decode(bytes);
+      const start = source.indexOf("let dbApps =");
+      const end = source.indexOf("let favorites =");
+      if (start < 0 || end < 0 || end <= start) return json({ ok: false, error: "Struktur katalog js/main.js tidak dikenali." }, 422, cors);
+      const updated = source.slice(0, start) + "let dbApps = " + JSON.stringify(body.apps, null, 4) + ";\\n\\n" + source.slice(end);
+      const encoded = toBase64(new TextEncoder().encode(updated));
+      const putUrl = "https://api.github.com/repos/" + REPO + "/contents/js/main.js";
+      const put = await fetch(putUrl, { method: "PUT", headers: {
+        "Authorization": "Bearer " + env.GITHUB_TOKEN,
+        "Accept": "application/vnd.github+json",
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2022-11-28"
+      }, body: JSON.stringify({
+        message: "Perbarui katalog aplikasi SayutiHub melalui Admin",
+        content: encoded,
+        sha: file.sha,
+        branch: BRANCH
+      })});
+      const result = await put.json().catch(() => ({}));
+      if (!put.ok) return json({ ok: false, error: result.message || "GitHub menolak pembaruan katalog." }, put.status, cors);
+      if (!result.commit || !result.content) return json({ ok: false, error: "GitHub belum mengonfirmasi commit katalog." }, 502, cors);
+      return json({ ok: true, commit: result.commit.sha, message: "Katalog berhasil disinkronkan." }, 200, cors);
     }
     if (url.pathname === "/upload" && request.method === "POST") {
       if (!env.GITHUB_TOKEN || !env.SESSION_SECRET) return json({ ok: false, error: "Worker belum dikonfigurasi." }, 503, cors);
