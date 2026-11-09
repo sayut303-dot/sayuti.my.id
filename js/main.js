@@ -423,15 +423,25 @@ function openAdminLoginModal() {
 
 const SAYUTI_UPLOAD_API = "https://sayutihub-upload.sayut303.workers.dev";
 let sayutiAdminSession = sessionStorage.getItem("sayuti_admin_session") || "";
+// Simpan juga pada window agar login dan upload memakai sesi yang sama pada tab ini.
 function sayutiGetAdminSession() {
  const stored = sessionStorage.getItem("sayuti_admin_session") || "";
- if (stored) sayutiAdminSession = stored;
- return sayutiAdminSession;
+ const shared = window.__sayutiAdminSession || stored || sayutiAdminSession || "";
+ if (shared) {
+  sayutiAdminSession = shared;
+  window.__sayutiAdminSession = shared;
+ }
+ return shared;
+}
+function sayutiClearAdminSession() {
+ sayutiAdminSession = "";
+ window.__sayutiAdminSession = "";
+ sessionStorage.removeItem("sayuti_admin_session");
 }
 async function sayutiWorkerLogin(pin) {
  const r=await fetch(SAYUTI_UPLOAD_API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pin})});
  const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok||!d.token)throw new Error(d.error||"Login Worker gagal (HTTP "+r.status+").");
- sayutiAdminSession=d.token;sessionStorage.setItem("sayuti_admin_session",d.token);return true;
+ sayutiAdminSession=d.token;window.__sayutiAdminSession=d.token;sessionStorage.setItem("sayuti_admin_session",d.token);return true;
 }
 async function sayutiUploadApk(file,path,onProgress) {
  const session = sayutiGetAdminSession();
@@ -439,7 +449,7 @@ async function sayutiUploadApk(file,path,onProgress) {
  return await new Promise((resolve,reject)=>{const x=new XMLHttpRequest();x.open("POST",SAYUTI_UPLOAD_API+"/upload?path="+encodeURIComponent(path),true);
  x.setRequestHeader("Authorization","Bearer "+session);x.setRequestHeader("Content-Type","application/vnd.android.package-archive");
  x.upload.onprogress=e=>{if(e.lengthComputable&&onProgress)onProgress(Math.round(e.loaded/e.total*100));};
- x.onload=()=>{let d={};try{d=JSON.parse(x.responseText||"{}");}catch(e){}if(x.status>=200&&x.status<300&&d.ok)resolve(d);else{if(x.status===401){sayutiAdminSession="";sessionStorage.removeItem("sayuti_admin_session");}reject(new Error(d.error||"Upload gagal (HTTP "+x.status+")."));}};
+ x.onload=()=>{let d={};try{d=JSON.parse(x.responseText||"{}");}catch(e){}if(x.status>=200&&x.status<300&&d.ok)resolve(d);else{if(x.status===401){sayutiClearAdminSession();}reject(new Error(d.error||"Upload gagal (HTTP "+x.status+")."));}};
  x.onerror=()=>reject(new Error("Koneksi terputus saat mengirim APK."));x.ontimeout=()=>reject(new Error("Upload melewati batas waktu."));x.timeout=600000;x.send(file);});
 }
 async function sayutiSyncCatalog(onProgress) {
