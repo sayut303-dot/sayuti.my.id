@@ -175,6 +175,8 @@ function switchView(viewName) {
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
     let targetView = document.getElementById(viewName + 'View');
     if (targetView) targetView.classList.add('active');
+    const heroHeader = document.getElementById('mainHeader');
+    if (heroHeader) heroHeader.style.display = viewName === 'home' ? '' : 'none';
     
     if(viewName === 'favorites') renderFavorites();
     if(viewName === 'analytics') renderAnalytics();
