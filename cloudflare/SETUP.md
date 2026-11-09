@@ -31,6 +31,7 @@ Buka `https://NAMA-WORKER.NAMA-AKUN.workers.dev/health` dari domain website yang
 Frontend harus mengirim:
 - Login: POST `/auth/login` dengan JSON `{"pin":"PIN_ADMIN" }`.
 - Upload: POST `/upload?path=Nonton.apk`, header `Authorization: Bearer <session>`, body berupa binary file (bukan Base64).
+- Sinkronisasi katalog: POST `/catalog`, header `Authorization: Bearer <session>`, JSON `{"apps":[...]}`. Worker memperbarui blok `dbApps` pada `js/main.js` di branch `main`.
 
 Gunakan URL Worker Anda sebagai `UPLOAD_API_URL`. Jangan pernah memasukkan `GITHUB_TOKEN` ke JavaScript frontend.
 
