@@ -419,18 +419,34 @@ function openAdminLoginModal() {
     if(modal) modal.classList.add('active'); 
 }
 
-function verifyAdminLogin() {
-    let pinInput = document.getElementById('adminPinInput');
-    let pin = pinInput ? pinInput.value : '';
-    if (pin === '157303') {
-        isAdminLoggedIn = true;
-        closeModalDirect('adminLoginModal');
-        switchView('admin');
-        showToast('Berhasil masuk Admin!');
-        if(pinInput) pinInput.value = '';
-    } else {
-        alert('PIN Salah!');
-    }
+const SAYUTI_UPLOAD_API = "https://sayutihub-upload.sayut303.workers.dev";
+let sayutiAdminSession = sessionStorage.getItem("sayuti_admin_session") || "";
+async function sayutiWorkerLogin(pin) {
+ const r=await fetch(SAYUTI_UPLOAD_API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pin})});
+ const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok||!d.token)throw new Error(d.error||"Login Worker gagal (HTTP "+r.status+").");
+ sayutiAdminSession=d.token;sessionStorage.setItem("sayuti_admin_session",d.token);return true;
+}
+async function sayutiUploadApk(file,path,onProgress) {
+ if(!sayutiAdminSession)throw new Error("Sesi admin belum aktif. Login ulang.");
+ return await new Promise((resolve,reject)=>{const x=new XMLHttpRequest();x.open("POST",SAYUTI_UPLOAD_API+"/upload?path="+encodeURIComponent(path),true);
+ x.setRequestHeader("Authorization","Bearer "+sayutiAdminSession);x.setRequestHeader("Content-Type","application/vnd.android.package-archive");
+ x.upload.onprogress=e=>{if(e.lengthComputable&&onProgress)onProgress(Math.round(e.loaded/e.total*100));};
+ x.onload=()=>{let d={};try{d=JSON.parse(x.responseText||"{}");}catch(e){}if(x.status>=200&&x.status<300&&d.ok)resolve(d);else{if(x.status===401){sayutiAdminSession="";sessionStorage.removeItem("sayuti_admin_session");}reject(new Error(d.error||"Upload gagal (HTTP "+x.status+")."));}};
+ x.onerror=()=>reject(new Error("Koneksi terputus saat mengirim APK."));x.ontimeout=()=>reject(new Error("Upload melewati batas waktu."));x.timeout=600000;x.send(file);});
+}
+async function sayutiSyncCatalog(onProgress) {
+ if(!sayutiAdminSession)throw new Error("Sesi admin habis. Login kembali.");if(onProgress)onProgress(10,"Mengirim data katalog...");
+ const r=await fetch(SAYUTI_UPLOAD_API+"/catalog",{method:"POST",headers:{"Authorization":"Bearer "+sayutiAdminSession,"Content-Type":"application/json"},body:JSON.stringify({apps:dbApps})});
+ const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok){if(r.status===401){sayutiAdminSession="";sessionStorage.removeItem("sayuti_admin_session");}throw new Error(d.error||"Sinkronisasi katalog gagal (HTTP "+r.status+").");}
+ if(onProgress)onProgress(100,"Katalog berhasil disimpan.");return d;
+}
+
+async function verifyAdminLogin() {
+ const el=document.getElementById("adminPinInput");const pin=el?el.value.trim():"";if(!pin){alert("Masukkan PIN administrator.");return;}
+ const btn=document.querySelector('#adminLoginModal button[onclick="verifyAdminLogin()"]');if(btn){btn.disabled=true;btn.textContent="Memeriksa...";}
+ try{await sayutiWorkerLogin(pin);isAdminLoggedIn=true;closeModalDirect("adminLoginModal");switchView("admin");showToast("Berhasil masuk Admin!");if(el)el.value="";}
+ catch(e){alert(e.message||"Login admin gagal.");}
+ finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Masuk ke Panel';}}
 }
 
 function renderAdminTable() {
@@ -465,10 +481,8 @@ function openQuickApkUpload(appId) {
     quickApkAppId = app.id;
     const title = document.getElementById('quickApkAppTitle');
     const fileInput = document.getElementById('quickApkFile');
-    const tokenInput = document.getElementById('quickApkGithubToken');
     if (title) title.textContent = app.title;
     if (fileInput) fileInput.value = '';
-    if (tokenInput) tokenInput.value = localStorage.getItem('sayuti_gh_token') || '';
     const modal = document.getElementById('quickApkModal');
     if (modal) modal.classList.add('active');
 }
@@ -623,117 +637,19 @@ async function putGithubContentsWithProgress(apiUrl, token, payload, onProgress)
 
 // Upload APK untuk aplikasi yang sudah ada. File lama ditimpa pada path yang sama.
 async function uploadApkOnly() {
-    const app = dbApps.find(item => String(item.id) === String(quickApkAppId));
-    const fileInput = document.getElementById('quickApkFile');
-    const tokenInput = document.getElementById('quickApkGithubToken');
-    const file = fileInput && fileInput.files ? fileInput.files[0] : null;
-    const token = tokenInput ? tokenInput.value.trim() : '';
-
-    if (!app) { alert('Pilih aplikasi yang akan diperbarui.'); return; }
-    if (!file) { alert('Pilih file APK terbaru terlebih dahulu.'); return; }
-    if (!/\.apk$/i.test(file.name)) { alert('File harus berformat .apk'); return; }
-    if (!token) { alert('Masukkan GitHub Token untuk mengunggah APK.'); return; }
-
-    // GitHub Contents API menerima JSON berisi Base64, sehingga file besar cepat melewati batas.
-    const maxBytes = 70 * 1024 * 1024;
-    if (file.size > maxBytes) {
-        alert('APK berukuran ' + (file.size / 1024 / 1024).toFixed(1) +
-            ' MB. Batas upload langsung saat ini 70 MB. Untuk file lebih besar perlu GitHub Releases/penyimpanan khusus.');
-        return;
-    }
-
-    const repo = 'sayut303-dot/sayuti.my.id';
-    const oldPath = typeof app.downloadUrl === 'string' ? app.downloadUrl.trim() : '';
-    const isRepoPath = oldPath && oldPath !== '#' &&
-        !/^https?:\/\//i.test(oldPath) && !/^data:/i.test(oldPath) &&
-        !oldPath.startsWith('/');
-    // Untuk aplikasi yang sudah memakai file di repo, PERTAHANKAN path lama.
-    // PUT dengan SHA akan mengganti file lama, bukan menambah APK dengan nama baru.
-    const filePath = isRepoPath ? oldPath : file.name;
-    const encodedPath = filePath.split('/').map(part => encodeURIComponent(part)).join('/');
-    const apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + encodedPath;
-    const headers = {
-        'Authorization': 'Bearer ' + token,
-        'Accept': 'application/vnd.github+json'
-    };
-
-    let apkUploaded = false;
-    setQuickApkUploading(true);
-    setQuickApkProgress(0, 'Menyiapkan pembaruan...');
-    try {
-        localStorage.setItem('sayuti_gh_token', token);
-        setQuickApkProgress(2, 'Memeriksa file lama di GitHub...');
-        const check = await fetchGithubWithRetry(apiUrl, { headers }, 4);
-        let sha = null;
-        if (check.ok) {
-            const existing = await check.json();
-            sha = existing.sha || null;
-            if (!sha) throw new Error('GitHub tidak memberikan SHA file lama. Upload dihentikan agar file tidak tertimpa secara tidak aman.');
-        } else if (check.status !== 404) {
-            let detail = '';
-            try { detail = (await check.json()).message || ''; } catch (e) {}
-            throw new Error('Tidak bisa memeriksa file lama (HTTP ' + check.status + '). ' +
-                (detail || 'Periksa token dan izin Contents: Read and write.'));
-        }
-
-        setQuickApkProgress(5, 'Membaca APK...');
-        const base64 = await readFileAsBase64WithProgress(file, pct => {
-            setQuickApkProgress(5 + pct * 0.2, 'Membaca APK (' + pct + '%)...');
-        });
-        const payload = {
-            message: (sha ? 'Ganti APK lama: ' : 'Upload APK: ') + filePath,
-            content: base64
-        };
-        if (sha) payload.sha = sha;
-
-        setQuickApkProgress(25, sha ? 'Mengganti file APK lama...' : 'Mengunggah APK ke lokasi unduhan...');
-        const uploaded = await putGithubContentsWithProgress(apiUrl, token, payload, pct => {
-            setQuickApkProgress(25 + pct * 0.68, pct >= 100 ? 'Transfer terkirim, menunggu konfirmasi GitHub...' : 'Transfer APK (' + pct + '%)...');
-        });
-        apkUploaded = true;
-
-        // Pastikan GitHub mengonfirmasi path yang sama sebelum menyatakan sukses.
-        if (uploaded && uploaded.content && uploaded.content.path && uploaded.content.path !== filePath) {
-            throw new Error('GitHub menyimpan APK pada path yang berbeda dari yang diminta.');
-        }
-
-        // Path lama dipertahankan untuk aplikasi yang sudah memakai file lokal repo.
-        // Dengan begitu katalog tidak perlu ditulis ulang setiap update APK, menghindari kegagalan sinkronisasi js/main.js.
-        const needsCatalogSync = !isRepoPath || app.downloadUrl !== filePath || app.format !== 'APK File';
-        app.downloadUrl = filePath;
-        app.format = 'APK File';
-        if (needsCatalogSync) {
-            setQuickApkProgress(95, 'APK terkirim. Menyimpan tautan katalog...');
-            await updateMainJsOnGitHub(token);
-        }
-
-        setQuickApkProgress(100, 'Pembaruan APK selesai!');
-        renderAdminTable();
-        renderApps();
-        showToast('APK baru menggantikan file lama. Tautan unduhan tetap sama.');
-        window.setTimeout(() => closeModalDirect('quickApkModal'), 900);
-    } catch (error) {
-        console.error('Upload APK cepat gagal:', error);
-        const detail = error.message || 'Kesalahan tidak diketahui.';
-        setQuickApkProgress(0, (apkUploaded ? 'APK sudah terunggah; langkah katalog perlu diperiksa: ' : 'Gagal: ') + detail);
-        alert((apkUploaded
-            ? 'APK sudah berhasil diunggah, tetapi langkah akhir belum selesai. Detail: '
-            : 'Gagal memperbarui APK. Detail: ') + detail +
-            '\n\nPeriksa: token GitHub memiliki Contents: Read and write, branch main tidak diblokir aturan repository, dan ukuran APK maksimal 70 MB.');
-    } finally {
-        setQuickApkUploading(false);
-    }
+ const app=dbApps.find(item=>String(item.id)===String(quickApkAppId));const input=document.getElementById("quickApkFile");const file=input&&input.files?input.files[0]:null;
+ if(!app){alert("Pilih aplikasi yang akan diperbarui.");return;}if(!file){alert("Pilih file APK terbaru terlebih dahulu.");return;}if(!/\.apk$/i.test(file.name)){alert("File harus berformat .apk");return;}if(file.size>25*1024*1024){alert("Ukuran APK maksimal 25 MB.");return;}
+ const old=typeof app.downloadUrl==="string"?app.downloadUrl.trim():"";const local=old&&old!=="#"&&!/^https?:\/\//i.test(old)&&!/^data:/i.test(old)&&!old.startsWith("/");const path=local?old:file.name;
+ setQuickApkUploading(true);setQuickApkProgress(2,"Menyiapkan upload...");
+ try{await sayutiUploadApk(file,path,p=>setQuickApkProgress(5+p*.82,"Mengirim APK ("+p+"%)..."));app.downloadUrl=path;app.format="APK File";setQuickApkProgress(90,"APK tersimpan. Menyinkronkan katalog...");
+ await sayutiSyncCatalog((p,m)=>setQuickApkProgress(90+p*.1,m));setQuickApkProgress(100,"Pembaruan APK selesai!");renderAdminTable();renderApps();showToast("APK berhasil diganti. Tautan unduhan tetap sama.");window.setTimeout(()=>closeModalDirect("quickApkModal"),900);}
+ catch(e){console.error("Upload APK gagal:",e);setQuickApkProgress(0,"Gagal: "+e.message);alert("Gagal memperbarui APK: "+e.message);}finally{setQuickApkUploading(false);}
 }
 
 function openAppFormModal(appId = null) {
     let editId = document.getElementById('editAppId');
     if(editId) editId.value = appId || '';
     
-    let savedToken = localStorage.getItem('sayuti_gh_token');
-    let tokenInput = document.getElementById('inputGithubToken');
-    if (savedToken && tokenInput) {
-        tokenInput.value = savedToken;
-    }
 
     if (appId) {
         let app = dbApps.find(a => a.id === appId);
@@ -794,9 +710,7 @@ async function saveAppFromForm() {
     let githubToken = document.getElementById('inputGithubToken') ? document.getElementById('inputGithubToken').value.trim() : '';
     
     if (!title) { alert('Nama aplikasi wajib diisi'); return; }
-    if (!githubToken) { alert('GitHub Token wajib diisi untuk sinkronisasi publik!'); return; }
-
-    localStorage.setItem('sayuti_gh_token', githubToken);
+    if (iconFileInput && !githubToken) { alert('Untuk upload ikon/logo, masukkan GitHub Token. Upload APK tidak memerlukannya.'); return; }
     setAppFormProgress(2, 'Memeriksa data aplikasi...');
 
     let downloadUrl = document.getElementById('inputDownloadUrl') ? document.getElementById('inputDownloadUrl').value : '#';
@@ -804,66 +718,22 @@ async function saveAppFromForm() {
     let iconValue = document.getElementById('inputIcon') && document.getElementById('inputIcon').value ? document.getElementById('inputIcon').value.trim() : 'fa-cube';
     let repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
 
-    // 1. Upload APK. Saat mengedit aplikasi, gunakan path APK lama agar file lama
-    // ditimpa dan tautan unduhan yang sudah ada tetap berfungsi.
+    // 1. Upload APK melalui Cloudflare Worker; file lama tetap memakai path yang sama.
     if (apkFileInput) {
-        showToast('Mengunggah APK aplikasi...');
-        setAppFormProgress(5, 'Memeriksa file APK...');
+        if (!/\.apk$/i.test(apkFileInput.name)) { alert('File harus berformat .apk'); return; }
+        if (apkFileInput.size > 25 * 1024 * 1024) { alert('Ukuran APK maksimal 25 MB.'); return; }
+        const existingApp = id ? dbApps.find(a => String(a.id) === String(id)) : null;
+        const previousUrl = existingApp && typeof existingApp.downloadUrl === 'string' ? existingApp.downloadUrl.trim() : '';
+        const isRepoFile = previousUrl && previousUrl !== '#' && !/^https?:\/\//i.test(previousUrl) && !/^data:/i.test(previousUrl) && !previousUrl.startsWith('/');
+        const fileName = isRepoFile ? previousUrl : apkFileInput.name;
         try {
-            const base64Content = await readFileAsBase64WithProgress(apkFileInput, pct => {
-                setAppFormProgress(5 + pct * 0.15, 'Membaca file APK (' + pct + '%)...');
-            });
-            const existingApp = id ? dbApps.find(a => String(a.id) === String(id)) : null;
-            const previousUrl = existingApp && typeof existingApp.downloadUrl === 'string'
-                ? existingApp.downloadUrl.trim()
-                : '';
-            const isRepoFile = previousUrl && previousUrl !== '#' &&
-                !/^https?:\/\//i.test(previousUrl) && !/^data:/i.test(previousUrl) &&
-                !previousUrl.startsWith('/');
-            const fileName = isRepoFile ? previousUrl : apkFileInput.name;
-            const encodedFileName = fileName.split('/').map(part => encodeURIComponent(part)).join('/');
-            const apiUrl = `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedFileName}`;
-            const githubHeaders = {
-                'Authorization': `token ${githubToken}`,
-                'Accept': 'application/vnd.github+json'
-            };
-
-            let existingSha = null;
-            const checkRes = await fetchGithubWithRetry(apiUrl, { headers: githubHeaders }, 4);
-            if (checkRes.ok) {
-                const fileData = await checkRes.json();
-                existingSha = fileData.sha;
-            } else if (checkRes.status !== 404) {
-                let message = 'Tidak dapat memeriksa file APK lama di GitHub.';
-                try {
-                    const errorData = await checkRes.json();
-                    if (errorData.message) message += '\nGitHub: ' + errorData.message;
-                } catch (e) {}
-                throw new Error(message);
-            }
-
-            const bodyData = {
-                message: existingSha
-                    ? `Perbarui APK ${fileName} via Admin Panel SayutiHub`
-                    : `Upload APK ${fileName} via Admin Panel SayutiHub`,
-                content: base64Content
-            };
-            if (existingSha) bodyData.sha = existingSha;
-
-            setAppFormProgress(22, existingSha ? 'Mengganti APK lama...' : 'Mengunggah APK baru...');
-            const uploadedData = await putGithubContentsWithProgress(apiUrl, githubToken, bodyData, pct => {
-                setAppFormProgress(22 + pct * 0.53, pct >= 100 ? 'Transfer terkirim, menunggu konfirmasi GitHub...' : 'Transfer APK (' + pct + '%)...');
-            });
-            if (!uploadedData) throw new Error('GitHub tidak mengonfirmasi hasil upload.');
-
+            setAppFormProgress(8, 'Mengunggah APK melalui server...');
+            await sayutiUploadApk(apkFileInput, fileName, pct => setAppFormProgress(8 + pct * 0.62, 'Mengirim APK (' + pct + '%)...'));
             downloadUrl = fileName;
             format = 'APK File';
-            showToast(existingSha
-                ? 'APK lama berhasil digantikan dengan versi terbaru!'
-                : 'APK berhasil di-upload!');
         } catch (error) {
             console.error('APK upload error:', error);
-            alert('Gagal upload/update APK: ' + (error.message || 'Kesalahan tidak diketahui.'));
+            alert('Gagal upload APK: ' + (error.message || 'Kesalahan tidak diketahui.'));
             return;
         }
     }
@@ -1007,7 +877,7 @@ async function saveAppFromForm() {
     try {
         setAppFormProgress(93, 'Menyinkronkan katalog ke GitHub...');
         showToast('Menyinkronkan database ke GitHub...');
-        await updateMainJsOnGitHub(githubToken, (pct, message) => {
+        await sayutiSyncCatalog((pct, message) => {
             setAppFormProgress(93 + pct * 0.07, message || 'Menyinkronkan katalog...');
         });
         setAppFormProgress(100, 'Selesai! Aplikasi berhasil disimpan.');
