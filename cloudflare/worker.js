@@ -131,13 +131,13 @@ export default {
       if (!get.ok) return json({ ok: false, error: "Gagal membaca katalog GitHub (HTTP " + get.status + ")." }, get.status, cors);
       const file = await get.json();
       if (!file.sha || !file.content) return json({ ok: false, error: "Isi katalog GitHub tidak lengkap." }, 502, cors);
-      const raw = atob(file.content.replace(/\\s/g, ""));
+      const raw = atob(file.content.replace(/\s/g, ""));
       const bytes = Uint8Array.from(raw, c => c.charCodeAt(0));
       const source = new TextDecoder("utf-8").decode(bytes);
       const start = source.indexOf("let dbApps =");
       const end = source.indexOf("let favorites =");
       if (start < 0 || end < 0 || end <= start) return json({ ok: false, error: "Struktur katalog js/main.js tidak dikenali." }, 422, cors);
-      const updated = source.slice(0, start) + "let dbApps = " + JSON.stringify(body.apps, null, 4) + ";\\n\\n" + source.slice(end);
+      const updated = source.slice(0, start) + "let dbApps = " + JSON.stringify(body.apps, null, 4) + ";\n\n" + source.slice(end);
       const encoded = toBase64(new TextEncoder().encode(updated));
       const putUrl = "https://api.github.com/repos/" + REPO + "/contents/js/main.js";
       const put = await fetch(putUrl, { method: "PUT", headers: {
