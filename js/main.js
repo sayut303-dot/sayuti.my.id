@@ -1021,29 +1021,36 @@ async function saveAppFromForm() {
     renderApps();
 }
 
-async function updateMainJsOnGitHub(githubToken) {
+async function updateMainJsOnGitHub(githubToken, onProgress) {
     const repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
     const filePath = 'js/main.js';
     const apiUrl = `https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`;
     let lastError;
 
-    // Selalu baca ulang file/SHA tiap percobaan supaya koneksi putus atau konflik
-    // tidak membuat katalog berhenti di versi setengah tersimpan.
+    // Baca ulang SHA setiap proses; pengiriman PUT memakai XHR bersama retry
+    // agar koneksi lambat/terputus tidak langsung menggagalkan sinkronisasi.
     for (let attempt = 0; attempt < 4; attempt++) {
         try {
             const getRes = await fetchGithubWithRetry(apiUrl, {
                 headers: {
-                    'Authorization': `Bearer ${githubToken}`,
+                    'Authorization': 'Bearer ' + githubToken,
                     'Accept': 'application/vnd.github+json'
                 }
-            }, 3);
+            }, 4);
+
             if (!getRes.ok) {
                 let detail = '';
                 try { detail = (await getRes.json()).message || ''; } catch (e) {}
-                throw new Error(detail || 'Gagal mengambil file js/main.js dari GitHub (HTTP ' + getRes.status + ').');
+                const error = new Error(detail || 'Gagal mengambil js/main.js dari GitHub (HTTP ' + getRes.status + ').');
+                error.status = getRes.status;
+                throw error;
             }
 
             const fileData = await getRes.json();
+            if (!fileData.sha || !fileData.content) {
+                throw new Error('GitHub tidak mengirim SHA atau isi js/main.js.');
+            }
+
             const currentCode = decodeBase64Unicode(fileData.content);
             const newDbAppsString = `let dbApps = ${JSON.stringify(dbApps, null, 4)};`;
             const startIndex = currentCode.indexOf('let dbApps =');
@@ -1053,27 +1060,28 @@ async function updateMainJsOnGitHub(githubToken) {
                 throw new Error('Format file js/main.js tidak dikenali.');
             }
 
-            const updatedCode = currentCode.substring(0, startIndex) + newDbAppsString + '\n\n' + currentCode.substring(endIndex);
-            const putRes = await fetch(`https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${githubToken}`,
-                    'Accept': 'application/vnd.github+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: 'Update dbApps automatically via Admin Panel',
-                    content: encodeBase64Unicode(updatedCode),
-                    sha: fileData.sha
-                })
+            const updatedCode = currentCode.substring(0, startIndex) +
+                newDbAppsString + '\\n\\n' + currentCode.substring(endIndex);
+
+            if (typeof onProgress === 'function') onProgress(10, 'Mengirim pembaruan katalog...');
+            const saved = await putGithubContentsWithProgress(apiUrl, githubToken, {
+                message: 'Update dbApps automatically via Admin Panel',
+                content: encodeBase64Unicode(updatedCode),
+                sha: fileData.sha
+            }, pct => {
+                if (typeof onProgress === 'function') {
+                    onProgress(10 + pct * 0.9, pct >= 100
+                        ? 'Katalog terkirim, menunggu konfirmasi GitHub...'
+                        : 'Menyimpan katalog (' + pct + '%)...');
+                }
             });
 
-            if (putRes.ok) return true;
-            let errData = {};
-            try { errData = await putRes.json(); } catch (e) {}
-            const error = new Error(errData.message || 'Gagal memperbarui file js/main.js (HTTP ' + putRes.status + ').');
-            error.status = putRes.status;
-            throw error;
+            if (!saved || !saved.content || !saved.commit) {
+                // Contents API umumnya mengembalikan content dan commit.
+                // Jika respons minimal, jangan menganggap proses gagal bila XHR sukses.
+                if (!saved) throw new Error('GitHub tidak mengonfirmasi penyimpanan katalog.');
+            }
+            return true;
         } catch (error) {
             lastError = error;
             const retryable = !error.status || error.status === 408 || error.status === 409 ||
@@ -1082,5 +1090,7 @@ async function updateMainJsOnGitHub(githubToken) {
             await githubRetryDelay(attempt);
         }
     }
-    throw new Error('Sinkronisasi katalog gagal setelah beberapa percobaan. Coba lagi saat koneksi stabil. Detail: ' + (lastError.message || 'jaringan terputus'));
+
+    throw new Error('Sinkronisasi katalog gagal setelah beberapa percobaan. Data formulir tetap tersedia; coba lagi saat koneksi stabil. Detail: ' +
+        (lastError && lastError.message ? lastError.message : 'jaringan terputus'));
 }
