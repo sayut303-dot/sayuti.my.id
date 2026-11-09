@@ -402,9 +402,7 @@ async function submitReview() {
 
     let githubToken = localStorage.getItem('sayuti_gh_token');
     if (githubToken) {
-        try { await updateMainJsOnGitHub(githubToken, (pct, message) => {
-            setAppFormProgress(93 + pct * 0.07, message || 'Menyinkronkan katalog...');
-        }); } catch(e) {}
+        try { await updateMainJsOnGitHub(githubToken); } catch(e) {}
     }
 }
 
@@ -1009,7 +1007,9 @@ async function saveAppFromForm() {
     try {
         setAppFormProgress(93, 'Menyinkronkan katalog ke GitHub...');
         showToast('Menyinkronkan database ke GitHub...');
-        await updateMainJsOnGitHub(githubToken);
+        await updateMainJsOnGitHub(githubToken, (pct, message) => {
+            setAppFormProgress(93 + pct * 0.07, message || 'Menyinkronkan katalog...');
+        });
         setAppFormProgress(100, 'Selesai! Aplikasi berhasil disimpan.');
         showToast('Berhasil disimpan & disinkronkan ke publik!');
     } catch (err) {
