@@ -423,22 +423,29 @@ function openAdminLoginModal() {
 
 const SAYUTI_UPLOAD_API = "https://sayutihub-upload.sayut303.workers.dev";
 let sayutiAdminSession = sessionStorage.getItem("sayuti_admin_session") || "";
+function sayutiGetAdminSession() {
+ const stored = sessionStorage.getItem("sayuti_admin_session") || "";
+ if (stored) sayutiAdminSession = stored;
+ return sayutiAdminSession;
+}
 async function sayutiWorkerLogin(pin) {
  const r=await fetch(SAYUTI_UPLOAD_API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pin})});
  const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok||!d.token)throw new Error(d.error||"Login Worker gagal (HTTP "+r.status+").");
  sayutiAdminSession=d.token;sessionStorage.setItem("sayuti_admin_session",d.token);return true;
 }
 async function sayutiUploadApk(file,path,onProgress) {
- if(!sayutiAdminSession)throw new Error("Sesi admin belum aktif. Login ulang.");
+ const session = sayutiGetAdminSession();
+ if(!session)throw new Error("Sesi admin belum aktif. Silakan login melalui panel Admin pada tab yang sama, lalu ulangi upload.");
  return await new Promise((resolve,reject)=>{const x=new XMLHttpRequest();x.open("POST",SAYUTI_UPLOAD_API+"/upload?path="+encodeURIComponent(path),true);
- x.setRequestHeader("Authorization","Bearer "+sayutiAdminSession);x.setRequestHeader("Content-Type","application/vnd.android.package-archive");
+ x.setRequestHeader("Authorization","Bearer "+session);x.setRequestHeader("Content-Type","application/vnd.android.package-archive");
  x.upload.onprogress=e=>{if(e.lengthComputable&&onProgress)onProgress(Math.round(e.loaded/e.total*100));};
  x.onload=()=>{let d={};try{d=JSON.parse(x.responseText||"{}");}catch(e){}if(x.status>=200&&x.status<300&&d.ok)resolve(d);else{if(x.status===401){sayutiAdminSession="";sessionStorage.removeItem("sayuti_admin_session");}reject(new Error(d.error||"Upload gagal (HTTP "+x.status+")."));}};
  x.onerror=()=>reject(new Error("Koneksi terputus saat mengirim APK."));x.ontimeout=()=>reject(new Error("Upload melewati batas waktu."));x.timeout=600000;x.send(file);});
 }
 async function sayutiSyncCatalog(onProgress) {
- if(!sayutiAdminSession)throw new Error("Sesi admin habis. Login kembali.");if(onProgress)onProgress(10,"Mengirim data katalog...");
- const r=await fetch(SAYUTI_UPLOAD_API+"/catalog",{method:"POST",headers:{"Authorization":"Bearer "+sayutiAdminSession,"Content-Type":"application/json"},body:JSON.stringify({apps:dbApps})});
+ const session = sayutiGetAdminSession();
+ if(!session)throw new Error("Sesi admin belum aktif. Silakan login kembali melalui panel Admin.");if(onProgress)onProgress(10,"Mengirim data katalog...");
+ const r=await fetch(SAYUTI_UPLOAD_API+"/catalog",{method:"POST",headers:{"Authorization":"Bearer "+session,"Content-Type":"application/json"},body:JSON.stringify({apps:dbApps})});
  const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok){if(r.status===401){sayutiAdminSession="";sessionStorage.removeItem("sayuti_admin_session");}throw new Error(d.error||"Sinkronisasi katalog gagal (HTTP "+r.status+").");}
  if(onProgress)onProgress(100,"Katalog berhasil disimpan.");return d;
 }
