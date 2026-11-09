@@ -507,7 +507,6 @@ function setQuickApkProgress(percent, message) {
 function setQuickApkUploading(isUploading) {
     const button = document.querySelector('#quickApkModal button[onclick="uploadApkOnly()"]');
     const fileInput = document.getElementById('quickApkFile');
-    const tokenInput = document.getElementById('quickApkGithubToken');
     if (button) {
         button.disabled = isUploading;
         button.style.opacity = isUploading ? '0.65' : '1';
@@ -517,7 +516,6 @@ function setQuickApkUploading(isUploading) {
             : '<i class="fa-solid fa-upload"></i> Upload dan Ganti APK Lama';
     }
     if (fileInput) fileInput.disabled = isUploading;
-    if (tokenInput) tokenInput.disabled = isUploading;
 }
 
 function readFileAsBase64WithProgress(file, onProgress) {
