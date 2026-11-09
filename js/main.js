@@ -1061,7 +1061,7 @@ async function updateMainJsOnGitHub(githubToken, onProgress) {
             }
 
             const updatedCode = currentCode.substring(0, startIndex) +
-                newDbAppsString + '\\n\\n' + currentCode.substring(endIndex);
+                newDbAppsString + '\n\n' + currentCode.substring(endIndex);
 
             if (typeof onProgress === 'function') onProgress(10, 'Mengirim pembaruan katalog...');
             const saved = await putGithubContentsWithProgress(apiUrl, githubToken, {
