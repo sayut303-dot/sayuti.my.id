@@ -78,7 +78,7 @@ function validPath(path) {
   return typeof path === "string" &&
     path.length > 0 && path.length <= 240 &&
     !path.startsWith("/") && !path.includes("..") &&
-    /^[a-zA-Z0-9._/-]+$/.test(path) &&
+    /^[a-zA-Z0-9._/ -]+$/.test(path) &&
     path.toLowerCase().endsWith(".apk");
 }
 async function github(path, token) {
