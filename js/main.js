@@ -261,7 +261,7 @@ function renderApps() {
             
             let iconContent = app.icon && app.icon.startsWith('fa-') 
                 ? `<i class="fa-solid ${app.icon}"></i>` 
-                : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
+                : `<img src="${sayutiIconUrl(app.icon)}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
             let card = document.createElement('div');
             card.className = 'app-card';
@@ -351,7 +351,7 @@ function openDetailModal(appId) {
 
     let iconContent = app.icon && app.icon.startsWith('fa-') 
         ? `<i class="fa-solid ${app.icon}"></i>` 
-        : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
+        : `<img src="${sayutiIconUrl(app.icon)}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
     if(document.getElementById('detailTitle')) document.getElementById('detailTitle').innerText = app.title;
     if(document.getElementById('detailDesc')) document.getElementById('detailDesc').innerText = app.fullDesc;
@@ -448,6 +448,16 @@ function openAdminLoginModal() {
 }
 
 const SAYUTI_UPLOAD_API = "https://sayutihub-upload.sayut303.workers.dev";
+
+// Logo hasil upload disajikan oleh endpoint GET /icon pada Cloudflare Worker.
+function sayutiIconUrl(icon) {
+    if (!icon || icon.startsWith("fa-")) return icon || "";
+    if (/^https?:\/\//i.test(icon) || icon.startsWith("/") || icon.includes("/")) return icon;
+    if (/^logo_[a-zA-Z0-9._-]+\.(png|jpe?g|webp|svg)$/i.test(icon)) {
+        return SAYUTI_UPLOAD_API + "/icon?path=" + encodeURIComponent(icon);
+    }
+    return icon;
+}
 let sayutiAdminSession = sessionStorage.getItem("sayuti_admin_session") || "";
 // Simpan juga pada window agar login dan upload memakai sesi yang sama pada tab ini.
 function sayutiGetAdminSession() {
