@@ -67,10 +67,18 @@ async function validSession(request, secret) {
   } catch { return false; }
 }
 function toBase64(bytes) {
+  // Hindari spread argumen besar yang dapat memicu
+  // "Maximum call stack size exceeded" pada file APK besar.
+  // Potongan 8 KB aman untuk batas jumlah argumen runtime.
   let binary = "";
-  const chunk = 0x8000;
+  const chunk = 0x2000;
   for (let i = 0; i < bytes.length; i += chunk) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+    const part = bytes.subarray(i, Math.min(i + chunk, bytes.length));
+    let piece = "";
+    for (let j = 0; j < part.length; j++) {
+      piece += String.fromCharCode(part[j]);
+    }
+    binary += piece;
   }
   return btoa(binary);
 }
