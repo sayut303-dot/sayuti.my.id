@@ -30,7 +30,8 @@ Buka `https://NAMA-WORKER.NAMA-AKUN.workers.dev/health` dari domain website yang
 
 Frontend harus mengirim:
 - Login: POST `/auth/login` dengan JSON `{"pin":"PIN_ADMIN" }`.
-- Upload: POST `/upload?path=Nonton.apk`, header `Authorization: Bearer <session>`, body berupa binary file (bukan Base64).
+- Upload APK: POST `/upload?path=Nonton.apk`, header `Authorization: Bearer <session>`, body berupa binary file.
+- Upload logo: POST `/icon?path=logo_...webp`, header `Authorization: Bearer <session>`, body berupa binary file.
 - Sinkronisasi katalog: POST `/catalog`, header `Authorization: Bearer <session>`, JSON `{"apps":[...]}`. Worker memperbarui blok `dbApps` pada `js/main.js` di branch `main`.
 
 Gunakan URL Worker Anda sebagai `UPLOAD_API_URL`. Jangan pernah memasukkan `GITHUB_TOKEN` ke JavaScript frontend.
@@ -46,3 +47,7 @@ Gunakan URL Worker Anda sebagai `UPLOAD_API_URL`. Jangan pernah memasukkan `GITH
 ## Keamanan penting
 
 Token GitHub lama yang pernah dikirim melalui chat harus dicabut (revoke) di GitHub dan diganti dengan token baru. Jangan kirim token baru ke chat atau menaruhnya di file repository.
+
+
+## Perubahan autentikasi frontend
+GitHub PAT hanya disimpan sebagai Secret `GITHUB_TOKEN` di Cloudflare Worker. Form admin tidak meminta PAT dan browser tidak lagi memanggil GitHub Contents API secara langsung untuk mengunggah logo. APK, logo, dan katalog memakai sesi admin dari endpoint Worker.
