@@ -363,11 +363,11 @@
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
      <div style="width:44px;height:44px;display:grid;place-items:center;border-radius:12px;color:white;background:linear-gradient(135deg,#6366f1,#8b5cf6);"><i class="fa-solid fa-cloud-arrow-up"></i></div>
      <div>
-      <h3 style="margin:0;font-size:1rem;">Upload APK Terbaru</h3>
+      <h3 style="margin:0;font-size:1rem;">Update Aplikasi</h3>
       <p style="margin:4px 0 0;color:var(--text-muted);font-size:.75rem;">Aplikasi: <strong id="quickApkAppTitle">-</strong></p>
      </div>
     </div>
-    <p style="color:var(--text-muted);font-size:.8rem;line-height:1.6;">Pilih APK versi terbaru saja. File lama akan digantikan dan tautan unduhan tetap sama.</p>
+    <p style="color:var(--text-muted);font-size:.8rem;line-height:1.6;">Pilih APK terbaru, logo baru, atau keduanya. Jika logo tidak dipilih, logo lama tetap digunakan. Tautan unduhan APK tidak berubah.</p>
     <div id="quickApkProgressWrap" style="display:none;margin:0 0 15px;padding:12px;border:1px solid rgba(129,140,248,.28);border-radius:12px;background:rgba(99,102,241,.08);">
      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;">
       <span id="quickApkProgressStatus" role="status" aria-live="polite" style="font-size:.76rem;color:var(--text-soft);">Menunggu upload...</span>
@@ -376,14 +376,19 @@
      <div style="height:8px;overflow:hidden;border-radius:999px;background:rgba(148,163,184,.18);">
       <div id="quickApkProgressBar" role="progressbar" aria-label="Progres upload APK" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#6366f1,#22d3ee);transition:width .15s ease;"></div>
      </div>
-     <small style="display:block;margin-top:7px;color:var(--text-muted);font-size:.68rem;">Progres mencakup pembacaan file, transfer APK, dan penyimpanan katalog.</small>
+     <small style="display:block;margin-top:7px;color:var(--text-muted);font-size:.68rem;">Progres mencakup upload APK/logo dan penyimpanan katalog.</small>
     </div>
     <div class="form-group">
      <label for="quickApkFile">File APK terbaru</label>
      <input accept=".apk,application/vnd.android.package-archive" class="form-control" id="quickApkFile" type="file">
     </div>
+     <div class="form-group">
+      <label for="quickApkIconFile">Logo / gambar aplikasi baru (opsional)</label>
+      <input accept="image/png,image/jpeg,image/webp,image/svg+xml" class="form-control" id="quickApkIconFile" type="file">
+      <small style="display:block;margin-top:6px;color:var(--text-muted);font-size:.7rem;">PNG, JPG, WebP, atau SVG · Maksimal 5 MB</small>
+     </div>
     
-    <button class="nav-btn primary-action" onclick="uploadApkOnly()" style="width:100%;justify-content:center;min-height:45px;"><i class="fa-solid fa-upload"></i> Upload dan Ganti APK Lama</button>
+    <button class="nav-btn primary-action" onclick="uploadApkOnly()" style="width:100%;justify-content:center;min-height:45px;"><i class="fa-solid fa-upload"></i> Upload dan Simpan Pembaruan</button>
    </div>
   </div>
   <div aria-modal="true" class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')" role="dialog">
@@ -557,7 +562,7 @@
   <!-- =========================================================
          JAVASCRIPT
     ========================================================== -->
-  <script src="js/main.js?v=24"></script>
+  <script src="js/main.js?v=25"></script>
   <script>
     // Definisikan helper pada window agar tersedia untuk onclick inline dan login.
     window.closeModalDirect = window.closeModalDirect || function (modalId) {
