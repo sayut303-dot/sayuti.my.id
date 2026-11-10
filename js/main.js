@@ -261,7 +261,7 @@ function renderApps() {
             
             let iconContent = app.icon && app.icon.startsWith('fa-') 
                 ? `<i class="fa-solid ${app.icon}"></i>` 
-                : `<img src="${sayutiIconUrl(app.icon)}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
+                : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
             let card = document.createElement('div');
             card.className = 'app-card';
@@ -458,11 +458,6 @@ function sayutiGetAdminSession() {
   window.__sayutiAdminSession = shared;
  }
  return shared;
-}
-// Ubah nama file logo R2 menjadi URL publik Worker agar browser tidak mencari file di folder halaman.
-function sayutiIconUrl(icon) {
- if (!icon || icon.startsWith('fa-') || /^(https?:|data:|blob:|\/)/i.test(icon)) return icon;
- return SAYUTI_UPLOAD_API + "/icon?path=" + encodeURIComponent(icon);
 }
 function sayutiClearAdminSession() {
  sayutiAdminSession = "";
