@@ -110,7 +110,22 @@ let dbApps = [
         "changelog": "Rilis perdana aplikasi Nonton dengan akses streaming dan pemutar video terintegrasi.",
         "screenshots": [],
         "reviews": []
-    }
+    },
+    {
+        "id": 1794320000001,
+        "title": "Dopamine TV",
+        "category": "android",
+        "status": "New",
+        "icon": "fa-tv",
+        "shortDesc": "Aplikasi streaming TV & film dengan antarmuka modern, ringan, dan mudah digunakan.",
+        "fullDesc": "Dopamine TV adalah aplikasi hiburan untuk menonton TV & film secara streaming dengan tampilan yang sederhana dan modern. Cocok untuk pengguna yang ingin akses cepat ke berbagai channel/tayangan dari satu tempat.\\n\\nFitur utama:\\n📺 Streaming TV & film dari berbagai sumber\\n⚡ Antarmuka ringan dan responsif\\n📱 Mudah digunakan di perangkat Android\\n🌐 Membutuhkan koneksi internet stabil\\n\\nCatatan: Ketersediaan tayangan bergantung pada sumber streaming dan koneksi internet. Dopamine TV bukan aplikasi resmi dan tidak berafiliasi dengan penyedia konten.",
+        "version": "1.0.6",
+        "format": "APK File",
+        "downloads": 0,
+        "downloadUrl": "Dopamine tv 1.0.6 (SFILE.MOBI).apk",
+        "changelog": "Rilis perdana Dopamine TV v1.0.6.",
+        "screenshots": [],
+        "reviews": []
 ];
 
 let favorites = (() => {
