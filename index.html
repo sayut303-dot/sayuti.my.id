@@ -565,7 +565,19 @@
   <!-- =========================================================
          JAVASCRIPT
     ========================================================== -->
-  <script src="js/main.js?v=21"></script>
+  <script src="js/main.js?v=22"></script>
+  <script>
+    // Definisikan helper pada window agar tersedia untuk onclick inline dan login.
+    window.closeModalDirect = window.closeModalDirect || function (modalId) {
+      var modal = document.getElementById(modalId);
+      if (modal) modal.classList.remove('active');
+    };
+    window.closeModal = window.closeModal || function (event, modalId) {
+      if (event && event.target === event.currentTarget) {
+        window.closeModalDirect(modalId);
+      }
+    };
+  </script>
   <!-- ADMIN LOGIN FALLBACK: hanya membuka modal; autentikasi tetap melalui Cloudflare Worker di main.js -->
   <script>
     (function () {
