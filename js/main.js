@@ -484,6 +484,28 @@ async function sayutiUploadApk(file,path,onProgress) {
  x.onload=()=>{let d={};try{d=JSON.parse(x.responseText||"{}");}catch(e){}if(x.status>=200&&x.status<300&&d.ok)resolve(d);else{if(x.status===401){sayutiClearAdminSession();}reject(new Error(d.error||"Upload gagal (HTTP "+x.status+")."));}};
  x.onerror=()=>reject(new Error("Koneksi terputus saat mengirim APK."));x.ontimeout=()=>reject(new Error("Upload melewati batas waktu."));x.timeout=600000;x.send(file);});
 }
+
+async function sayutiUploadIcon(file, path, onProgress) {
+ const session = sayutiGetAdminSession();
+ if (!session) throw new Error("Sesi admin belum aktif. Silakan login kembali.");
+ return await new Promise((resolve, reject) => {
+  const x = new XMLHttpRequest();
+  x.open("POST", SAYUTI_UPLOAD_API + "/icon?path=" + encodeURIComponent(path), true);
+  x.setRequestHeader("Authorization", "Bearer " + session);
+  x.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+  x.upload.onprogress = e => { if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100)); };
+  x.onload = () => {
+   let d = {}; try { d = JSON.parse(x.responseText || "{}"); } catch (e) {}
+   if (x.status >= 200 && x.status < 300 && d.ok) resolve(d);
+   else { if (x.status === 401) sayutiClearAdminSession(); reject(new Error(d.error || "Upload logo gagal (HTTP " + x.status + ").")); }
+  };
+  x.onerror = () => reject(new Error("Koneksi terputus saat mengirim logo."));
+  x.ontimeout = () => reject(new Error("Upload logo melewati batas waktu."));
+  x.timeout = 180000;
+  x.send(file);
+ });
+}
+
 async function sayutiSyncCatalog(onProgress) {
  const session = sayutiGetAdminSession();
  if(!session)throw new Error("Sesi admin belum aktif. Silakan login kembali melalui panel Admin.");if(onProgress)onProgress(10,"Mengirim data katalog...");
@@ -756,10 +778,8 @@ async function saveAppFromForm() {
     
     let apkFileInput = document.getElementById('inputApkFile') ? document.getElementById('inputApkFile').files[0] : null;
     let iconFileInput = document.getElementById('inputIconFile') ? document.getElementById('inputIconFile').files[0] : null;
-    let githubToken = document.getElementById('inputGithubToken') ? document.getElementById('inputGithubToken').value.trim() : '';
     
     if (!title) { alert('Nama aplikasi wajib diisi'); return; }
-    if (iconFileInput && !githubToken) { alert('Untuk upload ikon/logo, masukkan GitHub Token. Upload APK tidak memerlukannya.'); return; }
     setAppFormProgress(2, 'Memeriksa data aplikasi...');
 
     let downloadUrl = document.getElementById('inputDownloadUrl') ? document.getElementById('inputDownloadUrl').value : '#';
@@ -787,29 +807,22 @@ async function saveAppFromForm() {
         }
     }
 
-    // 2. Proses Upload File Logo/Ikon ke GitHub (jika ada)
+    // 2. Upload logo melalui Worker; GitHub PAT tidak pernah dikirim ke browser.
     if (iconFileInput) {
         setAppFormProgress(76, 'Memproses logo aplikasi...');
-        showToast('Memproses logo aplikasi...');
-
         try {
             const originalName = iconFileInput.name || 'logo';
             const extension = originalName.split('.').pop().toLowerCase();
             const detectedType = iconFileInput.type ||
                 ({ png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
                    webp: 'image/webp', svg: 'image/svg+xml' }[extension] || '');
-
             const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
             if (!allowedTypes.includes(detectedType)) {
                 alert('Format logo tidak didukung. Gunakan PNG, JPG, WebP, atau SVG.');
                 return;
             }
-
-            // Raster besar otomatis diperkecil dan dikompresi menjadi WebP.
-            // Ini menghindari payload Base64 besar dan lebih cocok untuk ikon aplikasi.
             let uploadBlob = iconFileInput;
             let uploadName = originalName.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/_+/g, '_');
-
             if (detectedType !== 'image/svg+xml') {
                 try {
                     const bitmap = await createImageBitmap(iconFileInput);
@@ -822,68 +835,30 @@ async function saveAppFromForm() {
                     if (!ctx) throw new Error('Browser tidak dapat memproses gambar.');
                     ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
                     bitmap.close();
-
                     const compressedBlob = await new Promise((resolve, reject) => {
-                        canvas.toBlob(blob => {
-                            if (blob) resolve(blob);
-                            else reject(new Error('Kompresi gambar gagal.'));
-                        }, 'image/webp', 0.88);
+                        canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Kompresi gambar gagal.')), 'image/webp', 0.88);
                     });
                     uploadBlob = compressedBlob;
                     uploadName = uploadName.replace(/\.[^.]+$/, '') + '.webp';
                 } catch (compressionError) {
                     console.warn('Kompresi logo gagal:', compressionError);
                     if (iconFileInput.size > 5 * 1024 * 1024) {
-                        alert('Gambar terlalu besar untuk diproses browser. Coba JPG/PNG yang lebih sederhana atau SVG yang dioptimalkan.');
+                        alert('Gambar terlalu besar untuk diproses. Coba gambar yang lebih kecil.');
                         return;
                     }
-                    // Untuk gambar kecil, coba unggah file asli bila browser tak mendukung kompresi.
                 }
             } else if (iconFileInput.size > 5 * 1024 * 1024) {
-                alert('SVG terlalu besar (maksimal 5 MB). Optimalkan SVG terlebih dahulu.');
+                alert('SVG terlalu besar (maksimal 5 MB).');
                 return;
             }
-
-            // Batas setelah kompresi, bukan pada ukuran file asli.
             if (uploadBlob.size > 5 * 1024 * 1024) {
-                alert('Ukuran logo setelah diproses masih lebih dari 5 MB. Coba gambar lain.');
+                alert('Ukuran logo setelah diproses masih lebih dari 5 MB.');
                 return;
             }
-
-            setAppFormProgress(80, 'Membaca file logo...');
-            const base64Icon = await toBase64(uploadBlob);
             const iconFileName = 'logo_' + Date.now() + '_' + uploadName;
-            const encodedIconFileName = encodeURIComponent(iconFileName);
-
-            const githubHeaders = {
-                'Authorization': `token ${githubToken}`,
-                'Accept': 'application/vnd.github+json'
-            };
-
-            const repoCheck = await fetchGithubWithRetry(
-                `https://api.github.com/repos/${repoOwnerAndName}`,
-                { headers: githubHeaders },
-                4
-            );
-
-            if (!repoCheck.ok) {
-                let errText = 'Token GitHub tidak dapat mengakses repository.';
-                try {
-                    const errData = await repoCheck.json();
-                    if (errData.message) errText += '\n\nGitHub: ' + errData.message;
-                } catch (e) {}
-                alert(errText);
-                return;
-            }
-
-            setAppFormProgress(83, 'Mengunggah logo ke GitHub...');
-            showToast('Mengunggah logo ke GitHub...');
-            const iconApiUrl = `https://api.github.com/repos/${repoOwnerAndName}/contents/${encodedIconFileName}`;
-            await putGithubContentsWithProgress(iconApiUrl, githubToken, {
-                message: `Upload logo ${iconFileName} via Admin Panel SayutiHub`,
-                content: base64Icon
-            }, pct => {
-                setAppFormProgress(83 + pct * 0.04, 'Mengunggah logo (' + pct + '%)...');
+            setAppFormProgress(82, 'Mengunggah logo melalui server...');
+            await sayutiUploadIcon(uploadBlob, iconFileName, pct => {
+                setAppFormProgress(82 + pct * 0.06, 'Mengunggah logo (' + pct + '%)...');
             });
             iconValue = iconFileName;
             showToast('Logo berhasil di-upload!');
