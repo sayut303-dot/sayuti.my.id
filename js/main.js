@@ -507,7 +507,7 @@ async function sayutiPrepareQuickIcon(file) {
  const detectedType=file.type||({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',svg:'image/svg+xml'}[extension]||'');
  if(!['image/png','image/jpeg','image/webp','image/svg+xml'].includes(detectedType)) throw new Error('Format logo tidak didukung. Gunakan PNG, JPG, WebP, atau SVG.');
  let blob=file; let name=originalName.replace(/[^a-zA-Z0-9._-]/g,'_').replace(/_+/g,'_');
- if(detectedType!=='image/svg+xml') { try { const bitmap=await createImageBitmap(file); const scale=Math.min(1,1024/Math.max(bitmap.width,bitmap.height)); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(bitmap.width*scale)); canvas.height=Math.max(1,Math.round(bitmap.height*scale)); const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Browser tidak dapat memproses gambar.'); ctx.drawImage(bitmap,0,0,canvas.width,canvas.height); bitmap.close(); blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Kompresi gambar gagal.')),'image/webp',0.88)); name=name.replace(/\\.[^.]+$/,'')+'.webp'; } catch(e) { console.warn('Kompresi logo gagal:',e); if(file.size>5*1024*1024) throw new Error('Gambar terlalu besar untuk diproses.'); } }
+ if(detectedType!=='image/svg+xml') { try { const bitmap=await createImageBitmap(file); const scale=Math.min(1,1024/Math.max(bitmap.width,bitmap.height)); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(bitmap.width*scale)); canvas.height=Math.max(1,Math.round(bitmap.height*scale)); const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Browser tidak dapat memproses gambar.'); ctx.drawImage(bitmap,0,0,canvas.width,canvas.height); bitmap.close(); blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Kompresi gambar gagal.')),'image/webp',0.88)); name=name.replace(/\.[^.]+$/,'')+'.webp'; } catch(e) { console.warn('Kompresi logo gagal:',e); if(file.size>5*1024*1024) throw new Error('Gambar terlalu besar untuk diproses.'); } }
  else if(file.size>5*1024*1024) throw new Error('SVG terlalu besar (maksimal 5 MB).');
  if(blob.size>5*1024*1024) throw new Error('Ukuran logo setelah diproses masih lebih dari 5 MB.');
  return {blob:new Blob([blob],{type:blob.type||detectedType}),name:'logo_'+Date.now()+'_'+name};
@@ -596,7 +596,7 @@ function setQuickApkUploading(isUploading) {
         button.style.cursor = isUploading ? 'wait' : 'pointer';
         button.innerHTML = isUploading
             ? '<i class="fa-solid fa-spinner fa-spin"></i> Sedang memproses...'
-            : '<i class="fa-solid fa-upload"></i> Upload dan Ganti APK Lama';
+            : '<i class="fa-solid fa-upload"></i> Upload dan Simpan Pembaruan';
     }
     if (fileInput) fileInput.disabled = isUploading;
     if (iconInput) iconInput.disabled = isUploading;
@@ -629,10 +629,10 @@ async function uploadApkOnly() {
  const apk=ai&&ai.files?ai.files[0]:null, icon=ii&&ii.files?ii.files[0]:null;
  if(!app){alert('Pilih aplikasi yang akan diperbarui.');return;}
  if(!apk&&!icon){alert('Pilih APK terbaru, logo baru, atau keduanya.');return;}
- if(apk&&!/\\.apk$/i.test(apk.name)){alert('File harus berformat .apk');return;}
+ if(apk&&!/\.apk$/i.test(apk.name)){alert('File harus berformat .apk');return;}
  if(apk&&apk.size>25*1024*1024){alert('Ukuran APK maksimal 25 MB.');return;}
  const old=typeof app.downloadUrl==='string'?app.downloadUrl.trim():'';
- const local=old&&old!=='#'&&!/^https?:\\/\\//i.test(old)&&!/^data:/i.test(old)&&!old.startsWith('/');
+ const local=old&&old!=='#'&&!/^https?:\/\//i.test(old)&&!/^data:/i.test(old)&&!old.startsWith('/');
  const path=local?old:(apk?apk.name:old);
  setQuickApkUploading(true);setQuickApkProgress(2,'Menyiapkan pembaruan...');
  try {
