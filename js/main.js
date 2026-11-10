@@ -380,8 +380,6 @@ function triggerDownload(event, appId) {
     renderAnalytics();
     if (activeAppId === app.id) openDetailModal(app.id);
 
-    const githubToken = localStorage.getItem('sayuti_gh_token');
-    if (githubToken) updateMainJsOnGitHub(githubToken).catch(e => console.warn('Sinkronisasi gagal:', e));
     showToast('Mengunduh ' + app.title + '...');
 }
 
@@ -421,11 +419,6 @@ async function submitReview() {
     if(nameElem) nameElem.value = '';
     if(commentElem) commentElem.value = '';
     showToast('Ulasan terkirim!');
-
-    let githubToken = localStorage.getItem('sayuti_gh_token');
-    if (githubToken) {
-        try { await updateMainJsOnGitHub(githubToken); } catch(e) {}
-    }
 }
 
 function renderAnalytics() {
@@ -607,103 +600,6 @@ function readFileAsBase64WithProgress(file, onProgress) {
         reader.onabort = () => reject(new Error('Pembacaan file dibatalkan.'));
         reader.readAsDataURL(file);
     });
-}
-
-// Jeda bertahap memberi waktu jaringan lambat pulih tanpa mengulang terlalu cepat.
-function githubRetryDelay(attempt) {
-    return new Promise(resolve => window.setTimeout(resolve, Math.min(12000, 1200 * Math.pow(2, attempt))));
-}
-
-async function fetchGithubWithRetry(url, options = {}, maxAttempts = 4) {
-    let lastError;
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        try {
-            const response = await fetch(url, { ...options, cache: 'no-store' });
-            if (response.ok || (response.status < 500 && response.status !== 429)) return response;
-            let detail = '';
-            try { detail = (await response.clone().json()).message || ''; } catch (e) {}
-            lastError = new Error(detail || 'GitHub sementara tidak merespons (HTTP ' + response.status + ').');
-            lastError.status = response.status;
-            if (attempt === maxAttempts - 1) throw lastError;
-        } catch (error) {
-            lastError = error;
-            if (attempt === maxAttempts - 1) {
-                throw new Error('Koneksi ke GitHub gagal setelah ' + maxAttempts + ' percobaan. Data formulir tetap tersedia; periksa internet lalu coba simpan lagi. Detail: ' + (error.message || 'jaringan terputus'));
-            }
-        }
-        await githubRetryDelay(attempt);
-    }
-    throw lastError || new Error('Koneksi ke GitHub gagal.');
-}
-
-async function putGithubContentsWithProgress(apiUrl, token, payload, onProgress) {
-    // Simpan payload di memori browser dan kirim ulang otomatis jika jaringan putus.
-    // Jika percobaan sebelumnya sebenarnya sudah masuk ke GitHub, ambil SHA terbaru
-    // sebelum mencoba ulang agar update tidak berhenti karena konflik SHA.
-    const requestPayload = { ...payload };
-    let lastError;
-    const maxAttempts = 4;
-
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        try {
-            const result = await new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('PUT', apiUrl, true);
-                xhr.timeout = 180000; // Maksimal 3 menit menunggu respons GitHub setelah transfer.
-                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                xhr.setRequestHeader('Accept', 'application/vnd.github+json');
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.upload.onprogress = event => {
-                    if (event.lengthComputable && onProgress) {
-                        onProgress(Math.round((event.loaded / event.total) * 100));
-                    }
-                };
-                xhr.onload = () => {
-                    let data = {};
-                    try { data = JSON.parse(xhr.responseText || '{}'); } catch (e) {}
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(data);
-                        return;
-                    }
-                    const error = new Error(data.message || ('GitHub menolak upload (HTTP ' + xhr.status + ').'));
-                    error.status = xhr.status;
-                    reject(error);
-                };
-                xhr.onerror = () => reject(new Error('Koneksi terputus saat mengunggah.'));
-                xhr.ontimeout = () => { const error = new Error('GitHub tidak memberi respons dalam 3 menit. Periksa koneksi lalu coba lagi.'); error.status = 408; reject(error); };
-                xhr.onabort = () => reject(new Error('Upload dibatalkan.'));
-                xhr.send(JSON.stringify(requestPayload));
-            });
-            return result;
-        } catch (error) {
-            lastError = error;
-            const retryable = !error.status || error.status === 408 || error.status === 409 ||
-                error.status === 429 || error.status >= 500;
-            if (!retryable || attempt === maxAttempts - 1) break;
-
-            // Perbarui SHA file tujuan sebelum retry; ini juga menangani respons yang hilang
-            // setelah GitHub sebenarnya berhasil menyimpan percobaan sebelumnya.
-            try {
-                const check = await fetchGithubWithRetry(apiUrl, {
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Accept': 'application/vnd.github+json'
-                    }
-                }, 2);
-                if (check.ok) {
-                    const current = await check.json();
-                    if (current.sha) requestPayload.sha = current.sha;
-                } else if (check.status === 404) {
-                    delete requestPayload.sha;
-                }
-            } catch (checkError) {
-                console.warn('Pemeriksaan ulang file sebelum retry gagal:', checkError);
-            }
-            if (onProgress) onProgress(0);
-            await githubRetryDelay(attempt);
-        }
-    }
-    throw new Error('Upload gagal setelah ' + maxAttempts + ' percobaan. Data file masih ada di formulir; periksa koneksi/token lalu coba simpan kembali. Detail: ' + (lastError.message || 'jaringan terputus'));
 }
 
 // Upload APK untuk aplikasi yang sudah ada. File lama ditimpa pada path yang sama.
@@ -915,78 +811,4 @@ async function saveAppFromForm() {
     closeModalDirect('appFormModal');
     renderAdminTable();
     renderApps();
-}
-
-async function updateMainJsOnGitHub(githubToken, onProgress) {
-    const repoOwnerAndName = 'sayut303-dot/sayuti.my.id';
-    const filePath = 'js/main.js';
-    const apiUrl = `https://api.github.com/repos/${repoOwnerAndName}/contents/${filePath}`;
-    let lastError;
-
-    // Baca ulang SHA setiap proses; pengiriman PUT memakai XHR bersama retry
-    // agar koneksi lambat/terputus tidak langsung menggagalkan sinkronisasi.
-    for (let attempt = 0; attempt < 4; attempt++) {
-        try {
-            const getRes = await fetchGithubWithRetry(apiUrl, {
-                headers: {
-                    'Authorization': 'Bearer ' + githubToken,
-                    'Accept': 'application/vnd.github+json'
-                }
-            }, 4);
-
-            if (!getRes.ok) {
-                let detail = '';
-                try { detail = (await getRes.json()).message || ''; } catch (e) {}
-                const error = new Error(detail || 'Gagal mengambil js/main.js dari GitHub (HTTP ' + getRes.status + ').');
-                error.status = getRes.status;
-                throw error;
-            }
-
-            const fileData = await getRes.json();
-            if (!fileData.sha || !fileData.content) {
-                throw new Error('GitHub tidak mengirim SHA atau isi js/main.js.');
-            }
-
-            const currentCode = decodeBase64Unicode(fileData.content);
-            const newDbAppsString = `let dbApps = ${JSON.stringify(dbApps, null, 4)};`;
-            const startIndex = currentCode.indexOf('let dbApps =');
-            const endIndex = currentCode.indexOf('let favorites =');
-
-            if (startIndex === -1 || endIndex === -1) {
-                throw new Error('Format file js/main.js tidak dikenali.');
-            }
-
-            const updatedCode = currentCode.substring(0, startIndex) +
-                newDbAppsString + '\n\n' + currentCode.substring(endIndex);
-
-            if (typeof onProgress === 'function') onProgress(10, 'Mengirim pembaruan katalog...');
-            const saved = await putGithubContentsWithProgress(apiUrl, githubToken, {
-                message: 'Update dbApps automatically via Admin Panel',
-                content: encodeBase64Unicode(updatedCode),
-                sha: fileData.sha
-            }, pct => {
-                if (typeof onProgress === 'function') {
-                    onProgress(10 + pct * 0.9, pct >= 100
-                        ? 'Katalog terkirim, menunggu konfirmasi GitHub...'
-                        : 'Menyimpan katalog (' + pct + '%)...');
-                }
-            });
-
-            if (!saved || !saved.content || !saved.commit) {
-                // Contents API umumnya mengembalikan content dan commit.
-                // Jika respons minimal, jangan menganggap proses gagal bila XHR sukses.
-                if (!saved) throw new Error('GitHub tidak mengonfirmasi penyimpanan katalog.');
-            }
-            return true;
-        } catch (error) {
-            lastError = error;
-            const retryable = !error.status || error.status === 408 || error.status === 409 ||
-                error.status === 429 || error.status >= 500;
-            if (!retryable || attempt === 3) break;
-            await githubRetryDelay(attempt);
-        }
-    }
-
-    throw new Error('Sinkronisasi katalog gagal setelah beberapa percobaan. Data formulir tetap tersedia; coba lagi saat koneksi stabil. Detail: ' +
-        (lastError && lastError.message ? lastError.message : 'jaringan terputus'));
 }
