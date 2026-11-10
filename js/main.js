@@ -261,7 +261,7 @@ function renderApps() {
             
             let iconContent = app.icon && app.icon.startsWith('fa-') 
                 ? `<i class="fa-solid ${app.icon}"></i>` 
-                : `<img src="${app.icon}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
+                : `<img src="${sayutiIconUrl(app.icon)}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" alt="${app.title}">`;
 
             let card = document.createElement('div');
             card.className = 'app-card';
@@ -459,6 +459,11 @@ function sayutiGetAdminSession() {
  }
  return shared;
 }
+// Ubah nama file logo R2 menjadi URL publik Worker agar browser tidak mencari file di folder halaman.
+function sayutiIconUrl(icon) {
+ if (!icon || icon.startsWith('fa-') || /^(https?:|data:|blob:|\/)/i.test(icon)) return icon;
+ return SAYUTI_UPLOAD_API + "/icon?path=" + encodeURIComponent(icon);
+}
 function sayutiClearAdminSession() {
  sayutiAdminSession = "";
  window.__sayutiAdminSession = "";
@@ -637,7 +642,7 @@ async function uploadApkOnly() {
  setQuickApkUploading(true);setQuickApkProgress(2,'Menyiapkan pembaruan...');
  try {
   if(apk){await sayutiUploadApk(apk,path,p=>setQuickApkProgress(5+p*(icon?0.68:0.82),'Mengirim APK ('+p+'%)...'));app.downloadUrl=path;app.format='APK File';setQuickApkProgress(icon?75:90,'APK tersimpan.');}
-  if(icon){setQuickApkProgress(apk?76:8,'Memproses logo baru...');const prepared=await sayutiPrepareQuickIcon(icon);const ps=apk?78:12, span=apk?14:72;await sayutiUploadIcon(prepared.blob,prepared.name,p=>setQuickApkProgress(ps+p*span/100,'Mengunggah logo ('+p+'%)...'));app.icon=prepared.name;}
+  if(icon){setQuickApkProgress(apk?76:8,'Memproses logo baru...');const prepared=await sayutiPrepareQuickIcon(icon);const ps=apk?78:12, span=apk?14:72;const uploadedIcon=await sayutiUploadIcon(prepared.blob,prepared.name,p=>setQuickApkProgress(ps+p*span/100,'Mengunggah logo ('+p+'%)...'));app.icon=(uploadedIcon.url||uploadedIcon.publicUrl||uploadedIcon.public_url||uploadedIcon.fileUrl||uploadedIcon.file_url||'')||prepared.name;}
   setQuickApkProgress(94,'Menyinkronkan katalog aplikasi...');
   await sayutiSyncCatalog((p,m)=>setQuickApkProgress(94+p*0.06,m));
   setQuickApkProgress(100,'Pembaruan aplikasi selesai!');renderAdminTable();renderApps();
