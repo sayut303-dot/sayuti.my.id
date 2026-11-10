@@ -81,6 +81,15 @@ function validPath(path) {
     /^[a-zA-Z0-9._/ -]+$/.test(path) &&
     path.toLowerCase().endsWith(".apk");
 }
+
+function validIconPath(path) {
+  return typeof path === "string" &&
+    path.length > 0 && path.length <= 180 &&
+    !path.startsWith("/") && !path.includes("..") &&
+    /^logo_[a-zA-Z0-9._-]+$/.test(path) &&
+    /\.(png|jpe?g|webp|svg)$/i.test(path);
+}
+
 async function github(path, token) {
   const url = "https://api.github.com/repos/" + REPO + "/contents/" +
     path.split("/").map(encodeURIComponent).join("/") + "?ref=" + BRANCH;
@@ -219,6 +228,49 @@ export default {
         message: "APK berhasil disimpan pada lokasi yang sama."
       }, 200, cors);
     }
+
+    if (url.pathname === "/icon" && request.method === "POST") {
+      if (!env.GITHUB_TOKEN || !env.SESSION_SECRET) return json({ ok: false, error: "Worker belum dikonfigurasi." }, 503, cors);
+      if (!(await validSession(request, env.SESSION_SECRET))) return json({ ok: false, error: "Sesi admin habis. Login kembali." }, 401, cors);
+      const path = url.searchParams.get("path") || "";
+      if (!validIconPath(path)) return json({ ok: false, error: "Nama file logo tidak valid." }, 400, cors);
+      const contentType = request.headers.get("Content-Type") || "";
+      const allowedTypes = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
+      if (!allowedTypes.includes(contentType)) return json({ ok: false, error: "Format logo tidak didukung." }, 415, cors);
+      const declared = Number(request.headers.get("Content-Length") || 0);
+      if (declared > 5 * 1024 * 1024) return json({ ok: false, error: "Ukuran logo maksimal 5 MB." }, 413, cors);
+      const bytes = new Uint8Array(await request.arrayBuffer());
+      if (!bytes.length) return json({ ok: false, error: "File logo kosong." }, 400, cors);
+      if (bytes.length > 5 * 1024 * 1024) return json({ ok: false, error: "Ukuran logo maksimal 5 MB." }, 413, cors);
+      const apiUrl = "https://api.github.com/repos/" + REPO + "/contents/" +
+        path.split("/").map(encodeURIComponent).join("/");
+      const put = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + env.GITHUB_TOKEN,
+          "Accept": "application/vnd.github+json",
+          "Content-Type": "application/json",
+          "User-Agent": "SayutiHub-Cloudflare-Worker",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        body: JSON.stringify({
+          message: "Upload logo aplikasi: " + path,
+          content: toBase64(bytes),
+          branch: BRANCH
+        })
+      });
+      const result = await put.json().catch(() => ({}));
+      if (!put.ok) return json({
+        ok: false,
+        error: result.message || ("GitHub menolak upload logo (HTTP " + put.status + ")."),
+        status: put.status
+      }, put.status, cors);
+      if (!result.content || result.content.path !== path || !result.commit) {
+        return json({ ok: false, error: "GitHub belum mengonfirmasi penyimpanan logo." }, 502, cors);
+      }
+      return json({ ok: true, path, sha: result.content.sha, commit: result.commit.sha }, 200, cors);
+    }
+
     return json({ ok: false, error: "Endpoint tidak ditemukan." }, 404, cors);
   }
 };
