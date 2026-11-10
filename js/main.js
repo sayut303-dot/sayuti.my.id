@@ -753,7 +753,7 @@ async function saveAppFromForm() {
             }
             const iconFileName = 'logo_' + Date.now() + '_' + uploadName;
             setAppFormProgress(82, 'Mengunggah logo melalui server...');
-            await sayutiUploadIcon(uploadBlob, iconFileName, pct => {
+            await sayutiUploadIcon(new Blob([uploadBlob], { type: uploadBlob.type || detectedType }), iconFileName, pct => {
                 setAppFormProgress(82 + pct * 0.06, 'Mengunggah logo (' + pct + '%)...');
             });
             iconValue = iconFileName;
