@@ -88,6 +88,7 @@ async function github(path, token) {
     headers: {
       "Authorization": "Bearer " + token,
       "Accept": "application/vnd.github+json",
+      "User-Agent": "SayutiHub-Cloudflare-Worker",
       "X-GitHub-Api-Version": "2022-11-28"
     }
   });
@@ -126,6 +127,7 @@ export default {
       const get = await fetch(getUrl, { headers: {
         "Authorization": "Bearer " + env.GITHUB_TOKEN,
         "Accept": "application/vnd.github+json",
+        "User-Agent": "SayutiHub-Cloudflare-Worker",
         "X-GitHub-Api-Version": "2022-11-28"
       }});
       if (!get.ok) return json({ ok: false, error: "Gagal membaca katalog GitHub (HTTP " + get.status + ")." }, get.status, cors);
@@ -190,6 +192,7 @@ export default {
           "Authorization": "Bearer " + env.GITHUB_TOKEN,
           "Accept": "application/vnd.github+json",
           "Content-Type": "application/json",
+          "User-Agent": "SayutiHub-Cloudflare-Worker",
           "X-GitHub-Api-Version": "2022-11-28"
         },
         body: JSON.stringify(payload)
