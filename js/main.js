@@ -1,3 +1,22 @@
+// Toast helper global: memakai elemen #toast yang sudah tersedia di index.html.
+window.showToast = window.showToast || function(message) {
+    const toast = document.getElementById('toast');
+    const msg = document.getElementById('toastMsg');
+    if (!toast) {
+        console.info('[SayutiHub]', message);
+        return;
+    }
+    if (msg) msg.textContent = String(message || '');
+    toast.classList.add('show');
+    if (window._sayutiToastTimer) window.clearTimeout(window._sayutiToastTimer);
+    window._sayutiToastTimer = window.setTimeout(function() {
+        toast.classList.remove('show');
+    }, 2600);
+};
+function showToast(message) {
+    return window.showToast(message);
+}
+
 let dbApps = [
     {
         "id": 1,
