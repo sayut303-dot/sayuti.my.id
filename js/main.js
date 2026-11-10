@@ -1,5 +1,5 @@
-// Toast helper global: memakai elemen #toast yang sudah tersedia di index.html.
-window.showToast = window.showToast || function(message) {
+// Toast helper global: implementasi dipisah agar tidak memanggil dirinya sendiri.
+function sayutiShowToastImpl(message) {
     const toast = document.getElementById('toast');
     const msg = document.getElementById('toastMsg');
     if (!toast) {
@@ -12,9 +12,10 @@ window.showToast = window.showToast || function(message) {
     window._sayutiToastTimer = window.setTimeout(function() {
         toast.classList.remove('show');
     }, 2600);
-};
+}
+window.showToast = sayutiShowToastImpl;
 function showToast(message) {
-    return window.showToast(message);
+    return sayutiShowToastImpl(message);
 }
 
 let dbApps = [
