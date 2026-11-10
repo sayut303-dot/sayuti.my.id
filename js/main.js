@@ -500,6 +500,19 @@ async function sayutiUploadIcon(file, path, onProgress) {
  });
 }
 
+
+// Menyiapkan logo untuk upload cepat saat update aplikasi.
+async function sayutiPrepareQuickIcon(file) {
+ const originalName=file.name||'logo'; const extension=originalName.split('.').pop().toLowerCase();
+ const detectedType=file.type||({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',svg:'image/svg+xml'}[extension]||'');
+ if(!['image/png','image/jpeg','image/webp','image/svg+xml'].includes(detectedType)) throw new Error('Format logo tidak didukung. Gunakan PNG, JPG, WebP, atau SVG.');
+ let blob=file; let name=originalName.replace(/[^a-zA-Z0-9._-]/g,'_').replace(/_+/g,'_');
+ if(detectedType!=='image/svg+xml') { try { const bitmap=await createImageBitmap(file); const scale=Math.min(1,1024/Math.max(bitmap.width,bitmap.height)); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(bitmap.width*scale)); canvas.height=Math.max(1,Math.round(bitmap.height*scale)); const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Browser tidak dapat memproses gambar.'); ctx.drawImage(bitmap,0,0,canvas.width,canvas.height); bitmap.close(); blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Kompresi gambar gagal.')),'image/webp',0.88)); name=name.replace(/\\.[^.]+$/,'')+'.webp'; } catch(e) { console.warn('Kompresi logo gagal:',e); if(file.size>5*1024*1024) throw new Error('Gambar terlalu besar untuk diproses.'); } }
+ else if(file.size>5*1024*1024) throw new Error('SVG terlalu besar (maksimal 5 MB).');
+ if(blob.size>5*1024*1024) throw new Error('Ukuran logo setelah diproses masih lebih dari 5 MB.');
+ return {blob:new Blob([blob],{type:blob.type||detectedType}),name:'logo_'+Date.now()+'_'+name};
+}
+
 async function sayutiSyncCatalog(onProgress) {
  const session = sayutiGetAdminSession();
  if(!session)throw new Error("Sesi admin belum aktif. Silakan login kembali melalui panel Admin.");if(onProgress)onProgress(10,"Mengirim data katalog...");
@@ -548,8 +561,12 @@ function openQuickApkUpload(appId) {
     quickApkAppId = app.id;
     const title = document.getElementById('quickApkAppTitle');
     const fileInput = document.getElementById('quickApkFile');
+    const iconInput = document.getElementById('quickApkIconFile');
     if (title) title.textContent = app.title;
     if (fileInput) fileInput.value = '';
+    if (iconInput) iconInput.value = '';
+    const progressWrap = document.getElementById('quickApkProgressWrap');
+    if (progressWrap) progressWrap.style.display = 'none';
     const modal = document.getElementById('quickApkModal');
     if (modal) modal.classList.add('active');
 }
@@ -572,6 +589,7 @@ function setQuickApkProgress(percent, message) {
 function setQuickApkUploading(isUploading) {
     const button = document.querySelector('#quickApkModal button[onclick="uploadApkOnly()"]');
     const fileInput = document.getElementById('quickApkFile');
+    const iconInput = document.getElementById('quickApkIconFile');
     if (button) {
         button.disabled = isUploading;
         button.style.opacity = isUploading ? '0.65' : '1';
@@ -581,6 +599,7 @@ function setQuickApkUploading(isUploading) {
             : '<i class="fa-solid fa-upload"></i> Upload dan Ganti APK Lama';
     }
     if (fileInput) fileInput.disabled = isUploading;
+    if (iconInput) iconInput.disabled = isUploading;
 }
 
 function readFileAsBase64WithProgress(file, onProgress) {
@@ -605,13 +624,27 @@ function readFileAsBase64WithProgress(file, onProgress) {
 
 // Upload APK untuk aplikasi yang sudah ada. File lama ditimpa pada path yang sama.
 async function uploadApkOnly() {
- const app=dbApps.find(item=>String(item.id)===String(quickApkAppId));const input=document.getElementById("quickApkFile");const file=input&&input.files?input.files[0]:null;
- if(!app){alert("Pilih aplikasi yang akan diperbarui.");return;}if(!file){alert("Pilih file APK terbaru terlebih dahulu.");return;}if(!/\.apk$/i.test(file.name)){alert("File harus berformat .apk");return;}if(file.size>25*1024*1024){alert("Ukuran APK maksimal 25 MB.");return;}
- const old=typeof app.downloadUrl==="string"?app.downloadUrl.trim():"";const local=old&&old!=="#"&&!/^https?:\/\//i.test(old)&&!/^data:/i.test(old)&&!old.startsWith("/");const path=local?old:file.name;
- setQuickApkUploading(true);setQuickApkProgress(2,"Menyiapkan upload...");
- try{await sayutiUploadApk(file,path,p=>setQuickApkProgress(5+p*.82,"Mengirim APK ("+p+"%)..."));app.downloadUrl=path;app.format="APK File";setQuickApkProgress(90,"APK tersimpan. Menyinkronkan katalog...");
- await sayutiSyncCatalog((p,m)=>setQuickApkProgress(90+p*.1,m));setQuickApkProgress(100,"Pembaruan APK selesai!");renderAdminTable();renderApps();showToast("APK berhasil diganti. Tautan unduhan tetap sama.");window.setTimeout(()=>closeModalDirect("quickApkModal"),900);}
- catch(e){console.error("Upload APK gagal:",e);setQuickApkProgress(0,"Gagal: "+e.message);alert("Gagal memperbarui APK: "+e.message);}finally{setQuickApkUploading(false);}
+ const app=dbApps.find(item=>String(item.id)===String(quickApkAppId));
+ const ai=document.getElementById('quickApkFile'), ii=document.getElementById('quickApkIconFile');
+ const apk=ai&&ai.files?ai.files[0]:null, icon=ii&&ii.files?ii.files[0]:null;
+ if(!app){alert('Pilih aplikasi yang akan diperbarui.');return;}
+ if(!apk&&!icon){alert('Pilih APK terbaru, logo baru, atau keduanya.');return;}
+ if(apk&&!/\\.apk$/i.test(apk.name)){alert('File harus berformat .apk');return;}
+ if(apk&&apk.size>25*1024*1024){alert('Ukuran APK maksimal 25 MB.');return;}
+ const old=typeof app.downloadUrl==='string'?app.downloadUrl.trim():'';
+ const local=old&&old!=='#'&&!/^https?:\\/\\//i.test(old)&&!/^data:/i.test(old)&&!old.startsWith('/');
+ const path=local?old:(apk?apk.name:old);
+ setQuickApkUploading(true);setQuickApkProgress(2,'Menyiapkan pembaruan...');
+ try {
+  if(apk){await sayutiUploadApk(apk,path,p=>setQuickApkProgress(5+p*(icon?0.68:0.82),'Mengirim APK ('+p+'%)...'));app.downloadUrl=path;app.format='APK File';setQuickApkProgress(icon?75:90,'APK tersimpan.');}
+  if(icon){setQuickApkProgress(apk?76:8,'Memproses logo baru...');const prepared=await sayutiPrepareQuickIcon(icon);const ps=apk?78:12, span=apk?14:72;await sayutiUploadIcon(prepared.blob,prepared.name,p=>setQuickApkProgress(ps+p*span/100,'Mengunggah logo ('+p+'%)...'));app.icon=prepared.name;}
+  setQuickApkProgress(94,'Menyinkronkan katalog aplikasi...');
+  await sayutiSyncCatalog((p,m)=>setQuickApkProgress(94+p*0.06,m));
+  setQuickApkProgress(100,'Pembaruan aplikasi selesai!');renderAdminTable();renderApps();
+  showToast(apk&&icon?'APK dan logo berhasil diperbarui.':(apk?'APK berhasil diganti. Tautan unduhan tetap sama.':'Logo aplikasi berhasil diperbarui.'));
+  window.setTimeout(()=>closeModalDirect('quickApkModal'),900);
+ }catch(e){console.error('Pembaruan aplikasi gagal:',e);setQuickApkProgress(0,'Gagal: '+e.message);alert('Gagal memperbarui aplikasi: '+e.message);}
+ finally{setQuickApkUploading(false);}
 }
 
 function openAppFormModal(appId = null) {
