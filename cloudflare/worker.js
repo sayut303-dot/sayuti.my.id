@@ -146,6 +146,7 @@ export default {
         "Authorization": "Bearer " + env.GITHUB_TOKEN,
         "Accept": "application/vnd.github+json",
         "Content-Type": "application/json",
+        "User-Agent": "SayutiHub-Cloudflare-Worker",
         "X-GitHub-Api-Version": "2022-11-28"
       }, body: JSON.stringify({
         message: "Perbarui katalog aplikasi SayutiHub melalui Admin",
@@ -154,7 +155,10 @@ export default {
         branch: BRANCH
       })});
       const result = await put.json().catch(() => ({}));
-      if (!put.ok) return json({ ok: false, error: result.message || "GitHub menolak pembaruan katalog." }, put.status, cors);
+      if (!put.ok) {
+        const detail = result.message || result.errors?.map(e => e.message || e.code).join("; ") || ("HTTP " + put.status);
+        return json({ ok: false, error: "GitHub menolak pembaruan katalog (HTTP " + put.status + "): " + detail }, put.status, cors);
+      }
       if (!result.commit || !result.content) return json({ ok: false, error: "GitHub belum mengonfirmasi commit katalog." }, 502, cors);
       return json({ ok: true, commit: result.commit.sha, message: "Katalog berhasil disinkronkan." }, 200, cors);
     }
