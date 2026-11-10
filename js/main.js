@@ -416,6 +416,18 @@ function renderAnalytics() {
     if(document.getElementById('statTotalReviews')) document.getElementById('statTotalReviews').innerText = totalRev;
 }
 
+// Helper modal global: dipakai oleh tombol tutup, overlay, dan alur login.
+function closeModalDirect(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('active');
+}
+
+function closeModal(event, modalId) {
+    if (event && event.target === event.currentTarget) {
+        closeModalDirect(modalId);
+    }
+}
+
 function openAdminLoginModal() { 
     let modal = document.getElementById('adminLoginModal');
     if(modal) modal.classList.add('active'); 
