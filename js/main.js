@@ -84,7 +84,7 @@ let dbApps = [
         "shortDesc": "Nikmati hiburan streaming film dan serial dalam satu aplikasi dengan tampilan praktis dan pemutar video terintegrasi.",
         "fullDesc": "Nonton adalah aplikasi hiburan streaming yang memudahkan Anda menjelajahi dan menikmati berbagai tayangan film serta serial melalui satu tempat. Dengan tampilan sederhana dan navigasi yang praktis, Anda dapat membuka katalog tayangan dan memutar video langsung dari aplikasi.\n\nFitur utama:\n🎬 Akses halaman katalog streaming film dan serial\n▶️ Pemutaran video melalui pemutar terintegrasi\n📱 Praktis digunakan langsung dari perangkat Android\n🌐 Terhubung ke layanan streaming VidBox\n✨ Antarmuka sederhana untuk pengalaman menonton yang nyaman\n\nCatatan: Ketersediaan tayangan dan pemutaran bergantung pada layanan streaming serta koneksi internet. Nonton bukan aplikasi resmi Netflix dan tidak berafiliasi dengan Netflix.",
         "version": "v1.0.0",
-        "format": "APK • 650 KB",
+        "format": "APK File",
         "downloads": 0,
         "downloadUrl": "Nonton.apk",
         "changelog": "Rilis perdana aplikasi Nonton dengan akses streaming dan pemutar video terintegrasi.",
@@ -92,6 +92,7 @@ let dbApps = [
         "reviews": []
     }
 ];
+
 let favorites = (() => {
     try {
         const savedFavorites = JSON.parse(localStorage.getItem('sayuti_favs') || '[]');
