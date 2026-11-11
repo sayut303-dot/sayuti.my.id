@@ -99,3 +99,16 @@ body{display:flex;flex-direction:column;min-height:100vh}
     will-change: auto;
   }
 }
+
+
+/* Sedikit memperbesar dan memiringkan ilustrasi hero */
+.hero-visual {
+  transform: scale(1.07) rotate(-2deg);
+  transform-origin: center;
+}
+@media (max-width: 600px) {
+  .hero-visual {
+    transform: scale(1.04) rotate(-1.5deg);
+    transform-origin: center top;
+  }
+}
