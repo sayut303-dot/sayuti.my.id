@@ -126,6 +126,22 @@ let dbApps = [
         "changelog": "Rilis perdana Dopamine TV v1.0.6.",
         "screenshots": [],
         "reviews": []
+    },
+    {
+        "id": 1794320000002,
+        "title": "Resistor",
+        "category": "tools",
+        "status": "New",
+        "icon": "fa-bolt",
+        "shortDesc": "Kalkulator resistor DIP (color band 4/5) dan SMD (3 digit, 4 digit, EIA-96).",
+        "fullDesc": "Aplikasi kalkulator resistor lengkap untuk menghitung nilai resistor dari gelang warna DIP 4 band dan 5 band, serta kode SMD 3 digit, 4 digit, dan EIA-96. Tampilan pilihan warna interaktif, hasil dalam Ω/kΩ/MΩ/GΩ dengan toleransi. Cocok untuk teknisi elektronik dan hobi.\\n\\nFitur utama:\\n⚡ Kalkulator DIP 4 band & 5 band\\n🔢 Kode SMD 3 digit & 4 digit\\n🔤 Kode EIA-96\\n🎨 Pilihan warna visual\\n📱 Ringan dan mudah digunakan\\n\\nCatatan: Gunakan sebagai alat bantu; selalu verifikasi dengan multimeter bila perlu.",
+        "version": "1.8",
+        "format": "APK File",
+        "downloads": 0,
+        "downloadUrl": "Resistor-1.8.apk",
+        "changelog": "Rilis perdana Resistor v1.8 dengan DIP 4/5 band, SMD 3/4 digit, EIA-96, dan icon aplikasi.",
+        "screenshots": [],
+        "reviews": []
     }
 ];
 
