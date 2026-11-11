@@ -41,3 +41,61 @@ body{display:flex;flex-direction:column;min-height:100vh}
 .progress-bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#6366f1,#22d3ee);transition:width .2s}
 
 :root{--text-muted:#9aa8bd;--text-soft:#cbd5e1;--border-color:rgba(255,255,255,.09);--card-bg:#111827;--accent:#818cf8}
+
+
+/* Animasi ilustrasi utama pada bagian depan SayutiHub */
+.hero-visual {
+  perspective: 900px;
+}
+
+.visual-card-main {
+  transform-origin: center;
+  animation: sayutiHeroFloat 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.visual-card-float.float-one {
+  animation: sayutiBadgeFloat 4.2s ease-in-out infinite;
+}
+
+.visual-card-float.float-two {
+  animation: sayutiBadgeFloat 4.8s ease-in-out infinite;
+  animation-delay: -1.4s;
+}
+
+.visual-card-float.float-three {
+  animation: sayutiBadgeFloat 4.5s ease-in-out infinite;
+  animation-delay: -2.2s;
+}
+
+.visual-orbit.orbit-one {
+  animation: sayutiOrbit 18s linear infinite;
+}
+
+.visual-orbit.orbit-two {
+  animation: sayutiOrbit 24s linear infinite reverse;
+}
+
+@keyframes sayutiHeroFloat {
+  0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+  50% { transform: translateY(-12px) rotateX(2deg) rotateY(-2deg); }
+}
+
+@keyframes sayutiBadgeFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-9px) rotate(5deg); }
+}
+
+@keyframes sayutiOrbit {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visual-card-main,
+  .visual-card-float,
+  .visual-orbit {
+    animation: none !important;
+    will-change: auto;
+  }
+}
