@@ -112,3 +112,298 @@ body{display:flex;flex-direction:column;min-height:100vh}
     transform-origin: center top;
   }
 }
+
+
+/* =========================================================
+   RESPONSIVE MOBILE LAYOUT — SayutiHub
+   ========================================================= */
+img, video, iframe, canvas, svg {
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button, .nav-btn, .hero-btn, .filter-btn, .fav-btn-card {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (max-width: 900px) {
+  nav {
+    padding: 12px 4%;
+    gap: 12px;
+  }
+  .hero {
+    gap: 28px;
+  }
+  .hero-content {
+    min-width: 0;
+  }
+  .app-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    scroll-padding-top: 76px;
+  }
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+  nav {
+    position: sticky;
+    padding: 10px 4%;
+    min-height: 64px;
+    gap: 8px;
+  }
+  .brand {
+    min-width: 0;
+    gap: 8px;
+  }
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border-radius: 11px;
+  }
+  .brand-name {
+    font-size: 14px;
+  }
+  .brand-sub {
+    font-size: 7px;
+    letter-spacing: .8px;
+  }
+  .nav-actions {
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+  .nav-btn {
+    min-height: 40px;
+    padding: 0 10px;
+    gap: 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding: 34px 5% 28px;
+  }
+  .hero-content {
+    width: 100%;
+    max-width: none;
+  }
+  .hero h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -1.5px;
+    overflow-wrap: anywhere;
+  }
+  .hero-description {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .hero-btn {
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 9px;
+    font-size: 10px;
+    white-space: normal;
+  }
+  .hero-visual {
+    display: block;
+    width: min(100%, 330px);
+    min-width: 0;
+    min-height: 190px;
+    margin: 8px auto 0;
+    transform: scale(.98) rotate(-1deg);
+    transform-origin: center top;
+  }
+  .visual-card-main {
+    width: min(100%, 290px);
+    margin: 0 auto;
+  }
+  .visual-card-float {
+    width: 36px;
+    height: 36px;
+  }
+  .container {
+    width: 92%;
+    max-width: 100%;
+    padding: 26px 0 34px;
+  }
+  .section-heading {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .section-heading h2 {
+    font-size: 20px;
+  }
+  .section-heading p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .controls-wrapper {
+    padding: 12px;
+    border-radius: 14px;
+  }
+  .search-sort-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+  }
+  .search-box, .sort-select {
+    width: 100%;
+    min-height: 46px;
+    font-size: 13px;
+  }
+  .filter-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 7px;
+    margin: 12px -2px 0;
+    padding: 2px 2px 7px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-btn {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 8px 11px;
+    font-size: 10px;
+  }
+  .app-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .app-card {
+    min-height: 0;
+    padding: 15px;
+    gap: 12px;
+    border-radius: 15px;
+  }
+  .app-header {
+    gap: 10px;
+    padding-right: 24px;
+  }
+  .app-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+  }
+  .app-title-group h3 {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .app-desc {
+    margin: 8px 0;
+    font-size: 11px;
+    line-height: 1.65;
+  }
+  .app-meta {
+    flex-wrap: wrap;
+    font-size: 10px;
+  }
+  .btn-download {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .dashboard-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stats-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+  }
+  .stat-card {
+    padding: 13px;
+  }
+  .admin-table-wrapper {
+    max-width: 100%;
+    padding: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-table-wrapper table {
+    min-width: 620px;
+  }
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 10px;
+  }
+  .modal-container {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 20px);
+    padding: 22px 16px;
+    border-radius: 18px 18px 14px 14px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .form-control {
+    min-height: 46px;
+    font-size: 16px;
+  }
+  textarea.form-control {
+    min-height: 90px;
+  }
+  .modal-close {
+    width: 38px;
+    height: 38px;
+  }
+  footer {
+    padding: 22px 5%;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 380px) {
+  nav {
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+  .brand-sub {
+    display: none;
+  }
+  .nav-btn {
+    padding: 0 8px;
+    font-size: 10px;
+  }
+  .hero-actions {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    transform: scale(.92) rotate(-1deg);
+    margin-bottom: -10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
