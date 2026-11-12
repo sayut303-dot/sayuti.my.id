@@ -135,11 +135,11 @@ let dbApps = [
         "icon": "Resistor-icon.png",
         "shortDesc": "Kalkulator resistor DIP (color band 4/5) dan SMD (3 digit, 4 digit, EIA-96).",
         "fullDesc": "Aplikasi kalkulator resistor lengkap untuk menghitung nilai resistor dari gelang warna DIP 4 band dan 5 band, serta kode SMD 3 digit, 4 digit, dan EIA-96. Tampilan pilihan warna interaktif, hasil dalam Ω/kΩ/MΩ/GΩ dengan toleransi. Cocok untuk teknisi elektronik dan hobi.\\n\\nFitur utama:\\n⚡ Kalkulator DIP 4 band & 5 band\\n🔢 Kode SMD 3 digit & 4 digit\\n🔤 Kode EIA-96\\n🎨 Pilihan warna visual\\n📱 Ringan dan mudah digunakan\\n\\nCatatan: Gunakan sebagai alat bantu; selalu verifikasi dengan multimeter bila perlu.",
-        "version": "2.0",
+        "version": "2.8",
         "format": "APK File",
         "downloads": 0,
-        "downloadUrl": "Resistor-2.0.apk",
-        "changelog": "Resistor v2.0: tambahan DIP 6 band (temp coefficient), kalkulator Seri & Paralel, perbaikan DIP4, tema terang, dan icon aplikasi.",
+        "downloadUrl": "Resistor-2.8.apk",
+        "changelog": "Resistor v2.8: SMD pakai spinner angka + visual kode, DIP 4/5/6 dengan gambar resistor real-time, Seri & Paralel, state tersimpan, icon adaptive.",
         "screenshots": [],
         "reviews": []
     }
