@@ -143,6 +143,23 @@ let dbApps = [
         "screenshots": [],
         "reviews": []
     }
+],
+    {
+        "id": 1794320000003,
+        "title": "CloudA6000 Remote",
+        "category": "tools",
+        "status": "New",
+        "icon": "fa-cloud",
+        "shortDesc": "Panel kontrol remote untuk server Cloud A6000 (monitoring GPU, manajemen job render, terminal). File ZIP dilindungi password.",
+        "fullDesc": "Aplikasi klien resmi untuk mengakses dashboard Cloud A6000 dari Android. Fitur: monitoring GPU real-time (suhu, VRAM, utilization), manajemen job render video (submit, status, download hasil), terminal remote, manajemen file, dan notifikasi job selesai. File distribusi berupa ZIP terenkripsi AES-256 dengan password untuk keamanan.",
+        "version": "1.13",
+        "format": "ZIP (password protected)",
+        "downloads": 0,
+        "downloadUrl": "CloudA6000-1.13-password.zip",
+        "changelog": "v1.13: Dukungan render queue baru, perbaikan koneksi WebSocket, UI responsif untuk layar mobile.",
+        "screenshots": [],
+        "reviews": []
+    }
 ];
 
 let favorites = (() => {
