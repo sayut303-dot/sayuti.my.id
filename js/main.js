@@ -158,8 +158,7 @@ let dbApps = [
         "changelog": "v1.13: Dukungan render queue baru, perbaikan koneksi WebSocket, UI responsif untuk layar mobile.",
         "screenshots": [],
         "reviews": []
-    }
-},
+    },
     {
         "id": 1794320000004,
         "title": "Vidioplayer",
