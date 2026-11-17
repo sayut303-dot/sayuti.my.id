@@ -142,8 +142,7 @@ let dbApps = [
         "changelog": "Resistor v2.8: SMD pakai spinner angka + visual kode, DIP 4/5/6 dengan gambar resistor real-time, Seri & Paralel, state tersimpan, icon adaptive.",
         "screenshots": [],
         "reviews": []
-    }
-],
+    },
     {
         "id": 1794320000003,
         "title": "CloudA6000 Remote",
