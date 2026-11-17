@@ -159,6 +159,23 @@ let dbApps = [
         "screenshots": [],
         "reviews": []
     }
+},
+    {
+        "id": 1794320000004,
+        "title": "Vidioplayer",
+        "category": "android",
+        "status": "New",
+        "icon": "vidioplayer-icon.jpg",
+        "shortDesc": "Pemutar video universal dengan dukungan hardware decoding, subtitle, dan streaming jaringan.",
+        "fullDesc": "Vidioplayer adalah pemutar video serbaguna untuk Android yang mendukung hampir semua format video (MP4, MKV, AVI, MOV, FLV, dll). Fitur: hardware decoding (MediaCodec), dukungan subtitle (SRT, ASS, VTT), streaming URL (HLS, DASH), pengaturan kecepatan putar, gesture kontrol volume/brightness/seek, playlist, dan UI modern material design.",
+        "version": "1.0.0",
+        "format": "APK File",
+        "downloads": 0,
+        "downloadUrl": "Vidioplayer.apk",
+        "changelog": "Rilis perdana Vidioplayer v1.0.0.",
+        "screenshots": [],
+        "reviews": []
+    }
 ];
 
 let favorites = (() => {
