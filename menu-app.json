@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updated": "2026-11-23",
+  "menu": [
+    {
+      "id": "home",
+      "label": "Beranda",
+      "icon": "fa-house",
+      "action": "view:home",
+      "badge": null
+    },
+    {
+      "id": "apps",
+      "label": "Aplikasi",
+      "icon": "fa-cubes-stacked",
+      "action": "view:apps",
+      "badge": null
+    },
+    {
+      "id": "favorites",
+      "label": "Favorit",
+      "icon": "fa-heart",
+      "action": "view:favorites",
+      "badge": "favCount"
+    },
+    {
+      "id": "updates",
+      "label": "Cek Update",
+      "icon": "fa-arrows-rotate",
+      "action": "checkUpdate",
+      "badge": null
+    },
+    {
+      "id": "github",
+      "label": "Repo GitHub",
+      "icon": "fa-brands fa-github",
+      "action": "url:https://github.com/sayut303-dot/sayuti.my.id",
+      "external": true,
+      "badge": null
+    },
+    {
+      "id": "settings",
+      "label": "Pengaturan",
+      "icon": "fa-gear",
+      "action": "view:settings",
+      "badge": null
+    }
+  ],
+  "appConfig": {
+    "showHero": false,
+    "showFilterTabs": false,
+    "showSearch": true,
+    "defaultView": "apps",
+    "compactCards": true,
+    "pullToRefresh": true
+  }
+}

@@ -12,19 +12,18 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
   <meta content="SayutiHub — pusat aplikasi, marketplace digital, unduhan APK dan software dengan tampilan modern." name="description">
-  <title>SayutiHub — Pusat Aplikasi &amp; Marketplace Jawa</title>
+  <title>SayutiHub — Pusat Aplikasi & Marketplace Jawa</title>
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Main CSS -->
-  <link href="css/style.css?v=12" rel="stylesheet">
-  
-  
- 
-</head>
+  <link href="css/style.css?v=13" rel="stylesheet">
+  <!-- App-specific CSS (injected via script) -->
+  <style id="appStyles"></style>
+ </head>
  <body>
   <!-- =========================================================
          BACKGROUND
@@ -32,9 +31,9 @@
   <div class="glow-orb glow-1"></div>
   <div class="glow-orb glow-2"></div>
   <!-- =========================================================
-         NAVIGATION
+         TOP NAV (Web only) / App Header (App only)
     ========================================================== -->
-  <nav aria-label="Navigasi utama">
+  <nav id="topNav" aria-label="Navigasi utama" class="top-nav">
    <div aria-label="Kembali ke halaman utama" class="brand" onclick="switchView('home')" role="button" tabindex="0">
     <div class="brand-icon">
      <i class="fa-solid fa-cubes-stacked"></i>
@@ -43,21 +42,42 @@
      <span class="brand-name"> SayutiHub </span> <span class="brand-sub"> DIGITAL APP MARKETPLACE • v3 </span>
     </div>
    </div>
-   <div class="nav-actions">
+   <div class="nav-actions" id="navActions">
        <button aria-label="Aplikasi favorit" class="nav-btn" onclick="switchView('favorites')"><i class="fa-solid fa-heart"></i> <span>Favorit</span> <span id="favCount">0</span></button>
        <a href="https://sayuti.my.id" class="nav-btn primary-action" aria-label="Install SayutiHub App" style="text-decoration:none" id="downloadAppBtn"><i class="fa-solid fa-mobile-screen-button"></i> <span>Download App</span></a>
      </div>
   </nav>
-  <!-- App-only banner (hidden on web) -->
-  <div id="appBanner" style="display:none; background:linear-gradient(135deg,#6366f1,#8b5cf6); padding:12px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1);">
-   <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
-    <i class="fa-solid fa-mobile-screen-button" style="font-size:1.2rem;"></i>
-    <span style="font-weight:600; color:#fff;">Anda sudah di aplikasi SayutiHub</span>
-    <a href="https://github.com/sayut303-dot/sayuti.my.id" target="_blank" class="nav-btn" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);"><i class="fa-brands fa-github"></i> Repo GitHub</a>
+  <!-- App-only header (replaces topNav in app mode) -->
+  <header id="appHeader" style="display:none; position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(15,23,42,.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,.05); padding:10px 16px;">
+   <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; max-width:480px; margin:0 auto;">
+    <div class="brand" onclick="switchView('home')" style="cursor:pointer;">
+     <div class="brand-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+     <div class="brand-text"><span class="brand-name">SayutiHub</span></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+     <button id="appMenuBtn" class="nav-btn" onclick="toggleAppDrawer()" aria-label="Menu" style="padding:8px;"><i class="fa-solid fa-bars"></i></button>
+    </div>
+   </div>
+  </header>
+  <!-- App Drawer (slide-in menu) -->
+  <div id="appDrawer" class="app-drawer" aria-hidden="true">
+   <div class="app-drawer-backdrop" onclick="closeAppDrawer()"></div>
+   <div class="app-drawer-panel">
+    <div class="app-drawer-header">
+     <div class="brand" onclick="closeAppDrawer(); switchView('home')">
+      <div class="brand-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+      <div class="brand-text"><span class="brand-name">SayutiHub</span></div>
+     </div>
+     <button class="nav-btn" onclick="closeAppDrawer()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <nav id="appDrawerMenu" class="app-drawer-menu"></nav>
+    <div class="app-drawer-footer">
+     <div style="font-size:0.7rem; color:var(--text-muted); text-align:center; padding:12px;">SayutiHub v<span id="appVersion">1.0</span></div>
+    </div>
    </div>
   </div>
   <!-- Web-only download banner -->
-  <div id="webBanner" style="display:none; background:linear-gradient(135deg,#22c55e,#16a34a); padding:14px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1); position:relative;">
+  <div id="webBanner" style="display:none; background:linear-gradient(135deg,#22c55e,#16a34a); padding:14px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1); position:relative; margin-top:56px;">
    <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
     <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.2); display:grid; place-items:center;">
      <i class="fa-solid fa-mobile-screen-button" style="font-size:1.4rem; color:#fff;"></i>
@@ -71,7 +91,7 @@
    </div>
   </div>
   <!-- =========================================================
-         HERO
+         HERO (Web only)
     ========================================================== -->
   <header class="hero" id="mainHeader">
    <div class="hero-content">
@@ -120,11 +140,21 @@
    </div>
   </header>
   <!-- =========================================================
-         MAIN
+         SEARCH BAR (App mode - always visible below header)
     ========================================================== -->
-  <main class="container">
+  <div id="appSearchBar" style="display:none; position:fixed; top:56px; left:0; right:0; z-index:99; padding:8px 16px; background:rgba(15,23,42,.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,.05);">
+   <div style="max-width:480px; margin:0 auto;">
+    <div class="search-box" style="margin:0;">
+     <i class="fa-solid fa-magnifying-glass"></i> <input aria-label="Cari aplikasi" autocomplete="off" id="appSearchInput" oninput="renderApps()" placeholder="Cari aplikasi..." type="search" style="width:100%; background:transparent; border:none; color:var(--text-main); font:inherit; outline:none;">
+    </div>
+   </div>
+  </div>
+  <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+  <main class="container" id="mainContainer" style="padding-top: 120px;">
    <!-- =====================================================
-             HOME
+             HOME (Web only)
         ====================================================== -->
    <section class="view-section active" id="homeView">
     <div class="section-heading">
@@ -133,8 +163,8 @@
       <p>Pilih aplikasi yang ingin Anda gunakan.</p>
      </div>
     </div>
-    <!-- SEARCH & FILTER -->
-    <div class="controls-wrapper">
+    <!-- SEARCH & FILTER (Web only) -->
+    <div class="controls-wrapper" id="webControls">
      <div class="search-sort-row">
       <div class="search-box">
        <i class="fa-solid fa-magnifying-glass"></i> <input aria-label="Cari aplikasi" autocomplete="off" id="searchInput" oninput="renderApps()" placeholder="Cari nama aplikasi atau deskripsi..." type="search">
@@ -174,41 +204,97 @@
     <div class="app-grid" id="favoritesGrid"></div>
    </section>
    <!-- =====================================================
-             ANALYTICS
+             APPS VIEW (App mode default)
         ====================================================== -->
-   
+   <section class="view-section" id="appsView" style="display:none;">
+    <div aria-live="polite" class="app-grid" id="appsGrid"></div>
+    <div class="empty-state" id="appsEmptyState" style="display:none;">
+     <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+     <h3>Tidak Ada Aplikasi</h3>
+     <p>Coba cari dengan kata kunci lain.</p>
+    </div>
+   </section>
    <!-- =====================================================
-             ADMIN
+             SETTINGS VIEW (App only)
+        ====================================================== -->
+   <section class="view-section" id="settingsView" style="display:none;">
+    <div class="section-heading">
+     <div>
+      <h2><i class="fa-solid fa-gear" style="color:var(--primary-light)"></i> Pengaturan</h2>
+      <p>Kelola preferensi aplikasi SayutiHub.</p>
+     </div>
+    </div>
+    <div class="settings-list">
+     <div class="setting-item">
+      <div class="setting-info">
+       <i class="fa-solid fa-arrows-rotate" style="color:var(--primary-light); font-size:1.2rem;"></i>
+       <div>
+        <strong>Cek Update Aplikasi</strong>
+        <small style="color:var(--text-muted);">Periksa versi terbaru SayutiHub</small>
+       </div>
+      </div>
+      <button class="nav-btn primary-action" onclick="checkAppUpdate()"><i class="fa-solid fa-download"></i> Cek Sekarang</button>
+     </div>
+     <div class="setting-item">
+      <div class="setting-info">
+       <i class="fa-solid fa-database" style="color:var(--accent-amber); font-size:1.2rem;"></i>
+       <div>
+        <strong>Hapus Cache & Data Lokal</strong>
+        <small style="color:var(--text-muted);">Reset favorit, riwayat unduhan, sesi login</small>
+       </div>
+      </div>
+      <button class="nav-btn" onclick="clearLocalData()"><i class="fa-solid fa-trash"></i> Hapus</button>
+     </div>
+     <div class="setting-item">
+      <div class="setting-info">
+       <i class="fa-solid fa-broom" style="color:var(--accent-rose); font-size:1.2rem;"></i>
+       <div>
+        <strong>Bersihkan Service Worker</strong>
+        <small style="color:var(--text-muted);">Pakai reload halaman dari server</small>
+       </div>
+      </div>
+      <button class="nav-btn" onclick="clearServiceWorker()"><i class="fa-solid fa-refresh"></i> Bersihkan</button>
+     </div>
+     <div class="setting-item">
+      <div class="setting-info">
+       <i class="fa-brands fa-github" style="color:#fff; font-size:1.2rem;"></i>
+       <div>
+        <strong>Buka Repositori GitHub</strong>
+        <small style="color:var(--text-muted);">Lihat source code & lapor issue</small>
+       </div>
+      </div>
+      <a href="https://github.com/sayut303-dot/sayuti.my.id" target="_blank" class="nav-btn"><i class="fa-solid fa-external-link-alt"></i> Buka</a>
+     </div>
+     <div class="setting-item">
+      <div class="setting-info">
+       <i class="fa-solid fa-info-circle" style="color:var(--text-muted); font-size:1.2rem;"></i>
+       <div>
+        <strong>Tentang SayutiHub</strong>
+        <small style="color:var(--text-muted);">Versi <span id="aboutVersion">1.0</span> • Dibuat oleh Sayuti</small>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- =====================================================
+             ADMIN (Web only - requires login)
         ====================================================== -->
    <section class="view-section" id="adminView">
     <div class="dashboard-header">
      <div>
       <h2 style="font-size:1.15rem; margin:0;"><i class="fa-solid fa-user-shield" style="color:#818cf8"></i> Panel Admin</h2>
-      <p style="
-                            margin:5px 0 0;
-                            color:var(--text-muted);
-                            font-size:.7rem;
-                        ">Kelola aplikasi dan katalog SayutiHub.</p>
+      <p style="margin:5px 0 0; color:var(--text-muted); font-size:.7rem;">Kelola aplikasi dan katalog SayutiHub.</p>
      </div>
-     <div style="
-                        display:flex;
-                        gap:7px;
-                        flex-wrap:wrap;
-                    ">
+     <div style="display:flex; gap:7px; flex-wrap:wrap;">
       <button class="nav-btn primary-action" onclick="openAppFormModal()"><i class="fa-solid fa-plus"></i> Tambah</button>
       <button class="nav-btn" onclick="switchView('home')"><i class="fa-solid fa-arrow-left"></i> Keluar</button>
      </div>
     </div>
     <div class="admin-analytics-access" style="margin:0 0 18px;">
-
     <div class="dashboard-header">
      <div>
       <h2 style="font-size:1.2rem; margin:0;"><i class="fa-solid fa-chart-line" style="color:var(--primary-light)"></i> Analisis Sistem</h2>
-      <p style="
-                            margin:5px 0 0;
-                            color:var(--text-muted);
-                            font-size:.72rem;
-                        ">Statistik aktivitas SayutiHub.</p>
+      <p style="margin:5px 0 0; color:var(--text-muted); font-size:.72rem;">Statistik aktivitas SayutiHub.</p>
      </div>
     </div>
     <div class="stats-grid">
@@ -225,9 +311,8 @@
       <div class="val" id="statTotalReviews">0</div>
      </div>
     </div>
-   
-</div>
-<div class="admin-table-wrapper">
+   </div>
+   <div class="admin-table-wrapper">
      <table>
       <thead>
        <tr>
@@ -244,101 +329,42 @@
    </section>
   </main>
   <!-- =========================================================
+         BOTTOM NAV (App only)
+    ========================================================== -->
+  <nav id="bottomNav" class="bottom-nav" style="display:none;" aria-label="Navigasi bawah aplikasi"></nav>
+  <!-- =========================================================
          DETAIL MODAL
     ========================================================== -->
   <div aria-labelledby="detailTitle" aria-modal="true" class="modal-overlay" id="detailModal" onclick="closeModal(event, 'detailModal')" role="dialog">
    <div class="modal-container">
     <button aria-label="Tutup" class="modal-close" onclick="closeModalDirect('detailModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:13px;
-                    margin-bottom:14px;
-                    padding-right:30px;
-                ">
-     <div class="app-icon" id="detailIcon" style="
-                        width:58px;
-                        height:58px;
-                        font-size:1.6rem;
-                    "></div>
+    <div style="display:flex; align-items:center; gap:13px; margin-bottom:14px; padding-right:30px;">
+     <div class="app-icon" id="detailIcon" style="width:58px; height:58px; font-size:1.6rem;"></div>
      <div>
-      <h2 id="detailTitle" style="
-                            font-size:1.15rem;
-                            margin:0 0 4px;
-                        "></h2>
-      <div style="
-                            font-size:.68rem;
-                            color:var(--text-muted);
-                        ">
-       Versi: <span id="detailVersion" style="color:var(--text-main);"></span> &nbsp;•&nbsp; Format: <span id="detailFormat" style="color:var(--text-main);"></span> &nbsp;•&nbsp; Unduhan: <span id="detailDownloads" style="color:var(--text-main);"></span>x
-      </div>
+      <h2 id="detailTitle" style="font-size:1.15rem; margin:0 0 4px;"></h2>
+      <div style="font-size:.68rem; color:var(--text-muted);">Versi: <span id="detailVersion" style="color:var(--text-main);"></span> &nbsp;•&nbsp; Format: <span id="detailFormat" style="color:var(--text-main);"></span> &nbsp;•&nbsp; Unduhan: <span id="detailDownloads" style="color:var(--text-main);"></span>x</div>
      </div>
     </div>
-    <p id="detailDesc" style="
-                    color:var(--text-muted);
-                    font-size:.82rem;
-                    line-height:1.65;
-                    margin-bottom:14px;
-                "></p>
-    <div style="
-                    background:rgba(15,23,42,.65);
-                    padding:12px;
-                    border-radius:12px;
-                    margin-bottom:14px;
-                    font-size:.75rem;
-                    color:var(--text-muted);
-                    border:1px solid rgba(255,255,255,.05);
-                ">
+    <p id="detailDesc" style="color:var(--text-muted); font-size:.82rem; line-height:1.65; margin-bottom:14px;"></p>
+    <div style="background:rgba(15,23,42,.65); padding:12px; border-radius:12px; margin-bottom:14px; font-size:.75rem; color:var(--text-muted); border:1px solid rgba(255,255,255,.05);">
      <strong style="color:var(--text-soft);"> <i class="fa-solid fa-list-check"></i> Changelog </strong>
      <p id="detailChangelog" style="margin:5px 0 0;"></p>
     </div>
-    <div style="
-                    display:grid;
-                    grid-template-columns:1fr auto;
-                    gap:8px;
-                    margin-bottom:17px;
-                ">
+    <div style="display:grid; grid-template-columns:1fr auto; gap:8px; margin-bottom:17px;">
      <a class="btn-download" href="#" id="detailDownloadBtn" onclick="incrementDownload()"> <i class="fa-solid fa-download"></i> Unduh Sekarang </a>
      <button aria-label="Bagikan aplikasi" class="nav-btn" onclick="openShareModal()"><i class="fa-solid fa-qrcode"></i></button>
     </div>
     <!-- REVIEWS -->
-    <div style="
-                    border-top:1px solid var(--border-color);
-                    padding-top:15px;
-                ">
-     <h4 style="
-                        margin:0 0 9px;
-                        font-size:.88rem;
-                    "><i class="fa-solid fa-star-half-stroke" style="color:#fbbf24;"></i> Ulasan Pengguna</h4>
-     <div style="
-                        background:rgba(15,23,42,.45);
-                        padding:11px;
-                        border-radius:12px;
-                        margin-bottom:12px;
-                        display:flex;
-                        flex-direction:column;
-                        gap:7px;
-                        border:1px solid rgba(255,255,255,.05);
-                    ">
-      <div id="starPicker" style="
-                            display:flex;
-                            gap:6px;
-                            font-size:1rem;
-                            color:#fbbf24;
-                            cursor:pointer;
-                        ">
+    <div style="border-top:1px solid var(--border-color); padding-top:15px;">
+     <h4 style="margin:0 0 9px; font-size:.88rem;"><i class="fa-solid fa-star-half-stroke" style="color:#fbbf24;"></i> Ulasan Pengguna</h4>
+     <div style="background:rgba(15,23,42,.45); padding:11px; border-radius:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:7px; border:1px solid rgba(255,255,255,.05);">
+      <div id="starPicker" style="display:flex; gap:6px; font-size:1rem; color:#fbbf24; cursor:pointer;">
        <i class="fa-solid fa-star" onclick="setRating(1)"></i> <i class="fa-solid fa-star" onclick="setRating(2)"></i> <i class="fa-solid fa-star" onclick="setRating(3)"></i> <i class="fa-solid fa-star" onclick="setRating(4)"></i> <i class="fa-solid fa-star" onclick="setRating(5)"></i>
       </div>
       <input class="form-control" id="reviewName" maxlength="30" placeholder="Nama Anda..." type="text"> <textarea class="form-control" id="reviewComment" maxlength="150" placeholder="Bagikan pengalaman Anda..." rows="3"></textarea>
       <button class="nav-btn primary-action" onclick="submitReview()" style="align-self:flex-end;"><i class="fa-solid fa-paper-plane"></i> Kirim Ulasan</button>
      </div>
-     <div id="reviewsList" style="
-                        display:flex;
-                        flex-direction:column;
-                        gap:7px;
-                        max-height:180px;
-                        overflow-y:auto;
-                    "></div>
+     <div id="reviewsList" style="display:flex; flex-direction:column; gap:7px; max-height:180px; overflow-y:auto;"></div>
     </div>
    </div>
   </div>
@@ -348,41 +374,20 @@
   <div aria-modal="true" class="modal-overlay" id="adminLoginModal" onclick="closeModal(event, 'adminLoginModal')" role="dialog">
    <div class="modal-container" style="max-width:380px;">
     <button class="modal-close" onclick="closeModalDirect('adminLoginModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
-                    width:50px;
-                    height:50px;
-                    display:grid;
-                    place-items:center;
-                    border-radius:15px;
-                    background:rgba(99,102,241,.1);
-                    color:#818cf8;
-                    margin-bottom:12px;
-                ">
+    <div style="width:50px; height:50px; display:grid; place-items:center; border-radius:15px; background:rgba(99,102,241,.1); color:#818cf8; margin-bottom:12px;">
      <i class="fa-solid fa-user-shield"></i>
     </div>
-    <h3 style="
-                    margin:0 0 5px;
-                    font-size:1.1rem;
-                ">Login Admin</h3>
-    <p style="
-                    color:var(--text-muted);
-                    font-size:.72rem;
-                    margin:0 0 17px;
-                ">Masukkan PIN administrator untuk melanjutkan.</p>
+    <h3 style="margin:0 0 5px; font-size:1.1rem;">Login Admin</h3>
+    <p style="color:var(--text-muted); font-size:.72rem; margin:0 0 17px;">Masukkan PIN administrator untuk melanjutkan.</p>
     <div class="form-group">
      <label for="adminPinInput"> PIN Administrator </label> <input autocomplete="current-password" class="form-control" id="adminPinInput" placeholder="Masukkan PIN..." type="password">
     </div>
-    <button class="nav-btn primary-action" onclick="verifyAdminLogin()" style="
-                    width:100%;
-                    justify-content:center;
-                    min-height:44px;
-                "><i class="fa-solid fa-right-to-bracket"></i> Masuk ke Panel</button>
+    <button class="nav-btn primary-action" onclick="verifyAdminLogin()" style="width:100%; justify-content:center; min-height:44px;"><i class="fa-solid fa-right-to-bracket"></i> Masuk ke Panel</button>
    </div>
   </div>
   <!-- =========================================================
-         APP FORM
+         QUICK APK UPDATE MODAL
     ========================================================== -->
-  <!-- QUICK APK UPDATE MODAL -->
   <div aria-modal="true" class="modal-overlay" id="quickApkModal" onclick="closeModal(event, 'quickApkModal')" role="dialog">
    <div class="modal-container" style="max-width:440px;">
     <button class="modal-close" onclick="closeModalDirect('quickApkModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -413,45 +418,22 @@
       <input accept="image/png,image/jpeg,image/webp,image/svg+xml" class="form-control" id="quickApkIconFile" type="file">
       <small style="display:block;margin-top:6px;color:var(--text-muted);font-size:.7rem;">PNG, JPG, WebP, atau SVG · Maksimal 5 MB</small>
      </div>
-    
     <button class="nav-btn primary-action" onclick="uploadApkOnly()" style="width:100%;justify-content:center;min-height:45px;"><i class="fa-solid fa-upload"></i> Upload dan Simpan Pembaruan</button>
    </div>
   </div>
+  <!-- =========================================================
+         APP FORM MODAL
+    ========================================================== -->
   <div aria-modal="true" class="modal-overlay" id="appFormModal" onclick="closeModal(event, 'appFormModal')" role="dialog">
    <div class="modal-container">
     <button class="modal-close" onclick="closeModalDirect('appFormModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:10px;
-                    margin-bottom:17px;
-                    padding-right:30px;
-                ">
-     <div style="
-                        width:42px;
-                        height:42px;
-                        display:grid;
-                        place-items:center;
-                        border-radius:12px;
-                        color:white;
-                        background:linear-gradient(
-                            135deg,
-                            #6366f1,
-                            #8b5cf6
-                        );
-                    ">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:17px; padding-right:30px;">
+     <div style="width:42px; height:42px; display:grid; place-items:center; border-radius:12px; color:white; background:linear-gradient(135deg, #6366f1, #8b5cf6);">
       <i class="fa-solid fa-cloud-arrow-up"></i>
      </div>
      <div>
-      <h3 id="formModalTitle" style="
-                            margin:0;
-                            font-size:1rem;
-                        ">Tambah Aplikasi</h3>
-      <p style="
-                            margin:3px 0 0;
-                            color:var(--text-muted);
-                            font-size:.68rem;
-                        ">Tambahkan aplikasi ke katalog.</p>
+      <h3 id="formModalTitle" style="margin:0; font-size:1rem;">Tambah Aplikasi</h3>
+      <p style="margin:3px 0 0; color:var(--text-muted); font-size:.68rem;">Tambahkan aplikasi ke katalog.</p>
      </div>
     </div>
     <input id="editAppId" type="hidden">
@@ -487,86 +469,38 @@
      <label> Deskripsi Lengkap </label> <textarea class="form-control" id="inputFullDesc" placeholder="Jelaskan fungsi dan fitur aplikasi..." rows="3"></textarea>
     </div>
     <div class="form-group">
-     <label> Versi &amp; Format </label>
-     <div style="
-                        display:grid;
-                        grid-template-columns:1fr 1fr;
-                        gap:8px;
-                    ">
+     <label> Versi & Format </label>
+     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
       <input class="form-control" id="inputVersion" placeholder="v1.0.0" type="text"> <input class="form-control" id="inputFormat" placeholder="APK / 15 MB" type="text">
      </div>
     </div>
     <div class="form-group">
-     <label> File APK </label> <input accept=".apk" class="form-control" id="inputApkFile" type="file"> <small style="
-                        display:block;
-                        margin-top:5px;
-                        color:#64748b;
-                        font-size:.62rem;
-                    "> Gunakan file APK jika ingin mengunggah aplikasi langsung dari panel. </small>
+     <label> File APK </label> <input accept=".apk" class="form-control" id="inputApkFile" type="file"> <small style="display:block; margin-top:5px; color:#64748b; font-size:.62rem;"> Gunakan file APK jika ingin mengunggah aplikasi langsung dari panel. </small>
     </div>
-<div class="form-group">
+    <div class="form-group">
      <label> URL Unduhan </label> <input class="form-control" id="inputDownloadUrl" placeholder="Nonton.apk atau https://..." type="text" inputmode="url">
     </div>
     <div class="form-group">
      <label> Changelog </label> <input class="form-control" id="inputChangelog" placeholder="Pembaruan versi terbaru..." type="text">
     </div>
-    <button class="nav-btn primary-action" onclick="saveAppFromForm()" style="
-                    width:100%;
-                    justify-content:center;
-                    min-height:45px;
-                    margin-top:5px;
-                "><i class="fa-solid fa-floppy-disk"></i> Simpan Aplikasi</button>
+    <button class="nav-btn primary-action" onclick="saveAppFromForm()" style="width:100%; justify-content:center; min-height:45px; margin-top:5px;"><i class="fa-solid fa-floppy-disk"></i> Simpan Aplikasi</button>
    </div>
   </div>
   <!-- =========================================================
          SHARE / QR MODAL
     ========================================================== -->
   <div aria-modal="true" class="modal-overlay" id="shareModal" onclick="closeModal(event, 'shareModal')" role="dialog">
-   <div class="modal-container" style="
-                max-width:360px;
-                text-align:center;
-            ">
+   <div class="modal-container" style="max-width:360px; text-align:center;">
     <button class="modal-close" onclick="closeModalDirect('shareModal')"><i class="fa-solid fa-xmark"></i></button>
-    <div style="
-                    width:48px;
-                    height:48px;
-                    display:grid;
-                    place-items:center;
-                    margin:0 auto 10px;
-                    border-radius:14px;
-                    color:#818cf8;
-                    background:rgba(99,102,241,.1);
-                ">
+    <div style="width:48px; height:48px; display:grid; place-items:center; margin:0 auto 10px; border-radius:14px; color:#818cf8; background:rgba(99,102,241,.1);">
      <i class="fa-solid fa-qrcode"></i>
     </div>
-    <h3 style="
-                    margin:0 0 5px;
-                    font-size:1.05rem;
-                ">Bagikan Aplikasi</h3>
-    <p style="
-                    margin:0 0 15px;
-                    color:var(--text-muted);
-                    font-size:.7rem;
-                ">Scan QR Code untuk membuka halaman aplikasi.</p>
-    <div id="qrcodeContainer" style="
-                    background:#fff;
-                    padding:12px;
-                    border-radius:14px;
-                    display:inline-block;
-                    margin-bottom:14px;
-                    box-shadow:0 15px 35px rgba(0,0,0,.25);
-                ">
-     <img alt="QR Code aplikasi" id="qrImg" src="" style="
-                        width:170px;
-                        height:170px;
-                        display:block;
-                    ">
+    <h3 style="margin:0 0 5px; font-size:1.05rem;">Bagikan Aplikasi</h3>
+    <p style="margin:0 0 15px; color:var(--text-muted); font-size:.7rem;">Scan QR Code untuk membuka halaman aplikasi.</p>
+    <div id="qrcodeContainer" style="background:#fff; padding:12px; border-radius:14px; display:inline-block; margin-bottom:14px; box-shadow:0 15px 35px rgba(0,0,0,.25);">
+     <img alt="QR Code aplikasi" id="qrImg" src="" style="width:170px; height:170px; display:block;">
     </div>
-    <button class="nav-btn primary-action" onclick="copyAppShareLink()" style="
-                    width:100%;
-                    justify-content:center;
-                    min-height:44px;
-                "><i class="fa-solid fa-copy"></i> Salin Tautan</button>
+    <button class="nav-btn primary-action" onclick="copyAppShareLink()" style="width:100%; justify-content:center; min-height:44px;"><i class="fa-solid fa-copy"></i> Salin Tautan</button>
    </div>
   </div>
   <!-- =========================================================
@@ -576,86 +510,208 @@
    <i class="fa-solid fa-circle-check"></i> <span id="toastMsg"> Berhasil! </span>
   </div>
   <!-- =========================================================
-         FOOTER
+         FOOTER (Web only)
     ========================================================== -->
-  <footer>
+  <footer id="pageFooter">
      <p>© 2026 <strong>SayutiHub</strong>. Semua hak dilindungi.</p>
-     <p style="
-                  margin-top:5px;
-                  opacity:.65;
-              ">Built for a faster digital experience.</p>
-    </footer>
-    <!-- =========================================================
-           PWA SERVICE WORKER REGISTRATION
-        ========================================================== -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('[SW] Registered:', reg.scope))
-            .catch(err => console.error('[SW] Registration failed:', err));
+     <p style="margin-top:5px; opacity:.65;">Built for a faster digital experience.</p>
+  </footer>
+  <!-- =========================================================
+         PWA SERVICE WORKER REGISTRATION
+    ========================================================== -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('[SW] Registered:', reg.scope))
+          .catch(err => console.error('[SW] Registration failed:', err));
+      });
+    }
+  </script>
+  <!-- =========================================================
+         APP vs WEB DETECTION & INIT
+    ========================================================== -->
+  <script>
+    (function() {
+      // Detect if running in SayutiHub Android WebView app
+      function isSayutiHubApp() {
+        var ua = navigator.userAgent || '';
+        if (ua.indexOf('SayutiHub/') !== -1) return true;
+        if (/Android/.test(ua) && /wv/.test(ua) && !/Chrome/.test(ua)) {
+          return true;
+        }
+        return false;
+      }
+
+      var isApp = isSayutiHubApp();
+      window.isSayutiHubApp = isApp;
+
+      function applyAppWebUI() {
+        var topNav = document.getElementById('topNav');
+        var appHeader = document.getElementById('appHeader');
+        var appSearchBar = document.getElementById('appSearchBar');
+        var bottomNav = document.getElementById('bottomNav');
+        var webBanner = document.getElementById('webBanner');
+        var downloadBtn = document.getElementById('downloadAppBtn');
+        var mainHeader = document.getElementById('mainHeader');
+        var webControls = document.getElementById('webControls');
+        var mainContainer = document.getElementById('mainContainer');
+        var homeView = document.getElementById('homeView');
+        var appsView = document.getElementById('appsView');
+        var pageFooter = document.getElementById('pageFooter');
+
+        if (isApp) {
+          // APP MODE
+          if (topNav) topNav.style.display = 'none';
+          if (appHeader) appHeader.style.display = 'block';
+          if (appSearchBar) appSearchBar.style.display = 'block';
+          if (bottomNav) bottomNav.style.display = 'flex';
+          if (webBanner) webBanner.style.display = 'none';
+          if (downloadBtn) downloadBtn.style.display = 'none';
+          if (mainHeader) mainHeader.style.display = 'none';
+          if (webControls) webControls.style.display = 'none';
+          if (mainContainer) mainContainer.style.paddingTop = '110px'; // header(56) + search(54)
+          if (homeView) homeView.style.display = 'none';
+          if (appsView) appsView.style.display = 'block';
+          if (pageFooter) pageFooter.style.display = 'none';
+
+          // Load app menu from GitHub
+          loadAppMenu();
+          // Render bottom nav
+          renderBottomNav();
+          // Switch to apps view by default
+          switchView('apps');
+        } else {
+          // WEB MODE
+          if (topNav) topNav.style.display = 'flex';
+          if (appHeader) appHeader.style.display = 'none';
+          if (appSearchBar) appSearchBar.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'none';
+          if (downloadBtn) downloadBtn.style.display = 'inline-flex';
+          if (mainHeader) mainHeader.style.display = '';
+          if (webControls) webControls.style.display = '';
+          if (mainContainer) mainContainer.style.paddingTop = '120px';
+          if (homeView) homeView.style.display = 'block';
+          if (appsView) appsView.style.display = 'none';
+          if (pageFooter) pageFooter.style.display = 'block';
+
+          // Show web banner if not dismissed
+          if (webBanner && !localStorage.getItem('sayuti_hide_banner')) {
+            webBanner.style.display = 'block';
+          }
+        }
+      }
+
+      // Load app menu from menu-app.json
+      async function loadAppMenu() {
+        try {
+          var res = await fetch('menu-app.json?v=' + Date.now());
+          var data = await res.json();
+          window.appMenuData = data;
+          window.appMenuVersion = data.version;
+          // Update version displays
+          var vEls = document.querySelectorAll('#appVersion, #aboutVersion');
+          vEls.forEach(function(el) { el.textContent = data.version || '1.0'; });
+        } catch (e) {
+          console.warn('Failed to load app menu:', e);
+          // Fallback menu
+          window.appMenuData = {
+            menu: [
+              {id:'home', label:'Beranda', icon:'fa-house', action:'view:home'},
+              {id:'apps', label:'Aplikasi', icon:'fa-cubes-stacked', action:'view:apps'},
+              {id:'favorites', label:'Favorit', icon:'fa-heart', action:'view:favorites', badge:'favCount'},
+              {id:'updates', label:'Cek Update', icon:'fa-arrows-rotate', action:'checkUpdate'},
+              {id:'github', label:'Repo GitHub', icon:'fa-brands fa-github', action:'url:https://github.com/sayut303-dot/sayuti.my.id', external:true},
+              {id:'settings', label:'Pengaturan', icon:'fa-gear', action:'view:settings'}
+            ],
+            appConfig: { showHero: false, showFilterTabs: false, showSearch: true, defaultView: 'apps', compactCards: true }
+          };
+        }
+      }
+
+      // Render bottom navigation from menu
+      function renderBottomNav() {
+        var bottomNav = document.getElementById('bottomNav');
+        var drawerMenu = document.getElementById('appDrawerMenu');
+        if (!bottomNav || !window.appMenuData) return;
+
+        var menu = window.appMenuData.menu || [];
+        var html = '';
+        var drawerHtml = '';
+
+        menu.forEach(function(item, index) {
+          var badgeHtml = item.badge ? '<span id="' + item.badge + '" class="nav-badge">0</span>' : '';
+          var isExternal = item.external === true;
+          var onclick = isExternal
+            ? 'window.open("' + item.action.replace('url:', '') + '", "_blank")'
+            : item.action.indexOf('view:') === 0
+              ? 'closeAppDrawer(); switchView("' + item.action.replace('view:', '') + '")'
+              : item.action.indexOf('checkUpdate') === 0
+                ? 'closeAppDrawer(); checkAppUpdate()'
+                : 'closeAppDrawer();';
+
+          html += '<button class="bottom-nav-item' + (index === 1 ? ' active' : '') + '" onclick="' + onclick + '" data-view="' + item.id + '">' +
+                  '<i class="fa-solid ' + item.icon + '"></i>' +
+                  '<span>' + item.label + '</span>' +
+                  badgeHtml +
+                  '</button>';
+
+          drawerHtml += '<button class="drawer-menu-item" onclick="' + onclick + '">' +
+                        '<i class="fa-solid ' + item.icon + '"></i>' +
+                        '<span>' + item.label + '</span>' +
+                        '</button>';
+        });
+
+        bottomNav.innerHTML = html;
+        drawerMenu.innerHTML = drawerHtml;
+      }
+
+      // Update active bottom nav item
+      function updateBottomNavActive(viewId) {
+        document.querySelectorAll('.bottom-nav-item').forEach(function(btn) {
+          btn.classList.toggle('active', btn.dataset.view === viewId);
         });
       }
-    </script>
-    <!-- =========================================================
-           APP vs WEB DETECTION
-        ========================================================== -->
-    <script>
-      (function() {
-        // Detect if running in SayutiHub Android WebView app
-        function isSayutiHubApp() {
-          // Check user agent for our custom app marker
-          var ua = navigator.userAgent || '';
-          if (ua.indexOf('SayutiHub/') !== -1) return true;
-          // Check for Android WebView without Chrome
-          if (/Android/.test(ua) && /wv/.test(ua) && !/Chrome/.test(ua)) {
-            // Additional check: try to access Android interface if injected
-            return true;
-          }
-          return false;
-        }
 
-        function applyAppWebUI() {
-          var appBanner = document.getElementById('appBanner');
-          var webBanner = document.getElementById('webBanner');
-          var downloadBtn = document.getElementById('downloadAppBtn');
-          var heroHeader = document.getElementById('mainHeader');
+      // Expose globally
+      window.applyAppWebUI = applyAppWebUI;
+      window.updateBottomNavActive = updateBottomNavActive;
+      window.loadAppMenu = loadAppMenu;
+      window.isSayutiHubApp = isApp;
 
-          if (isSayutiHubApp()) {
-            // Running in the native app
-            if (appBanner) appBanner.style.display = 'block';
-            if (webBanner) webBanner.style.display = 'none';
-            if (downloadBtn) downloadBtn.style.display = 'none';
-            // Hide hero on non-home views (already handled by switchView)
-          } else {
-            // Running in web browser
-            if (appBanner) appBanner.style.display = 'none';
-            // Show web banner if not dismissed
-            if (webBanner && !localStorage.getItem('sayuti_hide_banner')) {
-              webBanner.style.display = 'block';
-            }
-            if (downloadBtn) downloadBtn.style.display = 'inline-flex';
-          }
-        }
-
-        // Run on DOM ready
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', applyAppWebUI);
-        } else {
-          applyAppWebUI();
-        }
-
-        // Also expose for manual trigger
-        window.applyAppWebUI = applyAppWebUI;
-        window.isSayutiHubApp = isSayutiHubApp;
-      })();
-    </script>
-    <!-- =========================================================
-           JAVASCRIPT
-        ========================================================== -->
-  <script src="js/main.js?v=28"></script>
+      // Run on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyAppWebUI);
+      } else {
+        applyAppWebUI();
+      }
+    })();
+  </script>
+  <!-- =========================================================
+         DRAWER FUNCTIONS
+    ========================================================== -->
   <script>
-    // Definisikan helper pada window agar tersedia untuk onclick inline dan login.
+    function toggleAppDrawer() {
+      var drawer = document.getElementById('appDrawer');
+      if (drawer) {
+        drawer.classList.toggle('open');
+        drawer.setAttribute('aria-hidden', drawer.classList.contains('open') ? 'false' : 'true');
+      }
+    }
+    function closeAppDrawer() {
+      var drawer = document.getElementById('appDrawer');
+      if (drawer) {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+    }
+  </script>
+  <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+  <script src="js/main.js?v=29"></script>
+  <script>
+    // Global helpers for inline onclick
     window.closeModalDirect = window.closeModalDirect || function (modalId) {
       var modal = document.getElementById(modalId);
       if (modal) modal.classList.remove('active');
@@ -666,199 +722,88 @@
       }
     };
   </script>
-  <!-- ADMIN LOGIN FALLBACK: hanya membuka modal; autentikasi tetap melalui Cloudflare Worker di main.js -->
+  <!-- ADMIN LOGIN FALLBACK -->
   <script>
     (function () {
       function showAdminLogin() {
         var modal = document.getElementById('adminLoginModal');
-        if (!modal) {
-          console.error('Modal login admin tidak ditemukan.');
-          return;
-        }
+        if (!modal) { console.error('Modal login admin tidak ditemukan.'); return; }
         modal.classList.add('active');
         var input = document.getElementById('adminPinInput');
         if (input) setTimeout(function () { input.focus(); }, 50);
       }
-
       window.openAdminLoginModal = showAdminLogin;
-
       document.addEventListener('DOMContentLoaded', function () {
         var adminButton = document.querySelector('[aria-label="Login admin"]');
         if (adminButton) {
           adminButton.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            showAdminLogin();
+            event.preventDefault(); event.stopImmediatePropagation(); showAdminLogin();
           }, true);
         }
-
         var input = document.getElementById('adminPinInput');
         if (input) input.addEventListener('keydown', function (event) {
-          if (event.key === 'Enter') {
-            event.preventDefault();
-            if (typeof window.verifyAdminLogin === 'function') {
-              window.verifyAdminLogin();
-            } else {
-              alert('Fungsi login belum dimuat. Muat ulang halaman dan coba lagi.');
-            }
-          }
+          if (event.key === 'Enter') { event.preventDefault(); if (typeof window.verifyAdminLogin === 'function') window.verifyAdminLogin(); else alert('Fungsi login belum dimuat. Muat ulang halaman dan coba lagi.'); }
         });
       });
     })();
   </script>
   <!-- =========================================================
          SMALL UI ENHANCEMENT
-         Tidak menggantikan main.js
     ========================================================== -->
   <script>
- 
-        /*
-         * Sinkronisasi statistik Hero dengan
-         * statistik dashboard.
-         */
- 
-        function syncHeroStats() {
- 
-            const totalApps =
-                document.getElementById("statTotalApps");
- 
-            const totalDownloads =
-                document.getElementById("statTotalDownloads");
- 
-            const totalReviews =
-                document.getElementById("statTotalReviews");
- 
-            const heroApps =
-                document.getElementById("heroTotalApps");
- 
-            const heroDownloads =
-                document.getElementById("heroTotalDownloads");
- 
-            const heroReviews =
-                document.getElementById("heroTotalReviews");
- 
- 
-            if (totalApps && heroApps) {
-                heroApps.textContent =
-                    totalApps.textContent || "0";
-            }
- 
-            if (totalDownloads && heroDownloads) {
-                heroDownloads.textContent =
-                    totalDownloads.textContent || "0";
-            }
- 
-            if (totalReviews && heroReviews) {
-                heroReviews.textContent =
-                    totalReviews.textContent || "0";
-            }
- 
+    /* Sync stats, parse downloads, keyboard accessibility */
+    function syncHeroStats() {
+      var totalApps = document.getElementById('statTotalApps');
+      var totalDownloads = document.getElementById('statTotalDownloads');
+      var totalReviews = document.getElementById('statTotalReviews');
+      var heroApps = document.getElementById('heroTotalApps');
+      var heroDownloads = document.getElementById('heroTotalDownloads');
+      var heroReviews = document.getElementById('heroTotalReviews');
+      if (totalApps && heroApps) heroApps.textContent = totalApps.textContent || '0';
+      if (totalDownloads && heroDownloads) heroDownloads.textContent = totalDownloads.textContent || '0';
+      if (totalReviews && heroReviews) heroReviews.textContent = totalReviews.textContent || '0';
+    }
+    function parseDownloadNumber(value) {
+      if (!value) return 0;
+      var text = String(value).trim().toLowerCase().replace(/\s+/g, '');
+      var match = text.match(/([0-9]+(?:[.,][0-9]+)?)(k|m|jt|juta)?/i);
+      if (!match) return 0;
+      var number = parseFloat(match[1].replace(',', '.'));
+      var unit = match[2] || '';
+      if (unit === 'k') number *= 1000;
+      else if (unit === 'm' || unit === 'jt' || unit === 'juta') number *= 1000000;
+      return Math.round(number);
+    }
+    function syncDownloadTotalFromApps() {
+      var cards = document.querySelectorAll('#appGrid .app-card, #favoritesGrid .app-card, #appsGrid .app-card');
+      var seen = new Set(); var total = 0;
+      cards.forEach(function(card) {
+        var key = card.dataset.appId || card.querySelector('h3')?.textContent?.trim();
+        if (key && seen.has(key)) return;
+        if (key) seen.add(key);
+        var candidates = card.querySelectorAll('[data-downloads], .downloads, .app-meta span, .app-meta');
+        var value = null;
+        for (var i=0; i<candidates.length; i++) {
+          var el = candidates[i];
+          if (el.dataset.downloads) { value = el.dataset.downloads; break; }
+          var text = el.textContent || '';
+          var dm = text.match(/([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?\s*(?:unduhan|downloads?)/i);
+          if (dm) { value = dm[1] + (dm[2] || ''); break; }
+          var rm = text.match(/(?:unduhan|downloads?)\s*[:\\-]?\s*([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?/i);
+          if (rm) { value = rm[1] + (rm[2] || ''); break; }
         }
- 
- 
-        /*
-         * Jalankan berkala karena main.js
-         * kemungkinan memperbarui statistik
-         * secara dinamis.
-         */
- 
-        /*
-         * Total unduhan selalu dihitung dari angka unduhan setiap aplikasi.
-         * Jadi dashboard/hero tidak memakai angka total yang terpisah.
-         */
-        function parseDownloadNumber(value) {
-            if (!value) return 0;
-            const text = String(value).trim().toLowerCase().replace(/\s+/g, "");
-            const match = text.match(/([0-9]+(?:[.,][0-9]+)?)(k|m|jt|juta)?/i);
-            if (!match) return 0;
-            let number = parseFloat(match[1].replace(',', '.'));
-            const unit = match[2] || '';
-            if (unit === 'k') number *= 1000;
-            else if (unit === 'm' || unit === 'jt' || unit === 'juta') number *= 1000000;
-            return Math.round(number);
-        }
- 
-        function syncDownloadTotalFromApps() {
-            const cards = document.querySelectorAll('#appGrid .app-card, #favoritesGrid .app-card');
-            const seen = new Set();
-            let total = 0;
- 
-            cards.forEach(function(card) {
-                const key = card.dataset.appId || card.querySelector('h3')?.textContent?.trim();
-                if (key && seen.has(key)) return;
-                if (key) seen.add(key);
- 
-                const candidates = card.querySelectorAll('[data-downloads], .downloads, .app-meta span, .app-meta');
-                let value = null;
-                for (const el of candidates) {
-                    if (el.dataset.downloads) {
-                        value = el.dataset.downloads;
-                        break;
-                    }
-                    const text = el.textContent || '';
-                    const downloadMatch = text.match(/([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?\s*(?:unduhan|downloads?)/i);
-                    if (downloadMatch) {
-                        value = downloadMatch[1] + (downloadMatch[2] || '');
-                        break;
-                    }
-                    const reverseMatch = text.match(/(?:unduhan|downloads?)\s*[:\-]?\s*([0-9]+(?:[.,][0-9]+)?)\s*(k|m|jt|juta)?/i);
-                    if (reverseMatch) {
-                        value = reverseMatch[1] + (reverseMatch[2] || '');
-                        break;
-                    }
-                }
-                if (value != null) total += parseDownloadNumber(value);
-            });
- 
-            /* Jika card belum selesai dirender, jangan menimpa statistik yang valid. */
-            if (!cards.length) return;
- 
-            const formatted = total.toLocaleString('id-ID');
-            const dashboard = document.getElementById('statTotalDownloads');
-            const hero = document.getElementById('heroTotalDownloads');
-            if (dashboard) dashboard.textContent = formatted;
-            if (hero) hero.textContent = formatted;
-        }
- 
-        setInterval(function() {
-            syncHeroStats();
-            syncDownloadTotalFromApps();
-        }, 500);
- 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function() {
-                syncHeroStats();
-                syncDownloadTotalFromApps();
-            }
-        );
- 
- 
-        /*
-         * Keyboard accessibility
-         */
- 
-        document.addEventListener(
-            "keydown",
-            function(event) {
- 
-                if (
-                    event.key === "Escape"
-                ) {
- 
-                    document
-                        .querySelectorAll(".modal-overlay.active")
-                        .forEach(function(modal) {
- 
-                            modal.classList.remove("active");
- 
-                        });
- 
-                }
- 
-            }
-        );
- 
-    </script>
+        if (value != null) total += parseDownloadNumber(value);
+      });
+      if (!cards.length) return;
+      var formatted = total.toLocaleString('id-ID');
+      var dashboard = document.getElementById('statTotalDownloads');
+      var hero = document.getElementById('heroTotalDownloads');
+      if (dashboard) dashboard.textContent = formatted;
+      if (hero) hero.textContent = formatted;
+    }
+    setInterval(function() { syncHeroStats(); syncDownloadTotalFromApps(); }, 500);
+    document.addEventListener('DOMContentLoaded', function() { syncHeroStats(); syncDownloadTotalFromApps(); });
+    document.addEventListener('keydown', function(event) { if (event.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(function(m) { m.classList.remove('active'); }); } });
+  </script>
  </body>
 </html>
