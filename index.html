@@ -45,9 +45,31 @@
    </div>
    <div class="nav-actions">
        <button aria-label="Aplikasi favorit" class="nav-btn" onclick="switchView('favorites')"><i class="fa-solid fa-heart"></i> <span>Favorit</span> <span id="favCount">0</span></button>
-       <a href="https://sayuti.my.id" class="nav-btn primary-action" aria-label="Install SayutiHub App" style="text-decoration:none"><i class="fa-solid fa-mobile-screen-button"></i> <span>Download App</span></a>
+       <a href="https://sayuti.my.id" class="nav-btn primary-action" aria-label="Install SayutiHub App" style="text-decoration:none" id="downloadAppBtn"><i class="fa-solid fa-mobile-screen-button"></i> <span>Download App</span></a>
      </div>
   </nav>
+  <!-- App-only banner (hidden on web) -->
+  <div id="appBanner" style="display:none; background:linear-gradient(135deg,#6366f1,#8b5cf6); padding:12px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1);">
+   <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+    <i class="fa-solid fa-mobile-screen-button" style="font-size:1.2rem;"></i>
+    <span style="font-weight:600; color:#fff;">Anda sudah di aplikasi SayutiHub</span>
+    <a href="https://github.com/sayut303-dot/sayuti.my.id" target="_blank" class="nav-btn" style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);"><i class="fa-brands fa-github"></i> Repo GitHub</a>
+   </div>
+  </div>
+  <!-- Web-only download banner -->
+  <div id="webBanner" style="display:none; background:linear-gradient(135deg,#22c55e,#16a34a); padding:14px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1); position:relative;">
+   <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
+    <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.2); display:grid; place-items:center;">
+     <i class="fa-solid fa-mobile-screen-button" style="font-size:1.4rem; color:#fff;"></i>
+    </div>
+    <div style="text-align:left; flex:1; min-width:200px;">
+     <div style="font-weight:700; font-size:1rem; color:#fff;">Download Aplikasi SayutiHub</div>
+     <div style="font-size:0.78rem; color:rgba(255,255,255,.9); margin-top:2px;">Versi native — akses cepat, offline-ready, ikon custom</div>
+    </div>
+    <a href="https://sayuti.my.id/SayutiHub-app.apk" id="webDownloadBtn" class="nav-btn primary-action" style="background:#fff; color:#16a34a; min-width:140px; justify-content:center;"><i class="fa-solid fa-download"></i> Unduh APK</a>
+    <button onclick="document.getElementById('webBanner').style.display='none'; localStorage.setItem('sayuti_hide_banner','1');" style="position:absolute; top:8px; right:12px; background:none; border:none; color:#fff; font-size:1.2rem; padding:4px; line-height:1;"><i class="fa-solid fa-xmark"></i></button>
+   </div>
+  </div>
   <!-- =========================================================
          HERO
     ========================================================== -->
@@ -576,9 +598,62 @@
       }
     </script>
     <!-- =========================================================
+           APP vs WEB DETECTION
+        ========================================================== -->
+    <script>
+      (function() {
+        // Detect if running in SayutiHub Android WebView app
+        function isSayutiHubApp() {
+          // Check user agent for our custom app marker
+          var ua = navigator.userAgent || '';
+          if (ua.indexOf('SayutiHub/') !== -1) return true;
+          // Check for Android WebView without Chrome
+          if (/Android/.test(ua) && /wv/.test(ua) && !/Chrome/.test(ua)) {
+            // Additional check: try to access Android interface if injected
+            return true;
+          }
+          return false;
+        }
+
+        function applyAppWebUI() {
+          var appBanner = document.getElementById('appBanner');
+          var webBanner = document.getElementById('webBanner');
+          var downloadBtn = document.getElementById('downloadAppBtn');
+          var heroHeader = document.getElementById('mainHeader');
+
+          if (isSayutiHubApp()) {
+            // Running in the native app
+            if (appBanner) appBanner.style.display = 'block';
+            if (webBanner) webBanner.style.display = 'none';
+            if (downloadBtn) downloadBtn.style.display = 'none';
+            // Hide hero on non-home views (already handled by switchView)
+          } else {
+            // Running in web browser
+            if (appBanner) appBanner.style.display = 'none';
+            // Show web banner if not dismissed
+            if (webBanner && !localStorage.getItem('sayuti_hide_banner')) {
+              webBanner.style.display = 'block';
+            }
+            if (downloadBtn) downloadBtn.style.display = 'inline-flex';
+          }
+        }
+
+        // Run on DOM ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', applyAppWebUI);
+        } else {
+          applyAppWebUI();
+        }
+
+        // Also expose for manual trigger
+        window.applyAppWebUI = applyAppWebUI;
+        window.isSayutiHubApp = isSayutiHubApp;
+      })();
+    </script>
+    <!-- =========================================================
            JAVASCRIPT
         ========================================================== -->
-  <script src="js/main.js?v=27"></script>
+  <script src="js/main.js?v=28"></script>
   <script>
     // Definisikan helper pada window agar tersedia untuk onclick inline dan login.
     window.closeModalDirect = window.closeModalDirect || function (modalId) {
