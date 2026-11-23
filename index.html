@@ -7,6 +7,10 @@
   <meta content="dark" name="color-scheme">
   <meta content="yes" name="apple-mobile-web-app-capable">
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
   <meta content="SayutiHub — pusat aplikasi, marketplace digital, unduhan APK dan software dengan tampilan modern." name="description">
   <title>SayutiHub — Pusat Aplikasi &amp; Marketplace Jawa</title>
   <!-- Fonts -->
@@ -553,15 +557,27 @@
          FOOTER
     ========================================================== -->
   <footer>
-   <p>© 2026 <strong>SayutiHub</strong>. Semua hak dilindungi.</p>
-   <p style="
-                margin-top:5px;
-                opacity:.65;
-            ">Built for a faster digital experience.</p>
-  </footer>
-  <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
+     <p>© 2026 <strong>SayutiHub</strong>. Semua hak dilindungi.</p>
+     <p style="
+                  margin-top:5px;
+                  opacity:.65;
+              ">Built for a faster digital experience.</p>
+    </footer>
+    <!-- =========================================================
+           PWA SERVICE WORKER REGISTRATION
+        ========================================================== -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('[SW] Registered:', reg.scope))
+            .catch(err => console.error('[SW] Registration failed:', err));
+        });
+      }
+    </script>
+    <!-- =========================================================
+           JAVASCRIPT
+        ========================================================== -->
   <script src="js/main.js?v=27"></script>
   <script>
     // Definisikan helper pada window agar tersedia untuk onclick inline dan login.
