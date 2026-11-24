@@ -816,43 +816,73 @@
       </script>
       <!-- Theatre.js Example Usage -->
       <script type="module">
-        import { getProject, animate } from '@theatre/core';
+        import { getProject } from '@theatre/core';
         import studio from '@theatre/studio';
 
-        // Initialize Theatre.js Studio (dev tools)
-        studio.initialize();
+        // Wait for DOM and apps to render
+        function initTheatre() {
+          // Initialize Theatre.js Studio (dev tools)
+          studio.initialize();
 
-        // Create a project
-        const project = getProject('SayutiHub Animations', { state: {} });
+          // Create a project
+          const project = getProject('SayutiHub Animations', { state: {} });
+          const heroSheet = project.sheet('Hero Animations');
 
-        // Example: Animate hero cards on scroll
-        const heroSheet = project.sheet('Hero Animations');
+          // Function to animate cards
+          function animateCards() {
+            const cards = document.querySelectorAll('.app-card');
+            cards.forEach((card, index) => {
+              // Skip if already animated
+              if (card.dataset.theatreAnimated) return;
+              card.dataset.theatreAnimated = 'true';
 
-        // Animate app cards on hover
-        document.querySelectorAll('.app-card').forEach((card, index) => {
-          const obj = heroSheet.object(`Card ${index}`, {
-            y: 0,
-            scale: 1,
-            opacity: 1,
+              const obj = heroSheet.object(`Card ${index}`, {
+                y: 0,
+                scale: 1,
+                opacity: 1,
+              });
+
+              card.addEventListener('mouseenter', () => {
+                obj.animate('y', { to: -8, duration: 0.2, easing: 'easeOut' });
+                obj.animate('scale', { to: 1.02, duration: 0.2, easing: 'easeOut' });
+              });
+
+              card.addEventListener('mouseleave', () => {
+                obj.animate('y', { to: 0, duration: 0.3, easing: 'easeOut' });
+                obj.animate('scale', { to: 1, duration: 0.3, easing: 'easeOut' });
+              });
+
+              obj.onValuesChange(({ y, scale }) => {
+                card.style.transform = `translateY(${y}px) scale(${scale})`;
+              });
+            });
+          }
+
+          // Run after apps render (check every 200ms)
+          const checkInterval = setInterval(() => {
+            if (document.querySelectorAll('.app-card').length > 0) {
+              clearInterval(checkInterval);
+              animateCards();
+            }
+          }, 200);
+
+          // Also re-animate when apps re-render (e.g., filter/search)
+          const observer = new MutationObserver(() => {
+            animateCards();
+          });
+          const grids = document.querySelectorAll('#appGrid, #appsGrid, #favoritesGrid');
+          grids.forEach(grid => {
+            if (grid) observer.observe(grid, { childList: true, subtree: true });
           });
 
-          card.addEventListener('mouseenter', () => {
-            obj.animate('y', { to: -8, duration: 0.2, easing: 'easeOut' });
-            obj.animate('scale', { to: 1.02, duration: 0.2, easing: 'easeOut' });
-          });
+          console.log('Theatre.js initialized - ready for animations');
+        }
 
-          card.addEventListener('mouseleave', () => {
-            obj.animate('y', { to: 0, duration: 0.3, easing: 'easeOut' });
-            obj.animate('scale', { to: 1, duration: 0.3, easing: 'easeOut' });
-          });
-
-          // Apply transform
-          obj.onValuesChange(({ y, scale }) => {
-            card.style.transform = `translateY(${y}px) scale(${scale})`;
-          });
-        });
-
-        console.log('Theatre.js initialized - ready for animations');
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initTheatre);
+        } else {
+          initTheatre();
+        }
       </script>
     </body>
     </html>
