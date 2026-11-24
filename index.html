@@ -19,6 +19,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Theatre.js (animation) via esm.sh CDN -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@theatre/core": "https://esm.sh/@theatre/core@0.7.2",
+      "@theatre/studio": "https://esm.sh/@theatre/studio@0.7.2"
+    }
+  }
+  </script>
   <!-- Main CSS -->
   <link href="css/style.css?v=13" rel="stylesheet">
   <!-- App-specific CSS (injected via script) -->
@@ -804,6 +813,46 @@
     setInterval(function() { syncHeroStats(); syncDownloadTotalFromApps(); }, 500);
     document.addEventListener('DOMContentLoaded', function() { syncHeroStats(); syncDownloadTotalFromApps(); });
     document.addEventListener('keydown', function(event) { if (event.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(function(m) { m.classList.remove('active'); }); } });
-  </script>
- </body>
-</html>
+      </script>
+      <!-- Theatre.js Example Usage -->
+      <script type="module">
+        import { getProject, animate } from '@theatre/core';
+        import studio from '@theatre/studio';
+
+        // Initialize Theatre.js Studio (dev tools)
+        studio.initialize();
+
+        // Create a project
+        const project = getProject('SayutiHub Animations', { state: {} });
+
+        // Example: Animate hero cards on scroll
+        const heroSheet = project.sheet('Hero Animations');
+
+        // Animate app cards on hover
+        document.querySelectorAll('.app-card').forEach((card, index) => {
+          const obj = heroSheet.object(`Card ${index}`, {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+          });
+
+          card.addEventListener('mouseenter', () => {
+            obj.animate('y', { to: -8, duration: 0.2, easing: 'easeOut' });
+            obj.animate('scale', { to: 1.02, duration: 0.2, easing: 'easeOut' });
+          });
+
+          card.addEventListener('mouseleave', () => {
+            obj.animate('y', { to: 0, duration: 0.3, easing: 'easeOut' });
+            obj.animate('scale', { to: 1, duration: 0.3, easing: 'easeOut' });
+          });
+
+          // Apply transform
+          obj.onValuesChange(({ y, scale }) => {
+            card.style.transform = `translateY(${y}px) scale(${scale})`;
+          });
+        });
+
+        console.log('Theatre.js initialized - ready for animations');
+      </script>
+    </body>
+    </html>

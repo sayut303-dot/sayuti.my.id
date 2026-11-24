@@ -1,0 +1,23 @@
+{
+  "name": "sayuti.my.id",
+  "version": "1.0.0",
+  "description": "SayutiHub adalah platform web sederhana untuk menemukan, mengunduh, dan mengelola aplikasi digital (APK/software) dengan tampilan modern, cepat, dan responsif (desktop & mobile).",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sayut303-dot/sayuti.my.id.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sayut303-dot/sayuti.my.id/issues"
+  },
+  "homepage": "https://github.com/sayut303-dot/sayuti.my.id#readme",
+  "dependencies": {
+    "@theatre/core": "^0.7.2",
+    "@theatre/studio": "^0.7.2"
+  }
+}
