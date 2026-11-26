@@ -85,22 +85,8 @@
     </div>
    </div>
   </div>
-  <!-- Web-only download banner -->
-  <div id="webBanner" style="display:none; background:linear-gradient(135deg,#22c55e,#16a34a); padding:14px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1); position:relative; margin-top:56px;">
-   <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
-    <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.2); display:grid; place-items:center;">
-     <i class="fa-solid fa-mobile-screen-button" style="font-size:1.4rem; color:#fff;"></i>
-    </div>
-    <div style="text-align:left; flex:1; min-width:200px;">
-     <div style="font-weight:700; font-size:1rem; color:#fff;">Download Aplikasi SayutiHub</div>
-     <div style="font-size:0.78rem; color:rgba(255,255,255,.9); margin-top:2px;">Versi native — akses cepat, offline-ready, ikon custom</div>
-    </div>
-    <a href="https://sayuti.my.id/SayutiHub-app.apk" id="webDownloadBtn" class="nav-btn primary-action" style="background:#fff; color:#16a34a; min-width:140px; justify-content:center;"><i class="fa-solid fa-download"></i> Unduh APK</a>
-    <button onclick="document.getElementById('webBanner').style.display='none'; localStorage.setItem('sayuti_hide_banner','1');" style="position:absolute; top:8px; right:12px; background:none; border:none; color:#fff; font-size:1.2rem; padding:4px; line-height:1;"><i class="fa-solid fa-xmark"></i></button>
-   </div>
-  </div>
-  <!-- =========================================================
-         HERO (Web only)
+   <!-- =========================================================
+          HERO (Web only)
     ========================================================== -->
   <header class="hero" id="mainHeader">
    <div class="hero-content">
@@ -560,7 +546,6 @@
         var appHeader = document.getElementById('appHeader');
         var appSearchBar = document.getElementById('appSearchBar');
         var bottomNav = document.getElementById('bottomNav');
-        var webBanner = document.getElementById('webBanner');
         var downloadBtn = document.getElementById('downloadAppBtn');
         var mainHeader = document.getElementById('mainHeader');
         var webControls = document.getElementById('webControls');
@@ -575,7 +560,6 @@
           if (appHeader) appHeader.style.display = 'block';
           if (appSearchBar) appSearchBar.style.display = 'block';
           if (bottomNav) bottomNav.style.display = 'flex';
-          if (webBanner) webBanner.style.display = 'none';
           if (downloadBtn) downloadBtn.style.display = 'none';
           if (mainHeader) mainHeader.style.display = 'none';
           if (webControls) webControls.style.display = 'none';
@@ -603,11 +587,6 @@
           if (homeView) homeView.style.display = 'block';
           if (appsView) appsView.style.display = 'none';
           if (pageFooter) pageFooter.style.display = 'block';
-
-          // Show web banner if not dismissed
-          if (webBanner && !localStorage.getItem('sayuti_hide_banner')) {
-            webBanner.style.display = 'block';
-          }
         }
       }
 
