@@ -176,22 +176,6 @@ let dbApps = [
         "reviews": []
     },
     {
-        "id": 1794320000005,
-        "title": "NetMeter",
-        "category": "tools",
-        "status": "New",
-        "icon": "netmeter-icon.png",
-        "shortDesc": "Monitor kecepatan internet real-time dengan Speed Test Download/Upload, Ping, dan notifikasi status bar.",
-        "fullDesc": "NetMeter adalah aplikasi pemantau kecepatan internet secara real-time yang dilengkapi fitur Speed Test untuk mengukur kecepatan Download, Upload, Ping, dan kualitas koneksi internet. Menampilkan kecepatan jaringan secara real-time di notifikasi/status bar sehingga Anda bisa mengetahui penggunaan jaringan langsung dari perangkat.\n\nFitur utama:\n📶 Monitor kecepatan internet secara real-time\n🚀 Speed Test untuk mengukur kecepatan Download\n📤 Mengukur kecepatan Upload\n⚡ Menampilkan Ping/Latency\n📊 Informasi koneksi jaringan\n🔔 Pemantauan kecepatan melalui notifikasi/status bar\n📱 Tampilan sederhana, modern, dan ringan\n🌐 Membantu mengetahui kondisi koneksi saat menggunakan Wi-Fi maupun data seluler",
-        "version": "1.0",
-        "format": "APK File",
-        "downloads": 0,
-        "downloadUrl": "NetMeter.apk",
-        "changelog": "Rilis perdana NetMeter v1.0 dengan monitoring real-time, Speed Test, dan notifikasi kecepatan.",
-        "screenshots": [],
-        "reviews": []
-    },
-    {
         "id": 1794320000006,
         "title": "OTG Backup Manager",
         "category": "tools",
