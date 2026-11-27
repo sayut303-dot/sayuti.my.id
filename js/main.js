@@ -174,6 +174,38 @@ let dbApps = [
         "changelog": "Rilis perdana Vidioplayer v1.0.0.",
         "screenshots": [],
         "reviews": []
+    },
+    {
+        "id": 1794320000005,
+        "title": "NetMeter",
+        "category": "tools",
+        "status": "New",
+        "icon": "netmeter-icon.png",
+        "shortDesc": "Monitor kecepatan internet real-time dengan Speed Test Download/Upload, Ping, dan notifikasi status bar.",
+        "fullDesc": "NetMeter adalah aplikasi pemantau kecepatan internet secara real-time yang dilengkapi fitur Speed Test untuk mengukur kecepatan Download, Upload, Ping, dan kualitas koneksi internet. Menampilkan kecepatan jaringan secara real-time di notifikasi/status bar sehingga Anda bisa mengetahui penggunaan jaringan langsung dari perangkat.\n\nFitur utama:\n📶 Monitor kecepatan internet secara real-time\n🚀 Speed Test untuk mengukur kecepatan Download\n📤 Mengukur kecepatan Upload\n⚡ Menampilkan Ping/Latency\n📊 Informasi koneksi jaringan\n🔔 Pemantauan kecepatan melalui notifikasi/status bar\n📱 Tampilan sederhana, modern, dan ringan\n🌐 Membantu mengetahui kondisi koneksi saat menggunakan Wi-Fi maupun data seluler",
+        "version": "1.0",
+        "format": "APK File",
+        "downloads": 0,
+        "downloadUrl": "NetMeter.apk",
+        "changelog": "Rilis perdana NetMeter v1.0 dengan monitoring real-time, Speed Test, dan notifikasi kecepatan.",
+        "screenshots": [],
+        "reviews": []
+    },
+    {
+        "id": 1794320000006,
+        "title": "OTG Backup Manager",
+        "category": "tools",
+        "status": "New",
+        "icon": "otgbackup-icon.png",
+        "shortDesc": "Backup & restore data ke USB OTG tanpa root, support file manager dan scheduled backup.",
+        "fullDesc": "OTG Backup Manager adalah aplikasi untuk backup dan restore data ke penyimpanan USB OTG (On-The-Go) tanpa memerlukan akses root. Mendukung backup otomatis terjadwal, file manager terintegrasi, dan berbagai format penyimpanan eksternal.\n\nFitur utama:\n💾 Backup data aplikasi, foto, video, dokumen ke USB OTG\n🔄 Restore data dari backup dengan mudah\n⏰ Scheduled backup otomatis (harian/mingguan/bulanan)\n📁 File manager terintegrasi untuk kelola file di USB OTG\n📱 Support berbagai format USB (FAT32, exFAT, NTFS)\n🔔 Notifikasi status backup\n🔒 Tanpa root, aman dan mudah digunakan\n⚡ Transfer cepat dengan protokol USB standar",
+        "version": "1.0",
+        "format": "APK File",
+        "downloads": 0,
+        "downloadUrl": "OTGbackup.apk",
+        "changelog": "Rilis perdana OTG Backup Manager v1.0 dengan backup/restore ke USB OTG, scheduled backup, dan file manager.",
+        "screenshots": [],
+        "reviews": []
     }
 ];
 
